@@ -6,11 +6,14 @@
 // @include     https://www.kabam.com/games/the-godfather/play
 // @include     https://www.kabam.com/*/games/the-godfather/play
 // @include     https://*godfather.*.com/platforms/kabam/game
-// @version     2
+// @version     2.0.0
+// @grant       GM_addStyle
+// @grant       GM_getResourceText
+// @updateURL   https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.js
+// @downloadURL https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js
-// @require     http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js
-// @resource    http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css
 // @require     http://underscorejs.org/underscore-min.js
+// @resource    underbossCSS https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/underboss.css
 // @require     https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/frame.js
 // ==/UserScript==
 
@@ -1744,26 +1747,8 @@
                     return div;
                 };
                 this.drawPanel = function drawPanel() {
-                    var style = document.createElement("style");
-					style.innerHTML = " \
-                    .panel, .hiddenPanel{background-color: red; background-image: url('/images/banner/TGFF_banner_bg.jpg');border: 1px solid darkred;color:white;position: absolute; top: 0; right: 0;width: 300px; height: 688px;z-index: 10;} \
-                    .hiddenPanel{height:25px;} \
-					.header{background-color: darkred;color:white;width: 100%; height: 25px;text-align:center;font-size:150%;font-weight:bold;} \
-                    .info{width: 295px; height: 260px;} \
-					.textinfo {width: 295px; height: 95px;} \
-                    .prize_info{width: 295px; height: 200px;} \
-                    div.option{width: 110px; float:left;} \
-                    div.stats{width: 100%;} \
-                    input.button{background-color: darkred; color:white;border-color:red;} \
-                    .tab-box{border-bottom: 1px solid darkred;padding-bottom:5px;margin-top:5px;} \
-                    .tab-box a {border:1px solid red;color:white;padding: 5px 5px;text-decoration:none;background-color: darkred;} \
-                    .tab-box a.activeLink {background-color: red; border-bottom: 0; padding: 6px 5px; border-color: darkred;} \
-                    .tabcontent { border: 1px solid darkred; border-top: 0;overflow-y:auto;height:430px} \
-                    .hide { display: none;} \
-                    .unit_count{width:25px;} \
-                    input.number{width:35px;margin-right:5px;} \
-                    h7{font-weight:bold;display:block;}";
-                    document.head.appendChild(style);
+					var css = GM_getResourceText ("underbossCSS");
+					GM_addStyle (css);
 
                     var panel = document.createElement("div");
                     panel.setAttribute("id","panel");
