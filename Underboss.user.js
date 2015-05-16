@@ -1747,9 +1747,6 @@
                     return div;
                 };
                 this.drawPanel = function drawPanel() {
-					var css = GM_getResourceText ("underbossCSS");
-					GM_addStyle (css);
-
                     var panel = document.createElement("div");
                     panel.setAttribute("id","panel");
                     panel.setAttribute("class", "panel");
@@ -2256,3 +2253,7 @@
         document.getElementsByTagName("head")[0].appendChild(script);
     }
 })();
+
+// Adds the CSS
+var css = GM_getResourceText("underbossCSS");
+GM_addStyle (css);
