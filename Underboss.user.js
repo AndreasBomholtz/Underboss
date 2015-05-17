@@ -2087,7 +2087,7 @@ GM_addStyle (css);
 
         var script = document.createElement("script");
         script.innerHTML = attackUnits.toString()+";";
-		script.innerHTML =  "(" + src.toString() + ")();";
+		script.innerHTML +=  "(" + src.toString() + ")();";
         script.type = "text/javascript";
         document.getElementsByTagName("head")[0].appendChild(script);
     }
