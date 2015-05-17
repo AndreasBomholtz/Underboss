@@ -23,6 +23,7 @@
 // @require     res/defense_units.js
 // ==/UserScript==
 
+console.log(attackUnits);
 
 (function wholeBotScriptFunc() {
     var main = function botMainFunc() {
@@ -41,13 +42,14 @@
             script.type = "text/javascript";
             document.getElementsByTagName("head")[0].appendChild(script);
 
-            function GodfatherBot(data) {
+            function GodfatherBot(data,attackUnits) {
                 //Variables
                 this.queue = [];
                 this.slow_queue = [];
                 this.lastCommand = {};
                 this.html = {};
 				this.enableTrace = false;
+				this.attackUnits = attackUnits;
 
                 this.autoFunctions = {
                     "Collect": {},
@@ -2053,7 +2055,7 @@
                 this.init(data);
             }
 
-			gfb = new GodfatherBot(C.attrs);
+			gfb = new GodfatherBot(C.attrs,attackUnits);
         };
         //---------------------- END OF INJECTED PART -----------------------------------
     };
