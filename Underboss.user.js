@@ -2086,7 +2086,8 @@ GM_addStyle (css);
         console.debug("Injecting Godfather Bot script");
 
         var script = document.createElement("script");
-        script.innerHTML = attackUnits.toString()+";";
+        script.innerHTML = "var attackUnits = "+attackUnits.toString()+";";
+		script.innerHTML += "console.log(attackUnits);";
 		script.innerHTML +=  "(" + src.toString() + ")();";
         script.type = "text/javascript";
         document.getElementsByTagName("head")[0].appendChild(script);
