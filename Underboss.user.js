@@ -13,8 +13,14 @@
 // @downloadURL https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js
 // @require     http://underscorejs.org/underscore-min.js
-// @resource    underbossCSS https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/underboss.css
-// @require     https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/frame.js
+// @require     https://raw.githubusercontent.com/millermedeiros/js-signals/master/dist/signals.min.js
+// @resource    underbossCSS underboss.css
+// @require     frame.js
+// @require     res/buildings.js
+// @require     res/research.js
+// @require     res/prizes.js
+// @require     res/attack_units.js
+// @require     res/defense_units.js
 // ==/UserScript==
 
 
@@ -58,178 +64,6 @@
                     "Items": {},
                     "Report": {},
                     "Bonds": {}
-                };
-
-                this.buildPriority = {
-                    "SteelMill":     {"buildNew": 1, 'cost': {'cash': 600,  'food': 200, 'steel': 200, 'cement': 500}},
-                    "Restaurant":    {"buildNew": 1, 'cost': {'cash': 600,  'food': 200, 'steel': 500, 'cement': 200}},
-                    "CementFactory": {"buildNew": 1, 'cost': {'cash': 600,  'food': 500, 'steel': 200, 'cement': 200}},
-                    "Apartment":     {"buildNew": 6, 'cost': {'cash': 500,  'food': 100, 'steel': 100, 'cement': 100}},
-                    "Hideout":       {               'cost': {'cash': 1200, 'food': 500, 'steel': 500, 'cement': 500}},
-
-
-                    "Mansion":      {"priority": 1, "requirement": {"build": {5: {"Wall": 5}, 7: {"Wall":7}, 8: {"Wall":8}}},
-                                    'cost': {'cash': 2500, 'food': 300, 'steel': 300, 'cement': 300}
-                                    },
-                    "Library":      {"priority": 2,
-                                    'cost': {'cash': 2500, 'food': 1500, 'steel': 200, 'cement': 200}
-                                    },
-                    "Warehouse":    {"requirement": {"gangster":4},
-                                    'cost': {'cash': 1500, 'food': 1000, 'steel': 300, 'cement': 300}
-                                    },
-                    "Garage":       {"requirement": {"build": {2: {"Restaurant":5}}, "gangster":9},
-                                    'cost': {'cash': 2000, 'food': 300, 'steel': 1000, 'cement': 300}
-                                    },
-                    "Armory":       {"requirement": {"gangster":3},
-									'cost': {'cash': 3000, 'food': 300, 'steel': 300, 'cement': 1000}},
-                    "Workshop":     {"requirement": {"gangster":7},
-                                    'cost': {'cash': 3000, 'food': 300, 'steel': 1000, 'cement': 300}
-                                    },
-                    "GuestHouse":   {'requirement': {'gangster':6},
-                                    'cost': {'cash': 2000, 'food': 500, 'steel': 300, 'cement': 300}
-									},
-                    "Wall":         {'cost': {'cash': 6000, 'food': 1000, 'steel': 1000, 'cement': 1000}},
-                    "GuardPost":    {'requirement': {'build': {0: {'SteelMill':3}},'gangster':8},
-                                    'cost': {'cash': 1500, 'food': 300, 'steel': 300, 'cement': 1000}
-									},
-                    "Vault":         {"requirement": {"gangster":3},
-										'cost': {'cash': 3000, 'food': 300, 'steel': 300, 'cement': 1000}
-									},
-                    "FrontGate":    {'requirement': {"gangster": 5},
-									'cost': {'cash': 1500, 'food': 500, 'steel': 1500, 'cement': 500}
-									},
-                    "Exchange":     {"priority": 2,
-                                     'requirement': {'build':{2: {'GuestHouse': 3}}},
-                                     'cost': {'cash': 3000, 'food': 300, 'steel': 300, 'cement': 1000}}
-				};
-                this.researchPriority =  {"Capacity":       {"priority": 4,
-															"requirement": {"research" : ["Cooking","Cementing","Steelwork"]},
-															'cost': {'cash': 250, 'food': 175, 'steel': 175, 'cement': 175}
-															},
-                                          "Carjacking":		{"priority": 5,
-															"requirement": {"research" : ["Capacity"], "build": "Garage"},
-															'cost': {'cash': 400, 'food': 200, 'steel': 200, 'cement': 200}
-															},
-                                          "Cementing":      {"priority": 2,
-															"requirement": {"research" : ["Logistics"], "build": "CementFactory"},
-															'cost': {'cash': 150, 'food': 100, 'steel': 100, 'cement': 200}
-															},
-                                          "Construction":   {"priority": 4,
-															"requirement": {"research" : ["Maneuver"]},
-															'cost': {'cash': 400, 'food': 200, 'steel': 200, 'cement': 200}
-															},
-                                          "Cooking":        {"priority": 2,
-															"requirement": {"research" : ["Logistics"], "build": "Restaurant"},
-															'cost': {'cash': 150, 'food': 200, 'steel': 100, 'cement': 100}
-															},
-                                          "Corruption":     {"priority": 5,
-															"requirement": {"research" : ["Capacity"], "build": "Hideout"},
-															'cost': {'cash': 400, 'food': 200, 'steel': 200, 'cement': 200}
-															},
-                                          "Logistics":      {"priority": 1,
-															"requirement": {"research" : [], "build": "Library"},
-															'cost': {'cash': 225, 'food': 150, 'steel': 300, 'cement': 150}
-															},
-                                          "Maneuver":       {"priority": 3,
-															"requirement": {"research" : ["Spying"], "build": "Garage"},
-															'cost': {'cash': 250, 'food': 175, 'steel': 175, 'cement': 175}
-															},
-                                          "Mechanics":      {"priority": 4,
-															"requirement": {"research" : ["Trafficking"]},
-															'cost': {'cash': 250, 'food': 175, 'steel': 175, 'cement': 175}
-															},
-                                          "Medicine":       {"priority": 6,
-															"requirement": {"research" : ["Construction","Corruption"]},
-															'cost': {'cash': 500, 'food': 250, 'steel': 250, 'cement': 250}
-															},
-                                          "Muscle":         {"priority": 6,
-															"requirement": {"research" : ["Proficiency","Mechanics"], "Build": "GaurdPost"},
-															'cost': {'cash': 500, 'food': 250, 'steel': 250, 'cement': 250}
-															},
-                                          "Proficiency":    {"priority": 5,
-															"requirement": {"research" : ["Mechanics"], "build": "Workshop"},
-															'cost': {'cash': 400, 'food': 200, 'steel': 200, 'cement': 200}
-															},
-                                          "Spying":         {"priority": 2,
-															"requirement": {"research" : ["Logistics"]},
-															'cost': {'cash': 200, 'food': 150, 'steel': 150, 'cement': 150}
-															},
-                                          "Steelwork":      {"priority": 2,
-															"requirement": {"research" : ["Logistics"], "build": "SteelMill"},
-															'cost': {'cash': 150, 'food': 100, 'steel': 200, 'cement': 100}
-															},
-                                          "Trafficking":    {"priority": 3,
-															"requirement": {"research" : ["Cooking","Cementing","Steelwork"]},
-															'cost': {'cash': 200, 'food': 150, 'steel': 150, 'cement': 150}
-															}
-										//"Blackmail":    {"priority": 7, "requirement": {"research" : ["Muscle","Medicine"]
-
-                                         };
-                this.prizeCost =    {"SpeedUp1Minute":1,"SpeedUp5Minute":3,"SpeedUp15Minute":5,"SpeedUp1Hour":10,"SpeedUp2HalfHour":15,"SpeedUp8Hour":40,"SpeedUp15Hour":65,"SpeedUp24Hour":95,
-                                    "AttackBoost24Hour":10,"SteelBoost24Hour":7,"CementBoost24Hour":7,"FoodBoost24Hour":7,"CashBoost24Hour":35,"SpeedUpTraining30Percent":35,
-                                    "SteelBoost1Week":40,"FoodBoost1Week":40,"CementBoost1Week":40,
-                                    "OliveBranch12Hour":25,"OliveBranch24Hour":40,"HealthBoost24Hour":10,"AttackBoost7Day":35,"HealthBoost7Day":35,
-                                    "RelocationProgram":30,"WreckingBall":7,"ChangeEstateName":9,"Perfume":25,
-                                    "Energizer":5,"SlickStitch":10,"BoxingTicket":2,"TokenOfServitude":10,
-                                    "GreenwichVillageDeed": 150,"ParkAveDeed":300,"BrooklynDeed":300,"AtlanticCityDeed":35,"ChinatownDeed":35,
-                                    "RookieBundle":40,"DonsBlessing":40,"InitiateBundle":10,"DonsBlessing11":40,"ZoningPermit":40,
-                                    "ContractBundle100":1,"ContractBundle500":2,"ContractBundle1000":5,
-                                    "FavorBundle100":1,"FavorBundle500":2,"FavorBundle1000":5,"FavorBundle3000":15,
-                                    "KickbackBundle100":1,"KickbackBundle500":3,"KickbackBundle1000":5,
-                                    "BruiserBundle25":10,"EnforcerBundle25":10,"DemolitionistBundle25":10,"ArmedGuardBundle100":10,"ThugBundle25":5,
-                                    "HitmanBundle25":10,"AssassinBundle25":10,"GuardDogBundle100":10,"ProfessionalBundle25":10,"BlackWidowBundle25":10,"BlackWidowBundle100":20,"AssassinBundle100":20,
-                                    "UnnamedDefenderBundle100":10,"ArsonistBundle25":10,"SniperBundle25":10,"ButcherBundle25":10,"TommyGunnerBundle25":10,"BodyguardBundle100":10,
-                                    "AppointmentBundle100":20,"AppointmentBundle500":75,"AppointmentBundle1000":135,"AppointmentBundle3000":300,
-                                    "LesserAttireMedallion":40,"GreaterAttireMedallion":95,"GreaterLuckyToken":12,
-                                    "PoisonHealth10Percent10Minutes":10,"PoisonHealth25Percent10Minutes":20,
-                                    "ColesMotorOil":35,"BronzeToolbox":40,"GoldToolbox":75,"Antidote":35,
-                                    "BronzeBuildingPermit":40,"SilverBuildingPermit":60,"GoldBuildingPermit":75,"AssortedResourcesBundle":10,
-                                    "UpgradeGuarantee5":30,"UpgradeGuarantee7":30,
-                                    "PromoteGuarantee1":30,"PromoteGuarantee2":30,"PromoteGuarantee3":30,"PromoteGuarantee4":30,"PromoteGuarantee5":30,"PromoteGuarantee6":30,"PromoteGuarantee7":30,
-                                     "BankHeistStamp":30,"AssortedResources250KBundle":10
-                                 };
-                this.attackUnits = {
-					"Thug":          {'cost': {'cash': 750, 'food': 281, 'steel': 563, 'cement': 281, 'influence': 10},'bailout':2250},
-                    "Arsonist":      {'requirement': {'research': {'Logistics': 1}, 'build': {'Hideout': 2}},'bailout':3300},
-                    "Demolitionist": {'requirement': {'research': {'Proficiency': 4}, 'build': {'Garage': 3, 'Hideout': 3}},'bailout':5100},
-                    "Bruiser":       {'requirement': {'research': {'Corruption': 6}, 'build': {'Workshop': 3, 'Hideout': 4}},'bailout':8100},
-					"Hitman":        {'requirement': {'research': {'Corruption': 7, 'Proficiency': 7}, 'build': {'Hideout': 6, 'Workshop': 5, 'Garage':5}}},
-                    "Enforcer":      {'requirement': {'research': {'Proficiency': 8}, 'build': {'Garage': 6, 'Hideout': 7}},'bailout':17100},
-					"TommyGunner":   {'requirement': {'research': {'Corruption': 10}, 'build': {'Workshop': 6,'Hideout': 8}}},
-					"Professional":  {'requirement': {'research': {'Proficiency': 12}, 'build': {'Garage': 9,'Hideout': 9}}},
-					"Sniper":        {'requirement': {'research': {'Corruption': 14, 'Proficiency': 14}, 'build': {'Hideout': 9, 'Workshop': 9, 'Garage': 9}}, 'bailout': 46800},
-					"Butcher":       {'requirement': {'research': {'Corruption': 16, 'Cooking': 17}, 'build': {'Workshop': 9, 'Hideout': 9}}},
-					"BlackWidow":    {'requirement': {'research': {'Corruption': 17}, 'build': {'Hideout': 9, 'Workshop': 9}}, 'bailout': 56628},
-					"Assassin":      {'requirement': {'research': {'Proficiency': 17}, 'build': {'Hideout': 9, 'Garage': 9}}, 'bailout':56628},
-					"Courier":       {'cost': {'cash': 500, 'food': 188, 'steel': 188, 'cement': 375, 'influence': 10}},
-					"DeliveryTruck": {'requirement': {'research': {'Mechanics': 6, 'Capacity': 8}, 'build': {'Hideout': 5, 'Garage': 2}}},
-					"Smuggler":      {'bailout':62292},
-                    "Undertaker":    {'bailout':62292},
-					"Doctor":        {'bailout':62292},
-					"Loanshark":     {'bailout':62292},
-					"Hatchetman":    {'bailout':62292},
-					"Triggerman":    {'bailout':62292},
-					"Bartender":     {'bailout':62292},
-					"Crookedcop":    {'bailout':68520},
-                    "DRC":           {'bailout':68520},
-					"PIG":           {'bailout':68520},
-					"Highbinder":    {'bailout':68520},
-					"Gman":          {'bailout':68520},
-					"Bookie":        {'bailout':68520},
-					"MisterSnip":    {'bailout':75000},
-					"MisterHaul":    {'bailout':75000},
-					"MisterFixit":   {'bailout':75000},
-					"MisterSplit":   {'bailout':75000},
-                    "MisterKippy":   {'bailout':75000},
-					"MisterPao":     {'bailout':75000}
-				};
-                this.defenseUnits = {
-                    "BarbedWire":      {'requirement':{'research': {'Logistics': 4},  'build': {'GuardPost': 2, 'Wall': 2}}},
-                    "BoobyTrap":       {'requirement':{'research': {'Logistics': 8},  'build': {'GuardPost': 4, 'Wall': 4}}},
-                    "GuardDog":        {'requirement':{'research': {'Logistics': 12}, 'build': {'GuardPost': 6, 'Wall': 6}}},
-                    "ArmedGuard":      {'requirement':{'research': {'Logistics': 14}, 'build': {'GuardPost': 7, 'Wall': 7}}},
-                    "Bodyguard":       {'requirement':{'research': {'Logistics': 16}, 'build': {'GuardPost': 8, 'Wall': 8}}},
-                    "UnnamedDefender": {'requirement':{'research': {'Logistics': 18}, 'build': {'GuardPost': 9, 'Wall': 9}}}
                 };
 
                 //Functions
@@ -835,8 +669,8 @@
                             var slot = this.findBuildingSlot(neighborhood);
 
                             var build = "Hideout";
-                            for(var b in this.buildPriority) {
-                                var prio = this.buildPriority[b];
+                            for(var b in buildings) {
+                                var prio = buildings[b];
                                 var buildCountGoal = 0;
                                 if(this.options.build[b]) {
                                     buildCountGoal = this.options.build[b];
@@ -912,7 +746,7 @@
                             var building = buildings[b];
                             if(!building.hasOwnProperty('unlocked') && building.level  < 9) {
                                 var canBuild = true;
-                                var prio = this.buildPriority[building.type];
+                                var prio = buildings[building.type];
                                 if(prio && prio.requirement) {
                                     var reqs = prio.requirement;
                                     if(reqs.build) {
@@ -963,7 +797,7 @@
                         if(lowLevel.lvl != 20) {
                             if(lowLevel.lvl > 5) {
                                 var tmp = this.upgradeImportentBuilding(neighborhood,lowLevel);
-                                if(this.hasResources(city,tmp.name,this.buildPriority[tmp.name].cost,tmp.lvl,this.calcBuldingCost)) {
+                                if(this.hasResources(city,tmp.name,buildings[tmp.name].cost,tmp.lvl,this.calcBuldingCost)) {
                                     lowLevel = tmp;
                                 } else {
                                     this.debugBuild("Do not upgrade importent building, not egnogh rescources",city);
@@ -1012,13 +846,13 @@
                     this.trace();
 					var lowLevel = {'lvl': 20, 'pri': 20, 'id': ""};
                     if(city && city.data && city.data.research && city.neighborhood) {
-                        for(var key in this.researchPriority) {
+                        for(var key in research) {
                             var currentResearch = city.data.research[key], skip = false;
                             if(currentResearch === undefined) {
                                 currentResearch = 0;
                             }
-                            if(this.researchPriority[key]) {
-                                var prio = this.researchPriority[key];
+                            if(research[key]) {
+                                var prio = research[key];
                                 if(prio.requirement) {
                                     var req = prio.requirement;
                                     if(req) {
@@ -1061,11 +895,11 @@
                             if(!skip) {
                                 if((lowLevel.lvl > currentResearch) ||
                                    (lowLevel.lvl == currentResearch &&
-                                    lowLevel.pri > this.researchPriority[key].priority))
+                                    lowLevel.pri > research[key].priority))
                                 {
                                     lowLevel.lvl = currentResearch;
                                     lowLevel.name = key;
-                                    lowLevel.pri = this.researchPriority[key].priority;
+                                    lowLevel.pri = research[key].priority;
                                 }
                             }
                         }
@@ -1104,7 +938,7 @@
                         for(var i=0; i<this.cities.length; i++) {
                             var city = this.cities[i];
                             if(city.type != "DoriaAirport") {
-    							for(var unit in this.attackUnits) {
+    							for(var unit in attackUnits) {
     								var count = this.options.trainOrders[unit];
     								if(count) {
     								    if(city && city.data && city.data.units) {
@@ -1145,9 +979,9 @@
                             if(city.type != "DoriaAirport") {
                                 if(this.checkCityQueue(city,"defense_units")) {
                                     var lastUnit = undefined;
-                                    for(var unit in this.defenseUnits) {
+                                    for(var unit in defenseUnits) {
                                         var skip = false;
-                                        var req = this.defenseUnits[unit].requirement;
+                                        var req = defenseUnits[unit].requirement;
                                         if(req.build) {
                                             for(var b in req.build) {
                                                 var build = this.findBuildingLevel(b,city);
@@ -1230,8 +1064,8 @@
 
                             for(var unit in city.bailout) {
                                 var pay = 0;
-                                if(this.attackUnits[unit] && this.attackUnits[unit].bailout) {
-                                    var cost = this.attackUnits[unit].bailout;
+                                if(attackUnits[unit] && attackUnits[unit].bailout) {
+                                    var cost = attackUnits[unit].bailout;
                                     var all = parseInt(city.bailout[unit],10);
                                     var all_cost = cost * all;
                                     this.debugBailout(unit+" costs "+all_cost+" and all units costs "+total_cost+" and I have "+cash,city);
@@ -1421,7 +1255,7 @@
                     this.trace();
 					if(city && city.data && city.data.units) {
                         var units = jQuery.extend(true, {}, city.data.units);
-                        for(var def in this.defenseUnits) {
+                        for(var def in defenseUnits) {
                             if(units[def]) {
                                 delete units[def];
                             }
@@ -1640,7 +1474,7 @@
                         this.debug("Show Missing prizes");
                         for(var i=0; i<this.options.missing_prize.length; i++) {
                             var prize = this.options.missing_prize[i];
-                           if(this.prizeCost[prize]) {
+                           if(prizes[prize]) {
                                this.options.missing_prize.splice(i,1);
                            } else {
                                this.debug("Missing prize info: "+prize);
@@ -1657,9 +1491,9 @@
 
                     if(this.prizeList && this.prizeList.length) {
                         for(var i=0; i<this.prizeList.length; i++) {
-                            if(this.prizeCost[this.prizeList[i].type]) {
-                                if(min.cost > this.prizeCost[this.prizeList[i].type]) {
-                                    min.cost = this.prizeCost[this.prizeList[i].type];
+                            if(prizes[this.prizeList[i].type]) {
+                                if(min.cost > prizes[this.prizeList[i].type]) {
+                                    min.cost = prizes[this.prizeList[i].type];
                                     min.name = this.prizeList[i].type;
                                 }
                             } else {
@@ -1860,8 +1694,8 @@
                     infoData.appendChild(table);
 
                     var saveChanges = false;
-                    for(var b in this.buildPriority) {
-                        if(this.buildPriority[b].buildNew) {
+                    for(var b in buildings) {
+                        if(buildings[b].buildNew) {
                             var tr = document.createElement("tr");
                             table.appendChild(tr);
                             var td = document.createElement("td");
@@ -1873,7 +1707,7 @@
                             if(this.options.build.hasOwnProperty(b) && typeof(this.options.build[b]) == 'number') {
                                 input.value = this.options.build[b];
                             } else {
-                                input.value = this.buildPriority[b].buildNew;
+                                input.value = buildings[b].buildNew;
                                 saveChanges = true;
                             }
                             this.html.build[b] = input;
@@ -1887,8 +1721,8 @@
                 };
                 this.saveBuildOrder = function saveBuildOrder() {
                     this.options.build = {};
-                    for(var b in this.buildPriority) {
-                        if(this.buildPriority[b].buildNew) {
+                    for(var b in buildings) {
+                        if(buildings[b].buildNew) {
                             this.options.build[b] = parseInt(this.html.build[b].value,10);
                         }
                     }
@@ -1900,7 +1734,7 @@
                     $(infoData).append(table);
                     var count = 0;
                     var tr;
-					for(var unit in this.attackUnits) {
+					for(var unit in attackUnits) {
 					    if((count % 2) === 0) {
 					        tr = $("<tr/>");
                             table.append(tr);
@@ -1922,7 +1756,7 @@
 					if(!this.options.trainOrders) {
 					    this.options.trainOrders = {};
 					}
-					for(var unit in this.attackUnits) {
+					for(var unit in attackUnits) {
 						this.options.trainOrders[unit] = $("#unit_"+unit).val();
 					}
 					this.saveOptions();
@@ -1995,7 +1829,7 @@
 					    .append($('<select id="select_units"></select>'))
 					    .appendTo($(infoData));
                     var units = $('#select_units');
-                    for(var unit in this.attackUnits) {
+                    for(var unit in attackUnits) {
 						units.append($('<option value="'+unit+'">'+unit+'</option>'));
                     }
 
