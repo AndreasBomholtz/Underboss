@@ -23,7 +23,11 @@
 // @require     res/defense_units.js
 // ==/UserScript==
 
-console.log(attackUnits);
+
+// Adds the CSS
+var css = GM_getResourceText("underbossCSS");
+GM_addStyle (css);
+
 
 (function wholeBotScriptFunc() {
     var main = function botMainFunc() {
@@ -2060,10 +2064,8 @@ console.log(attackUnits);
         //---------------------- END OF INJECTED PART -----------------------------------
     };
 
-
-    var str = "" + window.location.href;
-                                        console.info("a:" + str);
     //Insert into the right iframe
+    var str = "" + window.location.href;
     if(str.indexOf("platforms/kabam/game") != -1) {
         injectBotScript(main);
     } else {
@@ -2084,12 +2086,9 @@ console.log(attackUnits);
         console.debug("Injecting Godfather Bot script");
 
         var script = document.createElement("script");
-        script.innerHTML = "(" + src.toString() + ")();";
+        script.innerHTML = attackUnits.toString()+";";
+		script.innerHTML =  "(" + src.toString() + ")();";
         script.type = "text/javascript";
         document.getElementsByTagName("head")[0].appendChild(script);
     }
 })();
-
-// Adds the CSS
-var css = GM_getResourceText("underbossCSS");
-GM_addStyle (css);
