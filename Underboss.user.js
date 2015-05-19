@@ -16,6 +16,7 @@
 // @require     https://raw.githubusercontent.com/millermedeiros/js-signals/master/dist/signals.min.js
 // @resource    underbossCSS underboss.css
 // @require     frame.js
+// @require     inject.js
 // @require     res/buildings.js
 // @require     res/research.js
 // @require     res/prizes.js
@@ -46,14 +47,13 @@ GM_addStyle (css);
             script.type = "text/javascript";
             document.getElementsByTagName("head")[0].appendChild(script);
 
-            function GodfatherBot(data,attackUnits) {
+            function GodfatherBot(data) {
                 //Variables
                 this.queue = [];
                 this.slow_queue = [];
                 this.lastCommand = {};
                 this.html = {};
 				this.enableTrace = false;
-				this.attackUnits = attackUnits;
 
                 this.autoFunctions = {
                     "Collect": {},
@@ -2059,7 +2059,7 @@ GM_addStyle (css);
                 this.init(data);
             }
 
-			gfb = new GodfatherBot(C.attrs,attackUnits);
+			gfb = new GodfatherBot(C.attrs);
         };
         //---------------------- END OF INJECTED PART -----------------------------------
     };
@@ -2085,11 +2085,11 @@ GM_addStyle (css);
     function injectBotScript(src) {
         console.debug("Injecting Godfather Bot script");
 
-        var script = document.createElement("script");
-        script.innerHTML = "var attackUnits = "+JSON.stringify(attackUnits)+";";
-		script.innerHTML += "console.log(attackUnits);";
-		script.innerHTML +=  "(" + src.toString() + ")();";
-        script.type = "text/javascript";
-        document.getElementsByTagName("head")[0].appendChild(script);
+		injectVariable("attackUnits",attackUnits);
+		injectVariable("defenseUnits",defenseUnits);
+		injectVariable("buildings",buildings);
+		injectVariable("research",research);
+		injectVariable("prizes",prizes);
+		injectFunction(src);
     }
 })();
