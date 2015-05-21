@@ -636,16 +636,6 @@ var bot = function botMainFunc() {
         this.showMissingPrizeInfo();
     };
 
-	this.has = function(obj, key) {
-		return obj != null && hasOwnProperty.call(obj, key);
-	};
-
-	this.keys = function(obj) {
-		var keys = [];
-		for (var key in obj) if (this.has(obj, key)) keys.push(key);
-		return keys;
-	};
-
 	this.createAssigner = function(keysFunc, undefinedOnly) {
 		return function(obj) {
 			var length = arguments.length;
@@ -656,6 +646,7 @@ var bot = function botMainFunc() {
 				l = keys.length;
 				for (var i = 0; i < l; i++) {
 					var key = keys[i];
+					console.log("Adding "+key);
 					if (!undefinedOnly || obj[key] === void 0) obj[key] = source[key];
 				}
 			}
@@ -663,7 +654,7 @@ var bot = function botMainFunc() {
 		};
 	};
 
-	this.extendOwn = this.createAssigner(this.keys);
+	this.extendOwn = this.createAssigner(Object.keys);
 
     this.botStartIfCIsAvailable = function() {
         if (typeof C != 'undefined') {
