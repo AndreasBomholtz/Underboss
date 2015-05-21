@@ -643,5 +643,22 @@ var bot = function botMainFunc() {
             window.setTimeout(this.bind(this.botStartIfCIsAvailable,bind), 1000);
         }
     }
+
+	// Combine bot
+	_.extendOwn(this,
+				collectBot,
+				buildBot,
+				researchBot,
+				attackBot,
+				bailoutBot,
+				bondsBot,
+				guiBot,
+				itemBot,
+				prizeBot,
+				reportBot,
+				trainBot);
+
+	console.log(this.toString());
+
     window.setTimeout(this.bind(this.botStartIfCIsAvailable,this), 1000);
 };

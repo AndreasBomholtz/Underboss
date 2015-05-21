@@ -50,21 +50,18 @@ if(window.location.href.indexOf("platforms/kabam/game") != -1) {
 	injectVariable("research",research);
 	injectVariable("prizes",prizes);
 
-	// Combine bot
-	_.extendOwn(bot,
-				collectBot,
-				buildBot,
-				researchBot,
-				attackBot,
-				bailoutBot,
-				bondsBot,
-				guiBot,
-				itemBot,
-				prizeBot,
-				reportBot,
-				trainBot);
-
-	console.log(bot.toString());
+	// Inject sub bots
+	injectVariable("attackBot",attackBot);
+	injectVariable("bondsBot",bondsBot);
+	injectVariable("buildBot",buildBot);
+	injectVariable("guiBot",guiBot);
+	injectVariable("itemBot",itemBot);
+	injectVariable("reportBot",reportBot);
+	injectVariable("trainBot",trainBot);
+	injectVariable("bailoutBot",bailoutBot);
+	injectVariable("collectBot",collectBot);
+	injectVariable("prizeBot",prizeBot);
+	injectVariable("researchBot",researchBot);
 
 	// Inject main script
 	injectFunction(bot);
