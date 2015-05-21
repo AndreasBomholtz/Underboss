@@ -1,4 +1,4 @@
-var prizeBot = function() {
+var prizeBot = {
     this.getPrize = function getPrize() {
         this.trace();
         if(this.cities && this.cities[0] && this.minigame_timestamp) {

@@ -1,4 +1,4 @@
-var attackBot = function() {
+var attackBot = {
     this.updateMap = function updateMap() {
         this.trace();
         if(!this.cities || !this.cities[0] || !this.cities[0].data) {

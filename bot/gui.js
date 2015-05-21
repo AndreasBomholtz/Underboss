@@ -1,4 +1,4 @@
-var guiBot = function() {
+var guiBot = {
     this.addMissingPrizeInfo = function addMissingPrizeInfo(str) {
         if(!this.options.missing_prize) {
             this.options.missing_prize = [];

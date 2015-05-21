@@ -1,4 +1,4 @@
-var trainBot = function() {
+var trainBot = {
     this.doTrain = function doTrain() {
         this.trace();
 

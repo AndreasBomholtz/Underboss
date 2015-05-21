@@ -1,4 +1,4 @@
-var bailoutBot = function() {
+var bailoutBot = {
     this.doBailout = function doBailout() {
         this.trace();
         if(this.cities) {

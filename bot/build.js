@@ -1,4 +1,4 @@
-var buildBot = function() {
+var buildBot = {
     this.calcBuldingCost = function calcBuldingCost(level,cost) {
         return cost * Math.pow(2,(level - 1));
     };

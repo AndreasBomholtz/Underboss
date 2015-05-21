@@ -1,4 +1,4 @@
-var collectBot = function() {
+var collectBot = {
     this.doCollect = function doCollect() {
         this.trace();
         if(this.cities) {

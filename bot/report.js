@@ -1,4 +1,4 @@
-var reportBot = function() {
+var reportBot = {
     this.doReport = function doReport() {
         this.debugReport("Do Reports");
         this.sendGetCommand("Reports","reports.json","count=18&page=1&category=reports");

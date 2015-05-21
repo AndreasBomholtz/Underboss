@@ -1,4 +1,4 @@
-var bondsBot = function() {
+var bondsBot = {
     this.doBonds = function doBonds() {
         this.debugBonds("Get Bonds");
         if(this.cities) {

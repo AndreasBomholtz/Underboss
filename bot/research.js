@@ -1,4 +1,4 @@
-var researchBot = function() {
+var researchBot = {
     this.researchLowest = function researchLowest(city) {
         this.trace();
         var lowLevel = {'lvl': 20, 'pri': 20, 'id': ""};
