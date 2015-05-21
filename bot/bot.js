@@ -636,12 +636,13 @@ var bot = function botMainFunc() {
         this.showMissingPrizeInfo();
     };
 
+	this.has = function(obj, key) {
+		return obj != null && hasOwnProperty.call(obj, key);
+	};
+
 	this.keys = function(obj) {
-		if (!_.isObject(obj)) return [];
-		if (nativeKeys) return nativeKeys(obj);
 		var keys = [];
-		for (var key in obj) if (_.has(obj, key)) keys.push(key);
-		if (hasEnumBug) collectNonEnumProps(obj, keys);
+		for (var key in obj) if (this.has(obj, key)) keys.push(key);
 		return keys;
 	};
 
