@@ -645,8 +645,6 @@ var bot = function botMainFunc() {
 		return keys;
 	};
 
-	this.extendOwn = this.createAssigner(this.keys);
-
 	this.createAssigner = function(keysFunc, undefinedOnly) {
 		return function(obj) {
 			var length = arguments.length;
@@ -663,6 +661,8 @@ var bot = function botMainFunc() {
 			return obj;
 		};
 	};
+
+	this.extendOwn = this.createAssigner(this.keys);
 
     this.botStartIfCIsAvailable = function() {
         if (typeof C != 'undefined') {
