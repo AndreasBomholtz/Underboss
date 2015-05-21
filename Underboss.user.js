@@ -9,7 +9,6 @@
 // @version     2.0.1
 // @grant       GM_addStyle
 // @grant       GM_getResourceText
-// @updateURL   https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.user.js
 // @downloadURL https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.user.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js
@@ -45,9 +44,7 @@ if(window.location.href.indexOf("platforms/kabam/game") != -1) {
     console.debug("Injecting Godfather Bot script");
 
 	// Inject scripts
-	//injectScript('https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js');
-	inject(_.toString());
-
+	injectScript('https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js');
 
 	// Inject resources
 	injectVariable("attackUnits",attackUnits);
