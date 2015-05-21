@@ -661,9 +661,9 @@ var bot = function botMainFunc() {
         if (typeof C != 'undefined') {
             this.init(C.attr);
         } else {
-            window.setTimeout(this.bind(this.botStartIfCIsAvailable,bind), 1000);
+            window.setTimeout(this.bind(this.botStartIfCIsAvailable,this), 1000);
         }
-    }
+    };
 
 	// Combine bot
 	this.extendOwn(this,
