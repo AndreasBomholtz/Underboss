@@ -640,9 +640,13 @@ var bot = function botMainFunc() {
 		var length = arguments.length;
 		if (length < 2 || obj == null) return obj;
 		for (var index = 1; index < length; index++) {
-			var source = arguments[index],
-			keys = Object.keys(source),
-			l = keys.length;
+			console.log(index);
+			var source = arguments[index];
+			console.log(source);
+			console.log(Object.keys);
+			var keys = Object.keys(source);
+			console.log(keys);
+			var l = keys.length;
 			for (var i = 0; i < l; i++) {
 				var key = keys[i];
 				console.log("Adding "+key);
