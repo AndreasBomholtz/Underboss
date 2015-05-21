@@ -638,12 +638,11 @@ var bot = function botMainFunc() {
 
 	this.extendOwn = function(obj) {
 		var length = arguments.length;
-		if (length < 2 || obj == null) return obj;
 		for (var index = 1; index < length; index++) {
 			console.log(index);
 			var source = arguments[index];
 			console.log(source);
-			if(source != undefined) {
+			if(source !== undefined) {
 				var keys = Object.keys(source);
 				console.log(keys);
 				var l = keys.length;
