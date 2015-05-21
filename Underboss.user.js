@@ -45,7 +45,9 @@ if(window.location.href.indexOf("platforms/kabam/game") != -1) {
     console.debug("Injecting Godfather Bot script");
 
 	// Inject scripts
-	injectScript('https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js');
+	//injectScript('https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js');
+	injectFunction(_);
+
 
 	// Inject resources
 	injectVariable("attackUnits",attackUnits);
