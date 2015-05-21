@@ -1,5 +1,5 @@
 var collectBot = {
-    this.doCollect = function doCollect() {
+    doCollect: function doCollect() {
         this.trace();
         if(this.cities) {
             for(var i=0; i<this.cities.length; i++) {
@@ -29,8 +29,8 @@ var collectBot = {
             }
         }
         return(1000);
-    };
-    this.doCityscape = function doCityscape() {
+    },
+    doCityscape: = function doCityscape() {
         this.trace();
         if(this.cities) {
             for(var i=0; i<this.cities.length; i++) {
@@ -67,8 +67,8 @@ var collectBot = {
             this.debugCityscape("Cities is not ready");
         }
         return(60*1000*60);
-    };
-    this.doExchange = function doExchange() {
+    },
+    doExchange: = function doExchange() {
         this.trace();
         if(this.cities && this.cities[0] && this.cities[0].neighborhood && this.cities[0].neighborhood.length) {
             var city = this.cities[0];
@@ -104,16 +104,16 @@ var collectBot = {
             this.debugExchange("Cities not ready");
         }
         return(0);
-    };
-    this.doLoyaltyToken = function doLoyaltyToken() {
+    },
+    doLoyaltyToken: function doLoyaltyToken() {
         this.trace();
         if(this.cities && this.cities[0]) {
             this.debugLoyaltyToken("Checking token");
             this.sendGetCommand("Update tokes","loyalty_tokens.json","",this.cities[0],this.bind(this.checkLoyalyToken));
         }
         return(60*1000*60);
-    };
-    this.checkLoyalyToken = function checkLoyalyToken() {
+    },
+    checkLoyalyToken: function checkLoyalyToken() {
         this.trace();
         if(this.tokens) {
             for(var i=0; i<this.tokens.length; i++) {
@@ -124,5 +124,5 @@ var collectBot = {
                 }
             }
         }
-    };
+    }
 };
