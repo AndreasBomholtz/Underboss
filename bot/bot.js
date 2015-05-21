@@ -636,6 +636,34 @@ var bot = function botMainFunc() {
         this.showMissingPrizeInfo();
     };
 
+	this.keys = function(obj) {
+		if (!_.isObject(obj)) return [];
+		if (nativeKeys) return nativeKeys(obj);
+		var keys = [];
+		for (var key in obj) if (_.has(obj, key)) keys.push(key);
+		if (hasEnumBug) collectNonEnumProps(obj, keys);
+		return keys;
+	};
+
+	this.extendOwn = this.createAssigner(this.keys);
+
+	this.createAssigner = function(keysFunc, undefinedOnly) {
+		return function(obj) {
+			var length = arguments.length;
+			if (length < 2 || obj == null) return obj;
+			for (var index = 1; index < length; index++) {
+				var source = arguments[index],
+				keys = keysFunc(source),
+				l = keys.length;
+				for (var i = 0; i < l; i++) {
+					var key = keys[i];
+					if (!undefinedOnly || obj[key] === void 0) obj[key] = source[key];
+				}
+			}
+			return obj;
+		};
+	};
+
     this.botStartIfCIsAvailable = function() {
         if (typeof C != 'undefined') {
             this.init(C.attr);
@@ -645,7 +673,7 @@ var bot = function botMainFunc() {
     }
 
 	// Combine bot
-	_.extendOwn(this,
+	this.extendOwn(this,
 				collectBot,
 				buildBot,
 				researchBot,
