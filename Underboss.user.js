@@ -12,8 +12,7 @@
 // @updateURL   https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.js
 // @downloadURL https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js
-// @require     http://underscorejs.org/underscore-min.js
-// @require     https://raw.githubusercontent.com/millermedeiros/js-signals/master/dist/signals.min.js
+// @require     https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js
 // @resource    underbossCSS res/underboss.css
 // @require     res/buildings.js
 // @require     res/research.js
