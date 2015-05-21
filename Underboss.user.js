@@ -46,7 +46,7 @@ if(window.location.href.indexOf("platforms/kabam/game") != -1) {
 
 	// Inject scripts
 	//injectScript('https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js');
-	injectFunction(_);
+	inject(_.toString());
 
 
 	// Inject resources
