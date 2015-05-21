@@ -14,3 +14,10 @@ function injectVariable(name, src) {
     src = "var "+name+" = "+JSON.stringify(src)+";";
 	inject(src);
 }
+
+function injectScript(url) {
+	var script = document.createElement("script");
+    script.src = url;
+    script.type = "text/javascript";
+    document.getElementsByTagName("head")[0].appendChild(script);
+}

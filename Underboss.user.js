@@ -3,9 +3,9 @@
 // @namespace   Underboss
 // @author      MrAnderson
 // @description A bot for the game The Godfather from kabam.com
-// @include     https://www.kabam.com/games/the-godfather/play
-// @include     https://www.kabam.com/*/games/the-godfather/play
-// @include     https://*godfather.*.com/platforms/kabam/game
+// @include     https://www.kabam.com/games/the-godfather/play*
+// @include     https://www.kabam.com/*/games/the-godfather/play*
+// @include     https://*godfather.*.com/platforms/kabam/game*
 // @version     2.0.0
 // @grant       GM_addStyle
 // @grant       GM_getResourceText
@@ -22,6 +22,9 @@
 // @require     res/defense_units.js
 // @require     frame.js
 // @require     inject.js
+// @require     collect.js
+// @require     build.js
+// @require     research.js
 // @require     bot.js
 // ==/UserScript==
 
@@ -34,6 +37,9 @@ GM_addStyle (css);
 var str = "" + window.location.href;
 if(str.indexOf("platforms/kabam/game") != -1) {
     console.debug("Injecting Godfather Bot script");
+
+	// Inject scripts
+	injectScript('http://underscorejs.org/underscore-min.js');
 
 	// Inject resources
 	injectVariable("attackUnits",attackUnits);
