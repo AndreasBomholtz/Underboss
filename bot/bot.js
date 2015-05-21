@@ -643,14 +643,15 @@ var bot = function botMainFunc() {
 			console.log(index);
 			var source = arguments[index];
 			console.log(source);
-			console.log(Object.keys);
-			var keys = Object.keys(source);
-			console.log(keys);
-			var l = keys.length;
-			for (var i = 0; i < l; i++) {
-				var key = keys[i];
-				console.log("Adding "+key);
-				obj[key] = source[key];
+			if(source != undefined) {
+				var keys = Object.keys(source);
+				console.log(keys);
+				var l = keys.length;
+				for (var i = 0; i < l; i++) {
+					var key = keys[i];
+					console.log("Adding "+key);
+					obj[key] = source[key];
+				}
 			}
 		}
 		return obj;
