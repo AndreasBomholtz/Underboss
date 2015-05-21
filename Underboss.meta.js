@@ -9,8 +9,8 @@
 // @version     2.0.1
 // @grant       GM_addStyle
 // @grant       GM_getResourceText
-// @updateURL   https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.user.js
-// @downloadURL https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.user.js
+// @updateURL   https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.js
+// @downloadURL https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js
 // @resource    underbossCSS res/underboss.css
@@ -34,28 +34,3 @@
 // @require     bot/train.js
 // @require     bot/bot.js
 // ==/UserScript==
-
-
-// Adds the CSS
-var css = GM_getResourceText("underbossCSS");
-GM_addStyle (css);
-
-//Insert into the right iframe
-if(window.location.href.indexOf("platforms/kabam/game") != -1) {
-    console.debug("Injecting Godfather Bot script");
-
-	// Inject scripts
-	//injectScript('https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js');
-	inject(_.toString());
-
-
-	// Inject resources
-	injectVariable("attackUnits",attackUnits);
-	injectVariable("defenseUnits",defenseUnits);
-	injectVariable("buildings",buildings);
-	injectVariable("research",research);
-	injectVariable("prizes",prizes);
-
-	// Inject main script
-	injectFunction(main);
-}
