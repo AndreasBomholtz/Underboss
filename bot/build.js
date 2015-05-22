@@ -1,12 +1,6 @@
 var buildBot = {
     calcBuldingCost: function calcBuldingCost(level,cost) {
         return cost * Math.pow(2,(level - 1));
-    }
-    calcReseachCost: function calcReseachCost(level,cost) {
-        for(var i=1; i<level; i++) {
-            cost *= 1.5;
-        }
-        return cost;
     },
     hasResources: function hasResources(city,name,cost,level,func) {
         if(cost && city && city.data && city.data.resources) {
