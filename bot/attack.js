@@ -1,5 +1,5 @@
 var attackBot = {
-    this.updateMap = function updateMap() {
+    updateMap: function updateMap() {
         this.trace();
         if(!this.cities || !this.cities[0] || !this.cities[0].data) {
             setTimeout(this.bind(this.updateMap),1000);
@@ -42,8 +42,8 @@ var attackBot = {
                 }
             }
         }
-    };
-    this.findBestGang = function findBestGang(city,level) {
+    },
+    findBestGang: function findBestGang(city,level) {
         this.trace();
         this.debugAttack("FindBestGang for "+city.type+" with lvl "+level);
         var d = new Date();
@@ -71,8 +71,8 @@ var attackBot = {
             }
         }
         return sel;
-    };
-    this.doAttack = function doAttack() {
+    },
+    doAttack: function doAttack() {
         this.trace();
         var t = 60000;
         var d = new Date();
@@ -145,8 +145,8 @@ var attackBot = {
             this.debugAttack("City or orders not ready");
         }
         return(t);
-    };
-    this.getAttackUnits = function getAttackUnits(city) {
+    },
+    getAttackUnits: function getAttackUnits(city) {
         this.trace();
         if(city && city.data && city.data.units) {
             var units = jQuery.extend(true, {}, city.data.units);
@@ -172,10 +172,10 @@ var attackBot = {
             return JSON.stringify(units);
         }
         return "";
-    };
-    this.attack = function attack(x,y,units,city) {
+    },
+    attack: function attack(x,y,units,city) {
         this.trace();
         this.sendCommand("Attack ("+x+","+y+") from "+city.type,"cities/"+city.id+"/marches.json","_method=post&march[x]="+x+"&march[y]="+y+"&march[units]="+units,city);
         this.addStat("Attack",1);
-    };
+    }
 };

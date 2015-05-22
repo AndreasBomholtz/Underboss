@@ -1,5 +1,5 @@
 var trainBot = {
-    this.doTrain = function doTrain() {
+    doTrain: function doTrain() {
         this.trace();
 
         if(this.cities && this.options.trainOrders) {
@@ -38,8 +38,8 @@ var trainBot = {
         } else {
             this.debugTrain("Train data is not ready");
         }
-    };
-    this.doDefense = function() {
+    },
+    doDefense: function() {
         this.trace();
 
         if(this.cities) {
@@ -95,8 +95,11 @@ var trainBot = {
                 }
             }
         }
-    };
-    this.sendTrainOrders = function(unit, amount, city) {
-        this.sendCommand("Train "+amount+" "+unit+" in "+city.type,"cities/"+city.id+"/units.json","_method=post&units[include_requirements]=false&units[quantity]="+amount+"&units[unit_type]="+unit,city);
-    };
+    },
+    sendTrainOrders: function(unit, amount, city) {
+        this.sendCommand("Train "+amount+" "+unit+" in "+city.type,
+						 "cities/"+city.id+"/units.json",
+						 "_method=post&units[include_requirements]=false&units[quantity]="+amount+"&units[unit_type]="+unit,
+						 city);
+    }
 };

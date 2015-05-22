@@ -636,7 +636,7 @@ var bot = function botMainFunc() {
         this.showMissingPrizeInfo();
     };
 
-	this.extendOwn = function(obj) {
+	this.combine = function(obj) {
 		var length = arguments.length;
 		for (var index = 1; index < length; index++) {
 			console.log(index);
@@ -665,7 +665,7 @@ var bot = function botMainFunc() {
     };
 
 	// Combine bot
-	this.extendOwn(this,
+	this.combine(this,
 				collectBot,
 				buildBot,
 				researchBot,

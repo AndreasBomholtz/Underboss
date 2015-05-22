@@ -1,14 +1,14 @@
 var buildBot = {
-    this.calcBuldingCost = function calcBuldingCost(level,cost) {
+    calcBuldingCost: function calcBuldingCost(level,cost) {
         return cost * Math.pow(2,(level - 1));
-    };
-    this.calcReseachCost = function calcReseachCost(level,cost) {
+    }
+    calcReseachCost: function calcReseachCost(level,cost) {
         for(var i=1; i<level; i++) {
             cost *= 1.5;
         }
         return cost;
-    };
-    this.hasResources = function hasResources(city,name,cost,level,func) {
+    },
+    hasResources: function hasResources(city,name,cost,level,func) {
         if(cost && city && city.data && city.data.resources) {
             var res = city.data.resources;
             for (var c in cost) {
@@ -40,8 +40,8 @@ var buildBot = {
             }
         }
         return true;
-    };
-    this.buildNewBuilding = function buildNewBuilding(neighborhood) {
+    },
+    buildNewBuilding: function buildNewBuilding(neighborhood) {
         this.trace();
         if(neighborhood && neighborhood.buildings && neighborhood.city) {
             var city = neighborhood.city;
@@ -93,8 +93,8 @@ var buildBot = {
             this.debugBuild("Can't find neighborhood or buildings",city);
         }
         return false;
-    };
-    this.upgradeImportentBuilding = function upgradeImportentBuilding(neighborhood,lowLevel) {
+    },
+    upgradeImportentBuilding: function upgradeImportentBuilding(neighborhood,lowLevel) {
         this.trace();
         var importent = ["Hideout","Apartment"];
         for(var i=0; i<importent.length; i++) {
@@ -117,8 +117,8 @@ var buildBot = {
         }
         this.debugBuild("Failed to find impotent building",neighborhood.city);
         return lowLevel;
-    };
-    this.upgradeLowestBuilding = function upgradeLowestBuilding(neighborhood) {
+    },
+    upgradeLowestBuilding: function upgradeLowestBuilding(neighborhood) {
         this.trace();
         if(this.buildNewBuilding(neighborhood)) {
             return true;
@@ -198,8 +198,8 @@ var buildBot = {
             }
         }
         return false;
-    };
-    this.doBuild = function doBuild() {
+    },
+    doBuild: function doBuild() {
         this.trace();
         if(this.cities) {
             for(var i=0; i<this.cities.length; i++) {
@@ -226,5 +226,5 @@ var buildBot = {
         } else {
             this.debugBuild("Cities not ready");
         }
-    };
+    }
 };

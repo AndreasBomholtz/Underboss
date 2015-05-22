@@ -30,7 +30,7 @@ var collectBot = {
         }
         return(1000);
     },
-    doCityscape: = function doCityscape() {
+    doCityscape: function doCityscape() {
         this.trace();
         if(this.cities) {
             for(var i=0; i<this.cities.length; i++) {
@@ -46,7 +46,9 @@ var collectBot = {
                                 var need = 60*60*6;
                                 if(diff >= need) {
                                     this.debugCityscape("Collect cityscapes",city);
-                                    this.sendCommand("Collect Cityscape in "+city.type,"cities/"+city.id+"/wildernesses/collect_all.json",'',city);
+                                    this.sendCommand("Collect Cityscape in "+city.type,
+													 "cities/"+city.id+"/wildernesses/collect_all.json",
+													 '',city);
                                     this.addStat("CityScape",1);
                                     break;
                                 } else {
@@ -68,7 +70,7 @@ var collectBot = {
         }
         return(60*1000*60);
     },
-    doExchange: = function doExchange() {
+    doExchange: function doExchange() {
         this.trace();
         if(this.cities && this.cities[0] && this.cities[0].neighborhood && this.cities[0].neighborhood.length) {
             var city = this.cities[0];
@@ -109,7 +111,10 @@ var collectBot = {
         this.trace();
         if(this.cities && this.cities[0]) {
             this.debugLoyaltyToken("Checking token");
-            this.sendGetCommand("Update tokes","loyalty_tokens.json","",this.cities[0],this.bind(this.checkLoyalyToken));
+            this.sendGetCommand("Update tokes",
+								"loyalty_tokens.json",
+								"",
+								this.cities[0],this.bind(this.checkLoyalyToken));
         }
         return(60*1000*60);
     },
@@ -119,7 +124,9 @@ var collectBot = {
             for(var i=0; i<this.tokens.length; i++) {
                 if(this.tokens[i].collectable) {
                     this.debugLoyaltyToken("Collect token");
-                    this.sendCommand("Collect token","loyalty_tokens/collect.json","type="+this.tokens[i].type,this.cities[0]);
+                    this.sendCommand("Collect token",
+									 "loyalty_tokens/collect.json",
+									 "type="+this.tokens[i].type,this.cities[0]);
                     this.addStat("Token",1);
                 }
             }

@@ -17,6 +17,7 @@
 // @require     res/prizes.js
 // @require     res/attack_units.js
 // @require     res/defense_units.js
+// @require     res/collect.js
 // @require     util/frame.js
 // @require     util/inject.js
 // @require     bot/collect.js
@@ -48,6 +49,7 @@ if(window.location.href.indexOf("platforms/kabam/game") != -1) {
 	injectVariable("buildings",buildings);
 	injectVariable("research",research);
 	injectVariable("prizes",prizes);
+	injectVariable("collect",collect);
 
 	// Inject sub bots
 	injectVariable("attackBot",attackBot);

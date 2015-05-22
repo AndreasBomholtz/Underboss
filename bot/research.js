@@ -1,5 +1,5 @@
 var researchBot = {
-    this.researchLowest = function researchLowest(city) {
+    researchLowest: function researchLowest(city) {
         this.trace();
         var lowLevel = {'lvl': 20, 'pri': 20, 'id': ""};
         if(city && city.data && city.data.research && city.neighborhood) {
@@ -67,8 +67,8 @@ var researchBot = {
             this.addStat("Research",1);
             city.data.research[lowLevel.name] = (lowLevel.lvl+1);
         }
-    };
-    this.doResearch = function doResearch() {
+    },
+    doResearch: function doResearch() {
         this.trace();
         if(this.cities) {
             for(var i=0; i<this.cities.length; i++) {
@@ -83,5 +83,5 @@ var researchBot = {
                 }
             }
         }
-    };
+    }
 };

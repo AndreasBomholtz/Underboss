@@ -1,5 +1,5 @@
 var bailoutBot = {
-    this.doBailout = function doBailout() {
+    doBailout: function doBailout() {
         this.trace();
         if(this.cities) {
             for(var c=0; c<this.cities.length; c++) {
@@ -9,8 +9,8 @@ var bailoutBot = {
                 }
             }
         }
-    };
-    this.payBailout = function payBailout(city) {
+    },
+	payBailout: function payBailout(city) {
         this.trace();
         if(city) {
             if(city.bailout) {
@@ -66,5 +66,5 @@ var bailoutBot = {
         } else {
             this.debugBailout('City is missing');
         }
-    };
+    }
 };
