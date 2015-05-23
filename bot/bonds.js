@@ -5,7 +5,7 @@ var bondsBot = {
             var city = this.cities[0];
             this.sendGetCommand("Get Bonds","bonds.json","action=index",city);
         }
-    }
+    },
     handleBonds: function handleBonds() {
         this.debugBonds("Handle bonds");
         if(this.cities) {
