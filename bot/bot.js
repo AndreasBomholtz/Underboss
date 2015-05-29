@@ -456,7 +456,8 @@ var bot = {
     addToQueue: function addToQueue(queue,cmd) {
         for(var i=0; i<queue.length; i++) {
             if(queue[i].url == cmd.url &&
-               queue[i].data == cmd.data) {
+               queue[i].data == cmd.data &&
+			   cmd.name.indexOf("Collect ") == -1) {
                 this.debug("Dropping double command: "+cmd.name,cmd.city);
                 return;
             }

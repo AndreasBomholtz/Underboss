@@ -12,15 +12,18 @@ var itemBot = {
 										 "_method=delete",
 										 city);
                         this.addStat("Item",1);
-                        //return(1000);
-                    }
+                        return(1000);
+                    } else {
+						this.debugItems("Can't find "+this.collect[i]+" in items",city);
+					}
                 }
-                this.loadPlayerData();
+                //this.loadPlayerData();
             } else {
                 this.debugItems("Cities is not ready");
             }
         } else {
             this.debugItems("Items is not ready");
         }
+		return(1000);
     }
 };
