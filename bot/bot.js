@@ -1,12 +1,6 @@
-var bot = function botMainFunc() {
+var bot = {
     //Variables
-    this.queue = [];
-    this.slow_queue = [];
-    this.lastCommand = {};
-    this.html = {};
-    this.enableTrace = false;
-
-    this.autoFunctions = {
+    autoFunctions: {
         "Collect": {},
         "Build": {},
         "Research": {},
@@ -21,29 +15,29 @@ var bot = function botMainFunc() {
         "Items": {},
         "Report": {},
         "Bonds": {}
-    };
+    },
 
     //Functions
-    this.bind = function bind(method) {
+    bind: function bind(method) {
         if(method) {
             var self = this;
             return(function(){return(method.apply(self, arguments));});
         }
-    };
-    this.signal = function signal(sig) {
+    },
+    signal: function signal(sig) {
         $(document).trigger(sig);
-    };
-    this.listen = function listen(sig,meth) {
+    },
+    listen: function listen(sig,meth) {
         $(document).bind(sig,this.bind(meth));
-    };
-    this.generateChangeEnable = function generateChangeEnable(name) {
+    },
+    generateChangeEnable: function generateChangeEnable(name) {
         this["changeEnable"+name] = function() {
             this.options["enable"+name] = this.html["enable_"+name].checked;
             this.saveOptions();
             this.debug("Enable "+name+": " + this.options["enable"+name]);
         };
-    };
-    this.generateAutoThread = function generateAutoThread(name) {
+    },
+    generateAutoThread: function generateAutoThread(name) {
         this['auto'+name+'Thread'] = function() {
             var m = this.bind(this['auto'+name+'Thread']);
             var t = 60000;
@@ -54,14 +48,14 @@ var bot = function botMainFunc() {
             setTimeout(m,t);
         };
         this['auto'+name+'Thread']();
-    };
-    this.generateDebugEnable = function generateDebugEnable(name) {
+    },
+    generateDebugEnable: function generateDebugEnable(name) {
         this["changeDebugEnable"+name] = function() {
             this["enableDebug"+name] = this.html["enable_debug_"+name].checked;
             this.debug("Enable Debug "+name+": " + this["enableDebug"+name]);
         };
-    };
-    this.getCity = function getCity(id) {
+    },
+    getCity: function getCity(id) {
         if(this.cities) {
             for(var i=0; i<this.cities.length; i++) {
                 if(this.cities[i].id == id) {
@@ -70,8 +64,8 @@ var bot = function botMainFunc() {
             }
         }
         return undefined;
-    };
-    this.findBuildingLevel = function findBuildingLevel(name,city) {
+    },
+    findBuildingLevel: function findBuildingLevel(name,city) {
         var maxLevel = 0;
         if(city && city.neighborhood && city.neighborhood.length) {
             for(var i=0; i<city.neighborhood.length; i++) {
@@ -89,9 +83,9 @@ var bot = function botMainFunc() {
             }
         }
         return maxLevel;
-    };
+    },
 
-    this.countBuilding = function countBuilding(neighborhood,name) {
+    countBuilding: function countBuilding(neighborhood,name) {
         this.trace();
         var count = 0;
         if(neighborhood && neighborhood.buildings) {
@@ -107,9 +101,9 @@ var bot = function botMainFunc() {
             }
         }
         return count;
-    };
+    },
 
-    this.findBuildingSlot = function findBuildingSlot(neighborhood) {
+    findBuildingSlot: function findBuildingSlot(neighborhood) {
         this.trace();
         var slots = [],i=0;
         for(i=0; i<45; i++) {
@@ -129,9 +123,9 @@ var bot = function botMainFunc() {
             }
         }
         return 0;
-    };
+    },
 
-    this.addStat = function addStat(name,count) {
+    addStat: function addStat(name,count) {
         if(!this.options.stats) {
             this.options.stats = {};
         }
@@ -141,9 +135,9 @@ var bot = function botMainFunc() {
         this.options.stats[name] += count;
         this.saveOptions();
         this.updateStats();
-    };
+    },
     //------------- PARSE FUNCTIONS ----------
-    this.parseData = function parseData(data) {
+    parseData: function parseData(data) {
         var i, city, n;
         if(data) {
             if(typeof(data) == "string") {
@@ -314,8 +308,8 @@ var bot = function botMainFunc() {
                 this.lastCommand.city.energy = data.energy;
             }
         }
-    };
-    this.errorCommand = function errorCommand(data) {
+    },
+    errorCommand: function errorCommand(data) {
         if(typeof(data) == "string") {
             data = JSON.parse(data);
         }
@@ -325,8 +319,8 @@ var bot = function botMainFunc() {
         if(this.lastCommand.callback !== undefined) {
             this.lastCommand.callback();
         }
-    };
-    this.revCommand = function revCommand(data) {
+    },
+    revCommand: function revCommand(data) {
         if(typeof(data) == "string") {
             data = JSON.parse(data);
         }
@@ -346,8 +340,8 @@ var bot = function botMainFunc() {
         if(this.lastCommand.callback !== undefined) {
             this.lastCommand.callback();
         }
-    };
-    this.checkCityQueue = function checkCityQueue(city,queue,building) {
+    },
+    checkCityQueue: function checkCityQueue(city,queue,building) {
         this.trace();
         var queueReady = false;
         if(city && city.data && city.data.jobs) {
@@ -380,9 +374,9 @@ var bot = function botMainFunc() {
             }
         }
         return queueReady;
-    };
+    },
     //------- LOAD DATA FUNCTIONS -----
-    this.loadCityData = function loadCityData(city) {
+    loadCityData: function loadCityData(city) {
         this.trace();
         if(city && city.id) {
             var name = "unknown";
@@ -397,16 +391,16 @@ var bot = function botMainFunc() {
             var d = new Date();
             city.lastUpdate = d.getTime();
         }
-    };
-    this.loadCitiesData = function loadCitiesData() {
+    },
+    loadCitiesData: function loadCitiesData() {
         this.trace();
         if(this.cities) {
             for(var i=0; i<this.cities.length; i++) {
                 this.loadCityData(this.cities[i]);
             }
         }
-    };
-    this.autoLoadCities = function autoLoadCities() {
+    },
+    autoLoadCities: function autoLoadCities() {
         this.trace();
         if(this.cities) {
             for(var i=0; i<this.cities.length; i++) {
@@ -417,8 +411,8 @@ var bot = function botMainFunc() {
             }
         }
 
-    };
-    this.loadGameLoadedData = function loadGameLoadedData() {
+    },
+    loadGameLoadedData: function loadGameLoadedData() {
         this.trace();
         if(this.cities && this.cities[0] && this.cities[0].id) {
             for(var i=0; i<this.cities.length; i++) {
@@ -426,17 +420,17 @@ var bot = function botMainFunc() {
             }
             this.loadCitiesData();
         }
-    };
-    this.loadPlayerData = function loadPlayerData() {
+    },
+    loadPlayerData: function loadPlayerData() {
         this.trace();
         this.sendGetCommand("Load Player","player.json");
-    };
-    this.loadPlayerDataInit = function loadPlayerDataInit() {
+    },
+    loadPlayerDataInit: function loadPlayerDataInit() {
         this.trace();
         var cb = this.bind(this.loadGameLoadedData);
         this.sendGetCommand("Load Player Init","player.json","",undefined,cb);
-    };
-    this.enqueCommand = function enqueCommand(name,url,data,type,city,callback,slow) {
+    },
+    enqueCommand: function enqueCommand(name,url,data,type,city,callback,slow) {
         this.trace();
 
         if(city !== undefined) {
@@ -458,8 +452,8 @@ var bot = function botMainFunc() {
         } else {
             this.addToQueue(this.queue,cmd);
         }
-    };
-    this.addToQueue = function addToQueue(queue,cmd) {
+    },
+    addToQueue: function addToQueue(queue,cmd) {
         for(var i=0; i<queue.length; i++) {
             if(queue[i].url == cmd.url &&
                queue[i].data == cmd.data) {
@@ -470,27 +464,27 @@ var bot = function botMainFunc() {
 
         queue.push(cmd);
         this.signal("queue:update");
-    };
-    this.sendCommand = function sendCommand(name,url,data,city,callback) {
+    },
+    sendCommand: function sendCommand(name,url,data,city,callback) {
         this.enqueCommand(name,url,data,'POST',city,callback,false);
-    };
-    this.sendGetCommand = function sendGetCommand(name,url,data,city,callback) {
+    },
+    sendGetCommand: function sendGetCommand(name,url,data,city,callback) {
         this.enqueCommand(name,url,data,'GET',city,callback,false);
-    };
-    this.sendSlowCommand = function sendCommand(name,url,data,city,callback) {
+    },
+    sendSlowCommand: function sendCommand(name,url,data,city,callback) {
         this.enqueCommand(name,url,data,'POST',city,callback,true);
-    };
-    this.sendSlowGetCommand = function sendGetCommand(name,url,data,city,callback) {
+    },
+    sendSlowGetCommand: function sendGetCommand(name,url,data,city,callback) {
         this.enqueCommand(name,url,data,'GET',city,callback,true);
-    };
-    this.sendQueue = function sendQueue() {
+    },
+    sendQueue: function sendQueue() {
         if(this.queue.length > 0) {
             this.executeCommand(this.queue.shift());
         } else if(this.slow_queue.length > 0) {
             this.executeCommand(this.slow_queue.shift());
         }
-    };
-    this.executeCommand = function executeCommand(cmd) {
+    },
+    executeCommand: function executeCommand(cmd) {
         this.lastCommand = cmd;
         this.signal("queue:update");
         var self = this;
@@ -501,31 +495,31 @@ var bot = function botMainFunc() {
             success: function(data) {self.revCommand(data);},
             error: function(data) {self.errorCommand(data);}
         });
-    };
+    },
     //------- END SEND FUNCTIONS ------
 
     //------- OPTIONS FUNCTIONS -------
-    this.saveOptions = function saveOptions() {
+    saveOptions: function saveOptions() {
         localStorage.setItem("gfb_options",JSON.stringify(this.options));
-    };
-    this.loadOptions = function loadOptions() {
+    },
+    loadOptions: function loadOptions() {
         var value = localStorage.getItem("gfb_options");
         if(value) {
             this.options = JSON.parse(value);
         } else {
             this.options = {};
         }
-    };
+    },
     //------- END OPTIONS FUNCTIONS ----
 
     //------- GUI FUNCTIONS ------
     //---- GUI Heper Functions -----
-    this.trace = function trace() {
+    trace: function trace() {
         if(this.enableTrace) {
             this.debug(arguments.callee.caller.name);
         }
-    };
-    this.debug = function debug(str,city,info) {
+    },
+    debug: function debug(str,city,info) {
         var d = new Date();
         if(typeof(str) == "object") {
             console.debug(str);
@@ -540,18 +534,18 @@ var bot = function botMainFunc() {
         str = d.toLocaleTimeString() + ": " + str;
         console.debug(str);
         return str;
-    };
-    this.generateDebugFunction = function(name) {
+    },
+    generateDebugFunction: function(name) {
         this["enableDebug"+name] = false;
         this["debug"+name] = function(str,city) {
             if(this["enableDebug"+name]) {
                 this.debug(str,city,name);
             }
         };
-    };
+    },
     //------- END GUI FUNCTONS -----
 
-    this.handleQueueComplete = function handleQueueComplete(queue) {
+    handleQueueComplete: function handleQueueComplete(queue) {
         this.trace();
         if(queue == "building" && this.options.enableBuild) {
             this.loadCitiesData();
@@ -564,8 +558,8 @@ var bot = function botMainFunc() {
         } else if(queue.indexOf("collect") != -1 && this.options.enableCollect) {
             this.doCollect();
         }
-    };
-    this.updateJobs = function updatejobs() {
+    },
+    updateJobs: function updatejobs() {
         var m = this.bind(this.main);
         var timeout = 1000;
 
@@ -596,10 +590,16 @@ var bot = function botMainFunc() {
         }
 
         setTimeout(m,timeout);
-    };
+    },
 
-    this.init = function init(data) {
+    init: function init(data) {
         this.loadOptions();
+
+		this.queue = [];
+		this.slow_queue = [];
+		this.lastCommand = {};
+		this.html = {};
+		this.enableTrace = false;
 
         //Save options
         this.server = data.apiServer+"/";
@@ -634,51 +634,14 @@ var bot = function botMainFunc() {
         this.updateJobs();
 
         this.showMissingPrizeInfo();
-    };
+    },
 
-	this.combine = function(obj) {
-		var length = arguments.length;
-		for (var index = 1; index < length; index++) {
-			console.log(index);
-			var source = arguments[index];
-			console.log(source);
-			if(source !== undefined) {
-				var keys = Object.keys(source);
-				console.log(keys);
-				var l = keys.length;
-				for (var i = 0; i < l; i++) {
-					var key = keys[i];
-					console.log("Adding "+key);
-					obj[key] = source[key];
-				}
-			}
-		}
-		return obj;
-	};
-
-    this.botStartIfCIsAvailable = function() {
+    start: function() {
         if (typeof C != 'undefined') {
-            this.init(C.attr);
+            this.init(C.attrs);
         } else {
-            window.setTimeout(this.bind(this.botStartIfCIsAvailable,this), 1000);
+            window.setTimeout(this.bind(this.start,this), 1000);
         }
-    };
+    }
 
-	// Combine bot
-	this.combine(this,
-				collectBot,
-				buildBot,
-				researchBot,
-				attackBot,
-				bailoutBot,
-				bondsBot,
-				guiBot,
-				itemBot,
-				prizeBot,
-				reportBot,
-				trainBot);
-
-	console.log(this.toString());
-
-    window.setTimeout(this.bind(this.botStartIfCIsAvailable,this), 1000);
 };

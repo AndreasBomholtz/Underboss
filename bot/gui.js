@@ -171,9 +171,7 @@ var guiBot = {
         this.listen("queue:update",this.updateDebugQueue);
     },
     drawDebugTab: function drawDebugTab(infoData) {
-        $(infoData).html("<h7>Debug Info</h7>")
-            .append($("<div/>").attr("id","debug_jobs"))
-            .append($("<div/>").attr("id","debug_queue"));
+        $(infoData).html("<h7>Debug Info</h7>").append($("<div/>").attr("id","debug_jobs")).append($("<div/>").attr("id","debug_queue"));
         this.drawButton("Update Jobs",this.bind(this.loadCitiesData),infoData);
         this.drawButton("Execute",this.bind(this.executeCMD),infoData);
         this.drawButton("Trace",this.bind(this.toggleTrace),infoData);
@@ -278,11 +276,7 @@ var guiBot = {
                 tr = $("<tr/>");
                 table.append(tr);
             }
-            tr.append($("<td/>")
-                      .text(unit))
-                .append($("<td/>")
-                        .append($("<input class='number'/>")
-                                .attr("id","unit_"+unit)));
+            tr.append($("<td/>").text(unit).append($("<td/>").append($("<input class='number'/>").attr("id","unit_"+unit))));
             if(this.options.trainOrders && this.options.trainOrders[unit]) {
                 $("#unit_"+unit).val(this.options.trainOrders[unit]);
             }
@@ -341,9 +335,7 @@ var guiBot = {
         this.html.order = {};
         infoData.innerHTML = "<h7>Attack Orders</h7>";
 
-        $('<div>City:</div>')
-            .append($('<select id="select_attack_city"></select>'))
-            .appendTo($(infoData));
+        $('<div>City:</div>').append($('<select id="select_attack_city"></select>')).appendTo($(infoData));
         this.listen('cities:update',function updateAttackCity() {
             var city = $('#select_attack_city');
             city.empty();
@@ -356,17 +348,13 @@ var guiBot = {
         });
 
 
-        $('<div>Gang Level:</div>')
-            .append($('<select id="select_gang"></select>'))
-            .appendTo($(infoData));
+        $('<div>Gang Level:</div>').append($('<select id="select_gang"></select>')).appendTo($(infoData));
         var gang = $('#select_gang');
         for(var i=1; i<=15; i++) {
             gang.append($('<option value="'+i+'">'+i+'</option>'));
         }
 
-        $('<div id="units_p">Units:</div>')
-            .append($('<select id="select_units"></select>'))
-            .appendTo($(infoData));
+        $('<div id="units_p">Units:</div>').append($('<select id="select_units"></select>')).appendTo($(infoData));
         var units = $('#select_units');
         for(var unit in attackUnits) {
             units.append($('<option value="'+unit+'">'+unit+'</option>'));
@@ -375,9 +363,7 @@ var guiBot = {
         $('<input type="text" id="unit_count" value="0" class="unit_count" />').appendTo($('#units_p'));
         this.drawButton("Add",this.bind(this.addUnitToAttackOrder),document.getElementById('units_p'));
 
-        $('<div>Use All:</div>')
-            .append('<input type="checkbox" id="check_attack_all" value="all"/>')
-            .appendTo($(infoData));
+        $('<div>Use All:</div>').append('<input type="checkbox" id="check_attack_all" value="all"/>').appendTo($(infoData));
 
         $('<textarea id="total_units" class="textinfo"></textarea>').appendTo($(infoData));
 
@@ -422,7 +408,7 @@ var guiBot = {
                 item.innerHTML = order.city+" | "+order.gang+" | "+(order.use_all?'t':'f')+" | "+order.units;
             }
         }
-    }
+    },
     addUnitToAttackOrder: function addUnitToAttackOrder() {
         var total = $('#total_units');
         if(total.val() !== "")

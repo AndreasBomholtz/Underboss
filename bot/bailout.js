@@ -35,7 +35,7 @@ var bailoutBot = {
                         var all = parseInt(city.bailout[unit],10);
                         var all_cost = cost * all;
                         this.debugBailout(unit+" costs "+all_cost+" and all units costs "+total_cost+" and I have "+cash,city);
-                        var count = parseInt((cash-total_cost) / cost);
+                        var count = parseInt((cash-total_cost) / cost,10);
                         if(count > 0) {
                             count = count > all ? all : count;
                             var count_cost = count * cost;

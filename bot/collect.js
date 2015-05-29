@@ -19,7 +19,6 @@ var collectBot = {
                                         var parm = "_method=put&city_building_id="+building.id;
                                         this.sendCommand("Collect "+building.type+" in "+city.type,url,parm,neighborhood.city);
                                         this.addStat("Collect",1);
-                                        return(60*1000);
                                     }
                                 }
                             }

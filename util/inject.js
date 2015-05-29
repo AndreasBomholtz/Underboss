@@ -15,6 +15,11 @@ function injectVariable(name, src) {
 	inject(src);
 }
 
+function injectObject(name, src) {
+    src = "var "+name+" = "+src.toString()+";";
+	inject(src);
+}
+
 function injectScript(url) {
 	var script = document.createElement("script");
     script.src = url;
