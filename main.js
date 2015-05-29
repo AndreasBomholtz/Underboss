@@ -2,34 +2,11 @@
 var css = GM_getResourceText("underbossCSS");
 GM_addStyle (css);
 
-function combine(obj) {
-	var length = arguments.length;
-	for (var index = 1; index < length; index++) {
-		var source = arguments[index];
-		if(source !== undefined) {
-			var keys = Object.keys(source);
-			var l = keys.length;
-			for (var i = 0; i < l; i++) {
-				var key = keys[i];
-				obj[key] = source[key];
-			}
-		}
-	}
-	return obj;
-}
-
 //Insert into the right iframe
 if(window.location.href.indexOf("platforms/kabam/game") != -1) {
     console.debug("Injecting Godfather Bot script");
 
-	// Inject resources
-	injectVariable("attackUnits",attackUnits);
-	injectVariable("defenseUnits",defenseUnits);
-	injectVariable("buildings",buildings);
-	injectVariable("research",research);
-	injectVariable("prizes",prizes);
-	injectVariable("collect",collect);
-
+	//Combine all the bots into one object
 	combine(bot,attackBot,
 			bondsBot,buildBot,
 			guiBot,itemBot,
@@ -37,7 +14,16 @@ if(window.location.href.indexOf("platforms/kabam/game") != -1) {
 			bailoutBot,collectBot,
 			prizeBot,researchBot);
 
-	var src = convertToText(bot);
+	//Add all the variables
+	bot.attackUnits = attackUnits;
+	bot.defenseUnits = defenseUnits;
+	bot.buildings = buildings;
+	bot.research = research;
+	bot.prizes = prizes;
+	bot.collect = collect;
+
+	//Convert the obj to source
+	var src = convertToSource(bot);
 	src = "var bot = "+src+";\n";
 	src += "bot.start();";
 

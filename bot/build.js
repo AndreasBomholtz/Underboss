@@ -51,8 +51,8 @@ var buildBot = {
                 var slot = this.findBuildingSlot(neighborhood);
 
                 var build = "Hideout";
-                for(var b in buildings) {
-                    var prio = buildings[b];
+                for(var b in this.buildings) {
+                    var prio = this.buildings[b];
                     var buildCountGoal = 0;
                     if(this.options.build[b]) {
                         buildCountGoal = this.options.build[b];
@@ -128,7 +128,7 @@ var buildBot = {
                 var building = buildings[b];
                 if(!building.hasOwnProperty('unlocked') && building.level  < 9) {
                     var canBuild = true;
-                    var prio = buildings[building.type];
+                    var prio = this.buildings[building.type];
                     if(prio && prio.requirement) {
                         var reqs = prio.requirement;
                         if(reqs.build) {
@@ -179,7 +179,7 @@ var buildBot = {
             if(lowLevel.lvl != 20) {
                 if(lowLevel.lvl > 5) {
                     var tmp = this.upgradeImportentBuilding(neighborhood,lowLevel);
-                    if(this.hasResources(city,tmp.name,buildings[tmp.name].cost,tmp.lvl,this.calcBuldingCost)) {
+                    if(this.hasResources(city,tmp.name,this.buildings[tmp.name].cost,tmp.lvl,this.calcBuldingCost)) {
                         lowLevel = tmp;
                     } else {
                         this.debugBuild("Do not upgrade importent building, not egnogh rescources",city);

@@ -3,12 +3,12 @@ var itemBot = {
         if(this.items) {
             if(this.cities) {
                 var city = this.cities[0];
-                for(var i=0; i<collect.length; i++) {
-                    if(this.items[collect[i]]) {
-                        this.debugItems(collect[i]+": "+this.items[collect[i]]);
-                        this.items[collect[i]]--;
-                        this.sendCommand("Collect "+collect[i],
-										 "player_items/"+collect[i]+".json",
+                for(var i=0; i<this.collect.length; i++) {
+                    if(this.items[this.collect[i]]) {
+                        this.debugItems(this.collect[i]+": "+this.items[this.collect[i]]);
+                        this.items[this.collect[i]]--;
+                        this.sendCommand("Collect "+this.collect[i],
+										 "player_items/"+this.collect[i]+".json",
 										 "_method=delete",
 										 city);
                         this.addStat("Item",1);

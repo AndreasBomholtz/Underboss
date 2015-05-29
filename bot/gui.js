@@ -12,7 +12,7 @@ var guiBot = {
             this.debug("Show Missing prizes");
             for(var i=0; i<this.options.missing_prize.length; i++) {
                 var prize = this.options.missing_prize[i];
-                if(prizes[prize]) {
+                if(this.prizes[prize]) {
                     this.options.missing_prize.splice(i,1);
                 } else {
                     this.debug("Missing prize info: "+prize);
@@ -29,9 +29,9 @@ var guiBot = {
 
         if(this.prizeList && this.prizeList.length) {
             for(var i=0; i<this.prizeList.length; i++) {
-                if(prizes[this.prizeList[i].type]) {
-                    if(min.cost > prizes[this.prizeList[i].type]) {
-                        min.cost = prizes[this.prizeList[i].type];
+                if(this.prizes[this.prizeList[i].type]) {
+                    if(min.cost > this.prizes[this.prizeList[i].type]) {
+                        min.cost = this.prizes[this.prizeList[i].type];
                         min.name = this.prizeList[i].type;
                     }
                 } else {
@@ -231,8 +231,8 @@ var guiBot = {
         infoData.appendChild(table);
 
         var saveChanges = false;
-        for(var b in buildings) {
-            if(buildings[b].buildNew) {
+        for(var b in this.buildings) {
+            if(this.buildings[b].buildNew) {
                 var tr = document.createElement("tr");
                 table.appendChild(tr);
                 var td = document.createElement("td");
@@ -244,7 +244,7 @@ var guiBot = {
                 if(this.options.build.hasOwnProperty(b) && typeof(this.options.build[b]) == 'number') {
                     input.value = this.options.build[b];
                 } else {
-                    input.value = buildings[b].buildNew;
+                    input.value = this.buildings[b].buildNew;
                     saveChanges = true;
                 }
                 this.html.build[b] = input;
@@ -258,8 +258,8 @@ var guiBot = {
     },
     saveBuildOrder: function saveBuildOrder() {
         this.options.build = {};
-        for(var b in buildings) {
-            if(buildings[b].buildNew) {
+        for(var b in this.buildings) {
+            if(this.buildings[b].buildNew) {
                 this.options.build[b] = parseInt(this.html.build[b].value,10);
             }
         }
@@ -271,7 +271,7 @@ var guiBot = {
         $(infoData).append(table);
         var count = 0;
         var tr;
-        for(var unit in attackUnits) {
+        for(var unit in this.attackUnits) {
             if((count % 2) === 0) {
                 tr = $("<tr/>");
                 table.append(tr);
@@ -289,7 +289,7 @@ var guiBot = {
         if(!this.options.trainOrders) {
             this.options.trainOrders = {};
         }
-        for(var unit in attackUnits) {
+        for(var unit in this.attackUnits) {
             this.options.trainOrders[unit] = $("#unit_"+unit).val();
         }
         this.saveOptions();
@@ -356,7 +356,7 @@ var guiBot = {
 
         $('<div id="units_p">Units:</div>').append($('<select id="select_units"></select>')).appendTo($(infoData));
         var units = $('#select_units');
-        for(var unit in attackUnits) {
+        for(var unit in this.attackUnits) {
             units.append($('<option value="'+unit+'">'+unit+'</option>'));
         }
 

@@ -1,11 +1,4 @@
-//Make an object a string that evaluates to an equivalent object
-//  Note that eval() seems tricky and sometimes you have to do
-//  something like eval("a = " + yourString), then use the value
-//  of a.
-//
-//  Also this leaves extra commas after everything, but JavaScript
-//  ignores them.
-function convertToText(obj) {
+function convertToSource(obj) {
     //create an array that will later be joined into a string.
     var string = [];
 
@@ -18,7 +11,7 @@ function convertToText(obj) {
     if (typeof(obj) == "object" && (obj.join == undefined)) {
         string.push("{");
         for (prop in obj) {
-            string.push(prop, ": ", convertToText(obj[prop]), ",");
+            string.push(prop, ": ", convertToSource(obj[prop]), ",");
         }
         string.push("}");
 
@@ -26,7 +19,7 @@ function convertToText(obj) {
     } else if (typeof(obj) == "object" && !(obj.join == undefined)) {
         string.push("[");
         for(prop in obj) {
-            string.push(convertToText(obj[prop]), ",");
+            string.push(convertToSource(obj[prop]), ",");
         }
         string.push("]");
 

@@ -9,13 +9,13 @@ var researchBot = {
         this.trace();
         var lowLevel = {'lvl': 20, 'pri': 20, 'id': ""};
         if(city && city.data && city.data.research && city.neighborhood) {
-            for(var key in research) {
+            for(var key in this.research) {
                 var currentResearch = city.data.research[key], skip = false;
                 if(currentResearch === undefined) {
                     currentResearch = 0;
                 }
-                if(research[key]) {
-                    var prio = research[key];
+                if(this.research[key]) {
+                    var prio = this.research[key];
                     if(prio.requirement) {
                         var req = prio.requirement;
                         if(req) {
@@ -58,11 +58,11 @@ var researchBot = {
                 if(!skip) {
                     if((lowLevel.lvl > currentResearch) ||
                        (lowLevel.lvl == currentResearch &&
-                        lowLevel.pri > research[key].priority))
+                        lowLevel.pri > this.research[key].priority))
                     {
                         lowLevel.lvl = currentResearch;
                         lowLevel.name = key;
-                        lowLevel.pri = research[key].priority;
+                        lowLevel.pri = this.research[key].priority;
                     }
                 }
             }

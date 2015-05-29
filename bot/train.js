@@ -7,7 +7,7 @@ var trainBot = {
             for(var i=0; i<this.cities.length; i++) {
                 var city = this.cities[i];
                 if(city.type != "DoriaAirport") {
-                    for(var unit in attackUnits) {
+                    for(var unit in this.attackUnits) {
                         var count = this.options.trainOrders[unit];
                         if(count) {
                             if(city && city.data && city.data.units) {
@@ -48,9 +48,9 @@ var trainBot = {
                 if(city.type != "DoriaAirport") {
                     if(this.checkCityQueue(city,"defense_units")) {
                         var lastUnit = undefined;
-                        for(var unit in defenseUnits) {
+                        for(var unit in this.defenseUnits) {
                             var skip = false;
-                            var req = defenseUnits[unit].requirement;
+                            var req = this.defenseUnits[unit].requirement;
                             if(req.build) {
                                 for(var b in req.build) {
                                     var build = this.findBuildingLevel(b,city);

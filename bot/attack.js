@@ -150,7 +150,7 @@ var attackBot = {
         this.trace();
         if(city && city.data && city.data.units) {
             var units = jQuery.extend(true, {}, city.data.units);
-            for(var def in defenseUnits) {
+            for(var def in this.defenseUnits) {
                 if(units[def]) {
                     delete units[def];
                 }

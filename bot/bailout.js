@@ -30,8 +30,8 @@ var bailoutBot = {
 
                 for(var unit in city.bailout) {
                     var pay = 0;
-                    if(attackUnits[unit] && attackUnits[unit].bailout) {
-                        var cost = attackUnits[unit].bailout;
+                    if(this.attackUnits[unit] && this.attackUnits[unit].bailout) {
+                        var cost = this.attackUnits[unit].bailout;
                         var all = parseInt(city.bailout[unit],10);
                         var all_cost = cost * all;
                         this.debugBailout(unit+" costs "+all_cost+" and all units costs "+total_cost+" and I have "+cash,city);
