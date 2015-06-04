@@ -130,5 +130,22 @@ var collectBot = {
                 }
             }
         }
-    }
+    },
+	doQuests: function doQuests() {
+		this.trace();
+		if(this.quests) {
+			if(this.quests.Completed) {
+				var quest = this.quests.Completed[0].name;
+				this.debugQuests("Collect quest: "+quest);
+				this.sendCommand("Collect Quest",
+								 "player_quests/claim.json",
+								 "quest_name="+quest+"&_method=put",
+								 this.cities[0]);
+			} else {
+				this.debugQuests("No Completed Quests");
+			}
+		} else {
+			this.debugQuests("No Quests yet");
+		}
+	}
 };

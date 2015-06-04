@@ -14,7 +14,8 @@ var bot = {
         "Exchange": {},
         "Items": {},
         "Report": {},
-        "Bonds": {}
+        "Bonds": {},
+		"Quests": {}
     },
 
     //Functions
@@ -234,7 +235,12 @@ var bot = {
             }
             if(data.items) {
                 this.items = data.items;
+				this.signal('player:items');
             }
+			if(data.quests) {
+				this.quests = data.quests;
+				this.signal("player:quests");
+			}
             if(data.level) {
                 this.player_level = data.level;
             }

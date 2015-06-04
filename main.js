@@ -1,5 +1,4 @@
 // Adds the CSS
-var css = GM_getResourceText("underbossCSS");
 GM_addStyle (css);
 
 //Insert into the right iframe
