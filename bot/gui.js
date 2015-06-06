@@ -457,5 +457,11 @@ var guiBot = {
     },
     updatePrizeInfo: function updatePrizeInfo(str,city) {
         $(".prize_info").text(this.debug(str,city) +"\n"+$(".prize_info").text());
-    }
+    },
+	createOverlay: function createOverlay() {
+		var overlay = document.createElement("div");
+        overlay.setAttribute("id","overlay");
+        overlay.setAttribute("class", "overlay");
+        document.body.appendChild(overlay);
+   }
 };
