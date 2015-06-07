@@ -12,7 +12,7 @@ var attackBot = {
             }
             for(var i=0; i<this.cities.length; i++) {
                 var city = this.cities[i];
-                if(city && city.data) {
+                if(city) {
                     var startX = city.x - offset;
                     if(startX < 0) {
                         startX = 750 + startX;
@@ -88,7 +88,7 @@ var attackBot = {
         if(this.cities && this.options.attackOrders) {
             for(var c=0; c<this.cities.length; c++) {
                 var city = this.cities[c];
-                if(city && city.data && city.energy > 1 && city.type != "DoriaAirport") {
+                if(city && city.energy > 1 && city.type != "DoriaAirport") {
                     var bestOrder = {"gang":0};
                     for(var i=0; i<this.options.attackOrders.length; i++) {
                         var order = this.options.attackOrders[i];
@@ -103,7 +103,7 @@ var attackBot = {
                         if(doIt) {
                             var aUnits = JSON.parse(order.units);
                             for(var u in aUnits) {
-                                if(!city.data.units[u] || city.data.units[u] < aUnits[u]) {
+                                if(!city.units[u] || city.units[u] < aUnits[u]) {
                                     this.debugAttack("Do not have "+u+" ("+aUnits[u]+")",city);
                                     doIt = false;
                                     break;
@@ -148,8 +148,8 @@ var attackBot = {
     },
     getAttackUnits: function getAttackUnits(city) {
         this.trace();
-        if(city && city.data && city.data.units) {
-            var units = jQuery.extend(true, {}, city.data.units);
+        if(city && city.units) {
+            var units = jQuery.extend(true, {}, city.units);
             for(var def in this.defenseUnits) {
                 if(units[def]) {
                     delete units[def];

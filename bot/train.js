@@ -10,12 +10,12 @@ var trainBot = {
                     for(var unit in this.attackUnits) {
                         var count = this.options.trainOrders[unit];
                         if(count) {
-                            if(city && city.data && city.data.units) {
+                            if(city && city.units) {
                                 var amount = 10;
                                 var unit_count = 0;
 								var cost = this.attackUnits[unit].cost;
-                                if(city.data.units[unit]) {
-                                    unit_count = city.data.units[unit];
+                                if(city.units[unit]) {
+                                    unit_count = city.units[unit];
                                 }
                                 if(unit_count >= count) {
                                     this.debugTrain("Do not train "+unit+", there is "+unit_count,city);
@@ -68,7 +68,7 @@ var trainBot = {
                             }
                             if(!skip && req.research) {
                                 for(var r in req.research) {
-                                    var resLvl = city.data.research[r];
+                                    var resLvl = city.research[r];
                                     if(resLvl === undefined) {
                                         resLvl = 0;
                                     }

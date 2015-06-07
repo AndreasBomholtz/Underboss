@@ -10,8 +10,8 @@ var debugBot = {
             console.debug(str);
             str = "";
         }
-        if(city && city.data) {
-            str = city.data.type+": "+str;
+        if(city && city.type) {
+            str = city.type+": "+str;
         }
         if(info) {
             str = info+": "+str;

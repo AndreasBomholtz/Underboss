@@ -60,8 +60,8 @@ var buildBot = {
         return cost * Math.pow(2,(level - 1));
     },
     hasResources: function hasResources(city,name,cost,level,func) {
-        if(cost && city && city.data && city.data.resources) {
-            var res = city.data.resources;
+        if(cost && city && city.resources) {
+            var res = city.resources;
             for (var c in cost) {
                 var rc = 0;
 				if(func) {
@@ -82,7 +82,7 @@ var buildBot = {
             }
             for (var cc in cost) {
                 var dc = func(level,cost[cc]);
-                city.data.resources[cc] = parseInt(city.data.resources[cc],10) - dc;
+                city.resources[cc] = parseInt(city.resources[cc],10) - dc;
             }
         } else if(cost) {
             if(func == this.calcBuldingCost) {

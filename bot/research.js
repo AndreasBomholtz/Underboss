@@ -8,9 +8,9 @@ var researchBot = {
     researchLowest: function researchLowest(city) {
         this.trace();
         var lowLevel = {'lvl': 20, 'pri': 20, 'id': ""};
-        if(city && city.data && city.data.research && city.neighborhood) {
+        if(city && city.research && city.neighborhood) {
             for(var key in this.research) {
-                var currentResearch = city.data.research[key], skip = false;
+                var currentResearch = city.research[key], skip = false;
                 if(currentResearch === undefined) {
                     currentResearch = 0;
                 }
@@ -35,7 +35,7 @@ var researchBot = {
                             }
                             if(!skip && req.research) {
                                 for(var i=0; i<req.research.length; i++) {
-                                    var r = req.research[i], resLvl = city.data.research[r];
+                                    var r = req.research[i], resLvl = city.research[r];
                                     if(resLvl === undefined) {
                                         resLvl = 0;
                                     }
@@ -71,7 +71,7 @@ var researchBot = {
             this.updateInfo("Research "+lowLevel.name+" lvl "+(lowLevel.lvl+1),city);
             this.sendCommand("Research "+lowLevel.name+" lvl "+(lowLevel.lvl+1)+" in "+city.type,"cities/"+city.id+"/researches.json","research[research_type]="+lowLevel.name,city);
             this.addStat("Research",1);
-            city.data.research[lowLevel.name] = (lowLevel.lvl+1);
+            city.research[lowLevel.name] = (lowLevel.lvl+1);
         }
     },
     doResearch: function doResearch() {

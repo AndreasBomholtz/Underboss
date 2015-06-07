@@ -46,26 +46,43 @@ var parserBot = {
             if(data.city) {
                 city = this.getCity(data.city.id);
                 if(city) {
-                    if(city.data && city.data.jobs && data.city.jobs) {
-                        for(i=0; i<city.data.jobs.length; i++) {
+                    if(city.jobs && data.city.jobs) {
+                        for(i=0; i<city.jobs.length; i++) {
                             var present = false;
                             for(n=0; n<data.city.jobs.length; n++) {
-                                if(city.data.jobs[i].queue == data.city.jobs[n].queue) {
-                                    //this.debug(city.data.jobs[i].queue+" is still present");
+                                if(city.jobs[i].queue == data.city.jobs[n].queue) {
                                     present = true;
                                     break;
                                 }
                             }
-                            if(!present && city.data.jobs[i].queue) {
-                                this.handleQueueComplete(city.data.jobs[i].queue);
+                            if(!present && city.jobs[i].queue) {
+                                this.handleQueueComplete(city.jobs[i].queue);
                             }
                         }
                     }
-                    city.data = data.city;
-                    this.signal("jobs:update");
-                    if(data.city.figures && data.city.figures.marches) {
+					if(data.city.units) {
+						city.units = data.city.units;
+						this.signal("units:update");
+					}
+					if(data.city.research) {
+						city.research = data.city.research;
+						this.signal("research:update");
+					}
+					if(data.city.resources) {
+						city.resources = data.city.resources;
+						this.signal("resources:update");
+					}
+					if(data.city.figures && data.city.figures.marches) {
                         city.maximum_troops = data.city.figures.marches.maximum_troops;
                     }
+					if(data.city.wildernesses) {
+						city.wildernesses = data.city.wildernesses;
+					}
+					if(data.city.jobs) {
+						city.jobs = data.city.jobs;
+						this.signal("jobs:update");
+					}
+					city.type = data.city.type;
                 }
             }
             if(data.terrain) {
@@ -130,19 +147,13 @@ var parserBot = {
                         }
                     }
                 }
-                /*if(data.result.city && data.result.city_id) {
-                  var city = this.getCity(data.result.city_id);
-                  if(city) {
-                  city.data = data.result.city;
-                  }
-                  }*/
                 if(data.result.job) {
                     city = this.getCity(data.result.job.city_id);
-                    if(city && city.data) {
-                        if(!city.data.jobs) {
-                            city.data.jobs = [];
+                    if(city) {
+                        if(!city.jobs) {
+                            city.jobs = [];
                         }
-                        city.data.jobs.push(data.result.job);
+                        city.jobs.push(data.result.job);
                         this.signal("jobs:update");
                     }
                 }

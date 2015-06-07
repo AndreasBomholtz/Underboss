@@ -34,9 +34,9 @@ var collectBot = {
         if(this.cities) {
             for(var i=0; i<this.cities.length; i++) {
                 var city = this.cities[i];
-                if(city && city.data && city.data.wildernesses && city.data.wildernesses) {
-                    for(var c=0; c<city.data.wildernesses.length; c++) {
-                        var wild = city.data.wildernesses[c];
+                if(city && city.wildernesses) {
+                    for(var c=0; c<city.wildernesses.length; c++) {
+                        var wild = city.wildernesses[c];
                         if(wild) {
                             if(wild.type == "CityScape") {
                                 var d = new Date();

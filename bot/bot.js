@@ -64,17 +64,17 @@ var bot = {
     checkCityQueue: function checkCityQueue(city,queue,building) {
         this.trace();
         var queueReady = false;
-        if(city && city.data && city.data.jobs) {
+        if(city && city.jobs) {
             queueReady = true;
-            for(var n=0; n<city.data.jobs.length; n++) {
+            for(var n=0; n<city.jobs.length; n++) {
                 if(building === undefined) {
-                    if(city.data.jobs[n].queue && city.data.jobs[n].queue == queue) {
+                    if(city.jobs[n].queue && city.jobs[n].queue == queue) {
                         queueReady = false;
                         break;
                     }
                 } else {
-                    if(city.data.jobs[n].city_building_id &&
-                       city.data.jobs[n].city_building_id == building)
+                    if(city.jobs[n].city_building_id &&
+                       city.jobs[n].city_building_id == building)
                     {
                         queueReady = false;
                         break;
@@ -90,7 +90,7 @@ var bot = {
                 } else {
                     obj.city_building_id = building;
                 }
-                city.data.jobs.push(obj);
+                city.jobs.push(obj);
             }
         }
         return queueReady;
@@ -100,9 +100,6 @@ var bot = {
         this.trace();
         if(city && city.id) {
             var name = "unknown";
-            if(city.data && city.data.type) {
-                name = city.data.type;
-            }
             if(city.type) {
                 name = city.type;
             }
@@ -177,14 +174,14 @@ var bot = {
 
             for(var i=0; i<this.cities.length; i++) {
                 var city = this.cities[i];
-                if(city && city.data && city.data.jobs) {
-                    for(var j=0; j<city.data.jobs.length; j++) {
-                        var job = city.data.jobs[j];
+                if(city && city.jobs) {
+                    for(var j=0; j<city.jobs.length; j++) {
+                        var job = city.jobs[j];
                         var comp = job.run_at + this.time_diff;
 
                         if(t >= comp) {
                             this.loadCityData(city);
-                            city.data.jobs.splice(j,1);
+                            city.jobs.splice(j,1);
                             timeout = 10000;
                             this.handleQueueComplete(job.queue);
                             break;

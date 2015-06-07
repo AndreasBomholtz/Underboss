@@ -30,3 +30,9 @@ release:
 
 dropbox: all
 	cp Underboss-dev.user.js ~/Dropbox/Godfather_Bot/
+
+clean:
+	rm -fr *~
+	rm -fr bot/*~
+	rm -fr util/*~
+	rm -fr res/*~

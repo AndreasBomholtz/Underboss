@@ -208,18 +208,15 @@ var guiBot = {
         if(this.cities) {
             for(var i=0; i<this.cities.length; i++) {
                 var city = this.cities[i];
-                if(city && city.data && city.data.jobs) {
+                if(city && city.jobs) {
                     var b, r, u, d = "&nbsp;";
-                    for(var j=0; j<city.data.jobs.length; j++) {
-                        if(city.data.jobs[j].queue == "research") { r = "R";}
-                        if(city.data.jobs[j].queue == "building") { b = "B";}
-                        if(city.data.jobs[j].queue == "units") { u = "U";}
-                        if(city.data.jobs[j].queue == "defense_units") { d = "D";}
+                    for(var j=0; j<city.jobs.length; j++) {
+                        if(city.jobs[j].queue == "research") { r = "R";}
+                        if(city.jobs[j].queue == "building") { b = "B";}
+                        if(city.jobs[j].queue == "units") { u = "U";}
+                        if(city.jobs[j].queue == "defense_units") { d = "D";}
                     }
-                    job.append("<h7>"+city.type+" ("+city.data.jobs.length+") "+b+" "+r+" "+u+" "+d+"</h7>");
-                    /*for(var j=0; j<city.data.jobs.length; j++) {
-                      job.append("<p>"+city.data.jobs[j].queue+"</p>");
-                      }*/
+                    job.append("<h7>"+city.type+" ("+city.jobs.length+") "+b+" "+r+" "+u+" "+d+"</h7>");
                 }
             }
         }
@@ -277,15 +274,17 @@ var guiBot = {
         var count = 0;
         var tr;
         for(var unit in this.attackUnits) {
-            if((count % 2) === 0) {
-                tr = $("<tr/>");
-                table.append(tr);
-            }
-            tr.append($("<td/>").text(unit).append($("<td/>").append($("<input class='number'/>").attr("id","unit_"+unit))));
-            if(this.options.trainOrders && this.options.trainOrders[unit]) {
-                $("#unit_"+unit).val(this.options.trainOrders[unit]);
-            }
-            count++;
+			if(this.attackUnits[unit].trainable) {
+				if((count % 2) === 0) {
+					tr = $("<tr/>");
+					table.append(tr);
+				}
+				tr.append($("<td/>").text(unit).append($("<td/>").append($("<input class='number'/>").attr("id","unit_"+unit))));
+				if(this.options.trainOrders && this.options.trainOrders[unit]) {
+					$("#unit_"+unit).val(this.options.trainOrders[unit]);
+				}
+				count++;
+			}
         }
         this.drawButton("Save",this.bind(this.saveTrainOrder),infoData);
     },
@@ -493,6 +492,7 @@ var guiBot = {
 
 		this.listen("jobs:update",this.updateOverview);
 		this.listen('cities:update',this.updateOverview);
+		this.listen('resources:update',this.updateOverview);
 
 		this.updateOverview();
 	},
@@ -521,35 +521,35 @@ var guiBot = {
 			var total_res = {};
             for(var i=0; i<this.cities.length; i++) {
                 var city = this.cities[i];
-                if(city && city.data) {
-					var el = table.find("#"+city.data.type);
+                if(city && city.type) {
+					var el = table.find("#"+city.type);
 					if(el.length === 0) {
 						total.before("\
-<tr id='"+city.data.type+"'>\
-<td>"+city.data.type+"</td>\
+<tr id='"+city.type+"'>\
+<td>"+city.type+"</td>\
 <td id='cash'>0</td><td id='cement'>0</td>\
 <td id='food'>0</td><td id='steel'>0</td>\
 <td id='jobs'></td>\
 </tr>");
-						el = table.find("#"+city.data.type);
+						el = table.find("#"+city.type);
 					}
-					if(city.data.resources) {
-						$.each(city.data.resources, function(k,v) {
+					if(city.resources) {
+						$.each(city.resources, function(k,v) {
 							var t = total_res[k] || 0;
 							t += parseInt(v,10);
 							total_res[k] = t;
 							el.find("#"+k).html(conv(v));
 						});
 					}
-					if(city.data.jobs) {
+					if(city.jobs) {
 						var b, r, u, d = "&nbsp;";
-						for(var j=0; j<city.data.jobs.length; j++) {
-							if(city.data.jobs[j].queue == "research") { r = "R";}
-							if(city.data.jobs[j].queue == "building") { b = "B";}
-							if(city.data.jobs[j].queue == "units") { u = "U";}
-							if(city.data.jobs[j].queue == "defense_units") { d = "D";}
+						for(var j=0; j<city.jobs.length; j++) {
+							if(city.jobs[j].queue == "research") { r = "R";}
+							if(city.jobs[j].queue == "building") { b = "B";}
+							if(city.jobs[j].queue == "units") { u = "U";}
+							if(city.jobs[j].queue == "defense_units") { d = "D";}
 						}
-						el.find("#jobs").html("("+city.data.jobs.length+") "+b+" "+r+" "+u+" "+d);
+						el.find("#jobs").html("("+city.jobs.length+") "+b+" "+r+" "+u+" "+d);
 					}
 				}
 			}

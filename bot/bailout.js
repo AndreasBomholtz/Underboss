@@ -15,12 +15,8 @@ var bailoutBot = {
         if(city) {
             if(city.bailout) {
                 var cash = 0;
-                if(city.data && city.data.resources) {
-                    cash = parseInt(city.data.resources.cash,10);
-                    /*if(cash < 1000000) {
-                      this.debugBailout("Money is "+city.data.resources.cash);
-                      return;
-                      }*/
+                if(city.resources) {
+                    cash = parseInt(city.resources.cash,10);
                 } else {
                     this.debugBailout('No resources',city);
                 }
