@@ -13,16 +13,19 @@ var trainBot = {
                             if(city && city.data && city.data.units) {
                                 var amount = 10;
                                 var unit_count = 0;
+								var cost = this.attackUnits[unit].cost;
                                 if(city.data.units[unit]) {
                                     unit_count = city.data.units[unit];
                                 }
                                 if(unit_count >= count) {
                                     this.debugTrain("Do not train "+unit+", there is "+unit_count,city);
-                                } else if(this.checkCityQueue(city,"units")) {
-                                    this.debugTrain("Train "+amount+" "+unit,city);
-                                    this.sendTrainOrders(unit, amount, city);
-                                    this.addStat("Train",amount);
-                                    break;
+								} else if(this.checkCityQueue(city,"units")) {
+									if(cost === undefined || this.hasResources(city,unit,cost,amount,undefined)) {
+										this.debugTrain("Train "+amount+" "+unit,city);
+										this.sendTrainOrders(unit, amount, city);
+										this.addStat("Train",amount);
+										break;
+									}
                                 } else {
                                     this.debugTrain("Already training units",city);
                                 }
@@ -48,6 +51,7 @@ var trainBot = {
                 if(city.type != "DoriaAirport") {
                     if(this.checkCityQueue(city,"defense_units")) {
                         var lastUnit = undefined;
+                        var amount = 10;
                         for(var unit in this.defenseUnits) {
                             var skip = false;
                             var req = this.defenseUnits[unit].requirement;
@@ -76,13 +80,18 @@ var trainBot = {
                                     }
                                 }
                             }
+							var cost = this.defenseUnits[unit].cost;
+							if(cost) {
+								if(!this.hasResources(city,unit,cost,amount,undefined)) {
+									skip = true;
+								}
+							}
                             if(!skip) {
                                 lastUnit = unit;
                                 this.debugDefense("Can build "+unit,city);
                             }
                         }
                         if(lastUnit) {
-                            var amount = 10;
                             this.sendTrainOrders(lastUnit, amount, city);
                             this.debugTrain("Train "+amount+" "+unit,city);
                             this.addStat("Defense",amount);

@@ -88,7 +88,7 @@ var attackBot = {
         if(this.cities && this.options.attackOrders) {
             for(var c=0; c<this.cities.length; c++) {
                 var city = this.cities[c];
-                if(city && city.data && city.energy > 1) {
+                if(city && city.data && city.energy > 1 && city.type != "DoriaAirport") {
                     var bestOrder = {"gang":0};
                     for(var i=0; i<this.options.attackOrders.length; i++) {
                         var order = this.options.attackOrders[i];

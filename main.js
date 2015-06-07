@@ -11,7 +11,10 @@ if(window.location.href.indexOf("platforms/kabam/game") != -1) {
 			guiBot,itemBot,
 			reportBot,trainBot,
 			bailoutBot,collectBot,
-			prizeBot,researchBot);
+			prizeBot,researchBot,
+			optionsBot,parserBot,
+			queueBot,debugBot,
+			utilBot);
 
 	//Add all the variables
 	bot.attackUnits = attackUnits;

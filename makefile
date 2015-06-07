@@ -1,5 +1,5 @@
-COMPRESS_OPT:=dead_code,drop_console,join_vars,warnings,unused
-UGLIFY:=uglifyjs -o underboss.js --lint --screw-ie8 -c ${COMPRESS_OPT}  -m --stats --
+COMPRESS_OPT:=dead_code,drop_console,join_vars,warnings,unused,sequences,drop_debugger,conditionals,comparisons,evaluate,booleans,loops,if_return
+UGLIFY:=uglifyjs -o underboss.js --lint --screw-ie8 -c ${COMPRESS_OPT}  -m --mangle-props --reserve-domprops --stats --
 JSL:=~/jsl/jsl -conf jsl.conf -nosummary -nologo -process
 FILES+=`ls res/*.js`
 FILES+=`ls bot/*.js`
@@ -27,3 +27,6 @@ release:
 	${UGLIFY} Underboss-dev.user.js
 	cat Underboss.meta.js underboss.js > Underboss.user.js
 	rm underboss.js
+
+dropbox: all
+	cp Underboss-dev.user.js ~/Dropbox/Godfather_Bot/

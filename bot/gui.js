@@ -1,4 +1,60 @@
 var guiBot = {
+    initGUI: function initGUI() {
+        var panel = document.createElement("div");
+        panel.setAttribute("id","panel");
+        panel.setAttribute("class", "panel");
+        document.body.appendChild(panel);
+        this.html.panel = panel;
+
+        var header = document.createElement("p");
+        header.className = "header";
+        header.innerHTML = "The Underboss";
+        header.onclick = function() {
+            if($("#panel").hasClass("panel")) {
+                $("#panel").removeClass("panel").addClass("hiddenPanel");
+                $("#mainPanel").hide();
+            } else {
+                $("#panel").removeClass("hiddenPanel").addClass("panel");
+                $("#mainPanel").show();
+            }
+        };
+        panel.appendChild(header);
+
+        var mainPanel = document.createElement("div");
+        mainPanel.setAttribute("id","mainPanel");
+        this.html.panel.appendChild(mainPanel);
+        this.html.mainPanel = mainPanel;
+
+        for(var fun in this.autoFunctions) {
+            this.drawOption(fun);
+        }
+
+
+		this.createOverview();
+
+        //this.drawButton("Cities",this.bind(this.loadCitiesData));
+
+        var infoPanel = document.createElement("div");
+        mainPanel.appendChild(infoPanel);
+
+        var tabBox = document.createElement("div");
+        tabBox.className = "tab-box";
+        infoPanel.appendChild(tabBox);
+
+        var tabs = ["Info","Prizes","Attack","Map","Train","Build","Debug"];
+        for(var i=0; i<tabs.length; i++) {
+            tabBox.appendChild(this.drawTab("info-"+(i+1),tabs[i]));
+            var infoData = this.drawTabData("info-"+(i+1));
+            infoPanel.appendChild(infoData);
+            this.html[tabs[i]+"InfoData"] = infoData;
+            if(this["draw"+tabs[i]+"Tab"]) {
+                this["draw"+tabs[i]+"Tab"](infoData);
+            }
+        }
+
+        this.listen("queue:update",this.updateDebugQueue);
+
+    },
     addMissingPrizeInfo: function addMissingPrizeInfo(str) {
         if(!this.options.missing_prize) {
             this.options.missing_prize = [];
@@ -118,63 +174,12 @@ var guiBot = {
         div.className = "tabcontent hide";
         return div;
     },
-    drawPanel: function drawPanel() {
-        var panel = document.createElement("div");
-        panel.setAttribute("id","panel");
-        panel.setAttribute("class", "panel");
-        document.body.appendChild(panel);
-        this.html.panel = panel;
-
-        var header = document.createElement("p");
-        header.className = "header";
-        header.innerHTML = "The Underboss";
-        header.onclick = function() {
-            if($("#panel").hasClass("panel")) {
-                $("#panel").removeClass("panel").addClass("hiddenPanel");
-                $("#mainPanel").hide();
-            } else {
-                $("#panel").removeClass("hiddenPanel").addClass("panel");
-                $("#mainPanel").show();
-            }
-        };
-        panel.appendChild(header);
-
-        var mainPanel = document.createElement("div");
-        mainPanel.setAttribute("id","mainPanel");
-        this.html.panel.appendChild(mainPanel);
-        this.html.mainPanel = mainPanel;
-
-        for(var fun in this.autoFunctions) {
-            this.drawOption(fun);
-        }
-
-        //this.drawButton("Cities",this.bind(this.loadCitiesData));
-
-        var infoPanel = document.createElement("div");
-        mainPanel.appendChild(infoPanel);
-
-        var tabBox = document.createElement("div");
-        tabBox.className = "tab-box";
-        infoPanel.appendChild(tabBox);
-
-        var tabs = ["Info","Prizes","Attack","Map","Train","Build","Debug"];
-        for(var i=0; i<tabs.length; i++) {
-            tabBox.appendChild(this.drawTab("info-"+(i+1),tabs[i]));
-            var infoData = this.drawTabData("info-"+(i+1));
-            infoPanel.appendChild(infoData);
-            this.html[tabs[i]+"InfoData"] = infoData;
-            if(this["draw"+tabs[i]+"Tab"]) {
-                this["draw"+tabs[i]+"Tab"](infoData);
-            }
-        }
-
-        this.listen("queue:update",this.updateDebugQueue);
-    },
     drawDebugTab: function drawDebugTab(infoData) {
         $(infoData).html("<h7>Debug Info</h7>").append($("<div/>").attr("id","debug_jobs")).append($("<div/>").attr("id","debug_queue"));
         this.drawButton("Update Jobs",this.bind(this.loadCitiesData),infoData);
         this.drawButton("Execute",this.bind(this.executeCMD),infoData);
         this.drawButton("Trace",this.bind(this.toggleTrace),infoData);
+        this.drawButton("Overview",this.showoverview,infoData);
 
         for(var fun in this.autoFunctions) {
             this.drawDebugOption(fun);
@@ -204,7 +209,7 @@ var guiBot = {
             for(var i=0; i<this.cities.length; i++) {
                 var city = this.cities[i];
                 if(city && city.data && city.data.jobs) {
-                    var b = r = u = d = "&nbsp;";
+                    var b, r, u, d = "&nbsp;";
                     for(var j=0; j<city.data.jobs.length; j++) {
                         if(city.data.jobs[j].queue == "research") { r = "R";}
                         if(city.data.jobs[j].queue == "building") { b = "B";}
@@ -458,10 +463,99 @@ var guiBot = {
     updatePrizeInfo: function updatePrizeInfo(str,city) {
         $(".prize_info").text(this.debug(str,city) +"\n"+$(".prize_info").text());
     },
-	createOverlay: function createOverlay() {
-		var overlay = document.createElement("div");
-        overlay.setAttribute("id","overlay");
-        overlay.setAttribute("class", "overlay");
-        document.body.appendChild(overlay);
-   }
+	createDialog: function createDialog(id, title) {
+		$("#panel").append("<dialog id='"+id+"' class='overlay'><h1>"+title+"</h1><button id='"+id+"_close'>Close</button></dialog>");
+		$("#"+id+"_close").click(function() {
+			$("#"+id).hide();
+		});
+		this["show"+id] = function() {
+			$("#"+id).show();
+		};
+	},
+	createOverview: function() {
+		this.createDialog('overview','Overview');
+
+		$("#overview").append("<button id='overview_update'>Update</button>");
+		$("#overview_update").click(this.bind(this.updateOverview,this));
+
+		$("#overview").append("<table id='overview_table'></table>");
+		$("#overview_table").append("\
+<tr><td>City</td>\
+<th>Cash</th><th>Cement</th><th>Food</th><th>Steel</th>\
+<th>Jobs</th>\
+</tr>\
+<tr id='total'>\
+<td>Total</td>\
+<td id='cash'>0</td><td id='cement'>0</td>\
+<td id='food'>0</td><td id='steel'>0</td>\
+<td id='jobs'></td>\
+</tr>");
+
+		this.listen("jobs:update",this.updateOverview);
+		this.listen('cities:update',this.updateOverview);
+
+		this.updateOverview();
+	},
+	numberToString: function numberToString(num) {
+		num = parseInt(num,10);
+		if(num >= 1000000000) {
+			num = Math.floor(num / 100000000);
+			num /= 10;
+			num += " B";
+		} else if(num >= 1000000) {
+			num = Math.floor(num / 100000);
+			num /= 10;
+			num += " M";
+		} else if(num >= 1000) {
+			num = Math.floor(num / 100);
+			num /= 10;
+			num += " K";
+		}
+		return num;
+	},
+    updateOverview: function updateOverview() {
+		var table = $("#overview_table");
+		var total = table.find("#total");
+		var conv = this.numberToString;
+        if(this.cities) {
+			var total_res = {};
+            for(var i=0; i<this.cities.length; i++) {
+                var city = this.cities[i];
+                if(city && city.data) {
+					var el = table.find("#"+city.data.type);
+					if(el.length === 0) {
+						total.before("\
+<tr id='"+city.data.type+"'>\
+<td>"+city.data.type+"</td>\
+<td id='cash'>0</td><td id='cement'>0</td>\
+<td id='food'>0</td><td id='steel'>0</td>\
+<td id='jobs'></td>\
+</tr>");
+						el = table.find("#"+city.data.type);
+					}
+					if(city.data.resources) {
+						$.each(city.data.resources, function(k,v) {
+							var t = total_res[k] || 0;
+							t += parseInt(v,10);
+							total_res[k] = t;
+							el.find("#"+k).html(conv(v));
+						});
+					}
+					if(city.data.jobs) {
+						var b, r, u, d = "&nbsp;";
+						for(var j=0; j<city.data.jobs.length; j++) {
+							if(city.data.jobs[j].queue == "research") { r = "R";}
+							if(city.data.jobs[j].queue == "building") { b = "B";}
+							if(city.data.jobs[j].queue == "units") { u = "U";}
+							if(city.data.jobs[j].queue == "defense_units") { d = "D";}
+						}
+						el.find("#jobs").html("("+city.data.jobs.length+") "+b+" "+r+" "+u+" "+d);
+					}
+				}
+			}
+			$.each(total_res, function(k,v) {
+				total.find("#"+k).html(conv(v));
+			});
+		}
+	}
 };

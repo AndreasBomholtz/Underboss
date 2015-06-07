@@ -1,4 +1,61 @@
 var buildBot = {
+	findBuildingLevel: function findBuildingLevel(name,city) {
+        var maxLevel = 0;
+        if(city && city.neighborhood && city.neighborhood.length) {
+            for(var i=0; i<city.neighborhood.length; i++) {
+                var neighborhood = city.neighborhood[i];
+                if(neighborhood && neighborhood.buildings) {
+                    var buildings = neighborhood.buildings;
+                    for(var b=0; b<buildings.length; b++) {
+                        if(buildings[b].type == name) {
+                            if(maxLevel < buildings[b].level) {
+                                maxLevel = buildings[b].level;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return maxLevel;
+    },
+	countBuilding: function countBuilding(neighborhood,name) {
+        this.trace();
+        var count = 0;
+        if(neighborhood && neighborhood.buildings) {
+            var buildings = neighborhood.buildings;
+            for(var b=0; b<buildings.length; b++) {
+                if(buildings[b].location == "neighborhood") {
+                    if(name === undefined && !buildings[b].hasOwnProperty('unlocked') && buildings[b].type != "Exchange") {
+                        count++;
+                    } else if(buildings[b].type == name) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    },
+	findBuildingSlot: function findBuildingSlot(neighborhood) {
+        this.trace();
+        var slots = [],i=0;
+        for(i=0; i<45; i++) {
+            slots[i] = true;
+        }
+        if(neighborhood && neighborhood.buildings) {
+            var buildings = neighborhood.buildings;
+            for(var b=0; b<buildings.length; b++) {
+                if(buildings[b].hasOwnProperty('slot') && buildings[b].location == "neighborhood") {
+                    slots[buildings[b].slot] = false;
+                }
+            }
+        }
+        for(i=0; i<slots.length; i++) {
+            if(slots[i]) {
+                return i;
+            }
+        }
+        return 0;
+    },
     calcBuldingCost: function calcBuldingCost(level,cost) {
         return cost * Math.pow(2,(level - 1));
     },
@@ -6,9 +63,16 @@ var buildBot = {
         if(cost && city && city.data && city.data.resources) {
             var res = city.data.resources;
             for (var c in cost) {
-                var rc = func(parseInt(level,10),cost[c]);
+                var rc = 0;
+				if(func) {
+					rc = func(parseInt(level,10),cost[c]);
+				} else {
+					rc = cost[c] * level;
+				}
                 if(rc > parseInt(res[c],10)) {
-                    if(func == this.calcBuldingCost) {
+					if(func === undefined) {
+						this.debugTrain("Can't train "+name+" because "+c+" ("+rc+") is more then "+res[c],city);
+                    } else if(func == this.calcBuldingCost) {
                         this.debugBuild("Can't build "+name+" because "+c+" ("+rc+") is more then "+res[c],city);
                     } else {
                         this.debugResearch("Can't research "+name+" because "+c+" ("+rc+") is more then "+res[c],city);

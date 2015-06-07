@@ -1,5 +1,8 @@
 var attackUnits = {
     'Thug': {
+		'type': 'Basic',
+		'city': 'All',
+		'trainable': true,
         'cost': {
             'cash': 750,
             'food': 281,
@@ -10,6 +13,9 @@ var attackUnits = {
         'bailout':2250
     },
     'Arsonist': {
+		'type': 'Basic',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Logistics': 1
@@ -18,7 +24,7 @@ var attackUnits = {
                 'Hideout': 2
             }
         },
-		'cost': {
+        'cost': {
             'cash': 1100,
             'food': 825,
             'steel': 413,
@@ -28,6 +34,9 @@ var attackUnits = {
         'bailout': 3300
     },
     'Demolitionist': {
+		'type': 'Intermediate',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Proficiency': 4
@@ -37,7 +46,7 @@ var attackUnits = {
                 'Hideout': 3
             }
         },
-		'cost': {
+        'cost': {
             'cash': 1700,
             'food': 638,
             'steel': 1274,
@@ -47,6 +56,9 @@ var attackUnits = {
         'bailout':5100
     },
     'Bruiser': {
+		'type': 'Intermediate',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Corruption': 6
@@ -56,7 +68,7 @@ var attackUnits = {
                 'Hideout': 4
             }
         },
-		'cost': {
+        'cost': {
             'cash': 2700,
             'food': 2025,
             'steel': 1013,
@@ -64,9 +76,12 @@ var attackUnits = {
             'influence': 20
         },
 
-		'bailout':8100
+        'bailout':8100
     },
-    'Hitman':        {
+    'Hitman': {
+		'type': 'Advanced',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Corruption': 7,
@@ -79,7 +94,10 @@ var attackUnits = {
             }
         }
     },
-    'Enforcer':      {
+    'Enforcer': {
+		'type': 'Advanced',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Proficiency': 8
@@ -90,27 +108,38 @@ var attackUnits = {
             }
         },'bailout':17100
     },
-    'TommyGunner':   {
+    'TommyGunner': {
+		'type': 'Expert',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Corruption': 10
             },
             'build': {
-                'Workshop': 6,'Hideout': 8
+                'Workshop': 6,
+                'Hideout': 8
             }
         }
     },
-    'Professional':  {
+    'Professional': {
+		'type': 'Expert',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Proficiency': 12
             },
             'build': {
-                'Garage': 9,'Hideout': 9
+                'Garage': 9,
+                'Hideout': 9
             }
         }
     },
-    'Sniper':        {
+    'Sniper': {
+		'type': 'Elite',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Corruption': 14,
@@ -124,7 +153,10 @@ var attackUnits = {
         },
         'bailout': 46800
     },
-    'Butcher':       {
+    'Butcher': {
+		'type': 'Elite',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Corruption': 16,
@@ -136,7 +168,10 @@ var attackUnits = {
             }
         }
     },
-    'BlackWidow':    {
+    'BlackWidow': {
+		'type': 'Femme Fatale',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Corruption': 17
@@ -148,7 +183,10 @@ var attackUnits = {
         },
         'bailout': 56628
     },
-    'Assassin':      {
+    'Assassin': {
+		'type': 'Femme Fatale',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Proficiency': 17
@@ -161,7 +199,10 @@ var attackUnits = {
         'bailout':56628
     },
 
-    'Courier':       {
+    'Courier': {
+		'type': 'Normal',
+		'city': 'All',
+		'trainable': true,
         'cost': {
             'cash': 500,
             'food': 188,
@@ -171,6 +212,9 @@ var attackUnits = {
         }
     },
     'DeliveryTruck': {
+		'type': 'Normal',
+		'city': 'All',
+		'trainable': true,
         'requirement': {
             'research': {
                 'Mechanics': 6,
@@ -183,99 +227,310 @@ var attackUnits = {
         }
     },
     'Freighttrain': {
-},
+    },
 
     'Heavyweight': {
+		'type': 'Pulitori',
+		'city': 'LittleItaly',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 12,
+                'Muscle': 12
+            },
+            'build': {
+                'Hideout': 9
+            }
+        },
         'bailout':62292
     },
     'Smuggler': {
+		'type': 'Pulitori',
+		'city': 'GreenwichVillage',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 12,
+                'Muscle': 12
+            },
+            'build': {
+                'Hideout': 9
+            }
+        },
         'bailout':62292
     },
     'Undertaker': {
+		'type': 'Pulitori',
+		'city': 'Brooklyn',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 12,
+                'Muscle': 12
+            },
+            'build': {
+                'Hideout': 9
+            }
+        },
         'bailout':62292
     },
     'Doctor': {
+		'type': 'Pulitori',
+		'city': 'ParkAvenue',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 12,
+                'Muscle': 12
+            },
+            'build': {
+                'Hideout': 9
+            }
+        },
         'bailout':62292
     },
-    'Loanshark':     {
+    'Loanshark': {
+		'type': 'Pulitori',
+		'city': 'AtlanticCity',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 12,
+                'Muscle': 12
+            },
+            'build': {
+                'Hideout': 9
+            }
+        },
         'bailout':62292
     },
-    'Hatchetman':    {
+    'Hatchetman': {
+		'type': 'Pulitori',
+		'city': 'Chinatown',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 12,
+                'Muscle': 12
+            },
+            'build': {
+                'Hideout': 9
+            }
+        },
         'bailout':62292
     },
-    'Triggerman':    {
+    'Triggerman': {
+		'type': 'Pulitori',
+		'city': 'Captial',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 12,
+                'Muscle': 12
+            },
+            'build': {
+                'Hideout': 9
+            }
+        },
         'bailout':62292
     },
-    'Bartender':     {
+    'Bartender': {
+		'type': 'Pulitori',
+		'city': 'Harlem',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 12,
+                'Muscle': 12
+            },
+            'build': {
+                'Hideout': 9
+            }
+        },
         'bailout':62292
     },
-    'CrookedCop':    {
+
+    'CrookedCop': {
+		'type': 'Johnney Law',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 16,
+                'Muscle': 16
+            },
+            'build': {
+                'Hideout': 10,
+				'Workshop': 10,
+				'Garage': 10
+            }
+        },
         'bailout':68520
     },
-    'Captain':       {
+    'Captain': {
+		'type': 'Johnney Law',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 16,
+                'Muscle': 16
+            },
+            'build': {
+                'Hideout': 10,
+				'Workshop': 10,
+				'Garage': 10
+            }
+        },
         'bailout':68520
     },
-    'DRC':           {
+    'DRC': {
+		'type': 'Johnney Law',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 16,
+                'Muscle': 16
+            },
+            'build': {
+                'Hideout': 10,
+				'Workshop': 10,
+				'Garage': 10
+            }
+        },
         'bailout':68520
     },
-    'PIG':           {
+    'PIG': {
+		'type': 'Johnney Law',
+		'city': 'ParkAvenue',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 16,
+                'Muscle': 16
+            },
+            'build': {
+                'Hideout': 10,
+				'Workshop': 10,
+				'Garage': 10
+            }
+        },
         'bailout':68520
     },
-    'Highbinder':    {
+    'Highbinder': {
+		'type': 'Johnney Law',
+		'city': 'Chinatown',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 16,
+                'Muscle': 16
+            },
+            'build': {
+                'Hideout': 10,
+				'Workshop': 10,
+				'Garage': 10
+            }
+        },
         'bailout':68520
     },
-    'Gman':          {
+    'Gman': {
+		'type': 'Johnney Law',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 16,
+                'Muscle': 16
+            },
+            'build': {
+                'Hideout': 10,
+				'Workshop': 10,
+				'Garage': 10
+            }
+        },
         'bailout':68520
     },
-    'Bookie':        {
+    'Bookie': {
+		'type': 'Johnney Law',
+		'city': 'Harlem',
+		'trainable': true,
+		'requirement': {
+            'research': {
+                'Medicine': 16,
+                'Muscle': 16
+            },
+            'build': {
+                'Hideout': 10,
+				'Workshop': 10,
+				'Garage': 10
+            }
+        },
         'bailout':68520
     },
-    'MisterSnip':    {
+
+    'MisterSnip': {
+		'type': 'Clean-up Crew',
         'bailout':75000
     },
-    'MisterHaul':    {
+    'MisterHaul': {
+		'type': 'Clean-up Crew',
         'bailout':75000
     },
-    'MisterFixit':   {
+    'MisterFixit': {
+		'type': 'Clean-up Crew',
         'bailout':75000
     },
-    'MissesNeat':    {
+    'MissesNeat': {
+		'type': 'Clean-up Crew',
         'bailout':75000
     },
-    'MisterSplit':   {
+    'MisterSplit': {
+		'type': 'Clean-up Crew',
         'bailout':75000
     },
-    'MisterKippy':   {
+    'MisterKippy': {
+		'type': 'Clean-up Crew',
         'bailout':75000
     },
-    'MisterPao':     {
+    'MisterPao': {
+		'type': 'Clean-up Crew',
         'bailout':75000
     },
 
-    'Hitsquad':      {
+    'Hitsquad': {
+		'trainable': false
     },
-    'Deathsquad':    {
+    'Deathsquad': {
+		'trainable': false
     },
-    'Deliverybomber':{
+    'Deliverybomber': {
+		'trainable': false
     },
-    'Medicalcourier':{
-    },
-
-    'Frontman':      {
-    },
-    'Skinner':       {
-    },
-    'Bassist':       {
+    'Medicalcourier': {
+		'trainable': false
     },
 
-    'Clyde':         {
+    'Frontman': {
+		'trainable': false
     },
-    'Bonnie':        {
+    'Skinner': {
+		'trainable': false
     },
-    'Romeo':         {
+    'Bassist': {
+		'trainable': false
     },
-    'Maneater':      {
+
+    'Clyde': {
+		'trainable': false
     },
-    'Carbomber':     {
+    'Bonnie': {
+		'trainable': false
+    },
+    'Romeo': {
+		'trainable': false
+    },
+    'Maneater': {
+		'trainable': false
+    },
+    'Carbomber': {
+		'trainable': false
     }
 };

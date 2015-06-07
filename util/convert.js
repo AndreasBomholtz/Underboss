@@ -1,6 +1,7 @@
 function convertToSource(obj) {
     //create an array that will later be joined into a string.
     var string = [];
+	var prop;
 
     //is object
     //    Both arrays and objects seem to return "object"
