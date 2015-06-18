@@ -81,17 +81,26 @@ var buildBot = {
                 }
             }
             for (var cc in cost) {
-                var dc = func(level,cost[cc]);
+				var dc;
+				if(func) {
+					dc = func(parseInt(level,10),cost[cc]);
+				} else {
+					dc = cost[cc] * level;
+				}
                 city.resources[cc] = parseInt(city.resources[cc],10) - dc;
             }
         } else if(cost) {
-            if(func == this.calcBuldingCost) {
+			if(func === undefined) {
+				this.debugTrain("Missing city data");
+            } else if(func == this.calcBuldingCost) {
                 this.debugBuild("Missing city data");
             } else {
                 this.debugResearch("Missing city data");
             }
         } else {
-            if(func == this.calcBuldingCost) {
+            if(func === undefined) {
+				this.debugTrain("Missing cost for "+name);
+            } else if(func == this.calcBuldingCost) {
                 this.debugBuild("Missing cost for "+name);
             } else {
                 this.debugResearch("Missing cost for "+name);
@@ -111,6 +120,7 @@ var buildBot = {
             var cap = manLvl * 3 + 10;
             var total = this.countBuilding(neighborhood);
             this.debugBuild("Man Level: "+manLvl+" Total building: "+ total+" => "+cap,city);
+
             if(cap > total) {
                 var slot = this.findBuildingSlot(neighborhood);
 
@@ -185,77 +195,92 @@ var buildBot = {
         lowLevel.lvl = 20;
         lowLevel.id = "";
         lowLevel.location = "";
-        if(neighborhood && neighborhood.buildings) {
-            var buildings = neighborhood.buildings;
-            var city = neighborhood.city;
-            for(var b=0; b<buildings.length; b++) {
-                var building = buildings[b];
-                if(!building.hasOwnProperty('unlocked') && building.level  < 9) {
-                    var canBuild = true;
-                    var prio = this.buildings[building.type];
-                    if(prio && prio.requirement) {
-                        var reqs = prio.requirement;
-                        if(reqs.build) {
-                            var build_prio = reqs.build[building.level];
-                            if(build_prio) {
-                                for(var req in build_prio) {
-                                    var lvl = this.findBuildingLevel(req,neighborhood.city);
-                                    if(lvl < build_prio[req]) {
-                                        this.debugBuild("Can't build "+building.type+" because "+req+" is not "+build_prio[req],city);
-                                        canBuild = false;
-                                        break;
-                                    } else {
-                                        this.debugBuild(building.type+" has req "+req+" ("+build_prio[req]+") and it is "+lvl,city);
-                                    }
-                                }
+        if(!neighborhood || !neighborhood.buildings) {
+			return false;
+		}
+
+        var buildings = neighborhood.buildings;
+        var city = neighborhood.city;
+        for(var b=0; b<buildings.length; b++) {
+            var building = buildings[b];
+            if(building.hasOwnProperty('unlocked') || building.level >= 9) {
+				continue;
+			}
+
+            var canBuild = true;
+            var prio = this.buildings[building.type];
+            if(prio && prio.requirement) {
+                var reqs = prio.requirement;
+                if(reqs.build) {
+                    var build_prio = reqs.build[building.level];
+                    if(build_prio) {
+                        for(var req in build_prio) {
+                            var lvl = this.findBuildingLevel(req,neighborhood.city);
+                            if(lvl < build_prio[req]) {
+                                this.debugBuild("Can't build "+building.type+" because "+req+" is not "+build_prio[req],city);
+                                canBuild = false;
+                                break;
+                            } else {
+                                this.debugBuild(building.type+" has req "+req+" ("+build_prio[req]+") and it is "+lvl,city);
                             }
                         }
-                        if(reqs.gangster && reqs.gangster > this.player_level) {
-                            this.debugBuild("Can't build "+building.type+" because gangster is not "+reqs.gangster,city);
-                            canBuild = false;
-                            break;
-                        } else if(reqs.gangster) {
-                            this.debugBuild(building.type+" has gangster "+reqs.gangster+" and we are "+this.player_level,city);
-                        }
-                    } else {
-                        this.debugBuild(building.type+" has no requirements",city);
-                    }
-                    if(canBuild && prio && prio.cost) {
-                        if(!this.hasResources(city,building.type,prio.cost,building.level,this.calcBuldingCost)) {
-                            canBuild = false;
-                        } else {
-                            this.debugBuild("Lots of resources",city);
-                        }
-                    } else if(canBuild) {
-                        this.debugBuild("Not cost info for "+building.type,city);
-                    }
-                    if(canBuild &&
-                       (lowLevel.lvl > building.level || (building.level > 3 && lowLevel.lvl == building.level && lowLevel.location == "neighborhood")))
-                    {
-                        lowLevel.lvl = building.level;
-                        lowLevel.id = building.id;
-                        lowLevel.name = building.type;
-                        lowLevel.location = building.location;
-                        lowLevel.building = building;
                     }
                 }
-            }
-            if(lowLevel.lvl != 20) {
-                if(lowLevel.lvl > 5) {
-                    var tmp = this.upgradeImportentBuilding(neighborhood,lowLevel);
-                    if(this.hasResources(city,tmp.name,this.buildings[tmp.name].cost,tmp.lvl,this.calcBuldingCost)) {
-                        lowLevel = tmp;
-                    } else {
-                        this.debugBuild("Do not upgrade importent building, not egnogh rescources",city);
-                    }
+                if(reqs.gangster && reqs.gangster > this.player_level) {
+                    this.debugBuild("Can't build "+building.type+" because gangster is not "+reqs.gangster,city);
+                    canBuild = false;
+                    break;
+                } else if(reqs.gangster) {
+                    this.debugBuild(building.type+" has gangster "+reqs.gangster+" and we are "+this.player_level,city);
                 }
-                this.updateInfo("Build "+lowLevel.name+" "+(lowLevel.lvl+1),city);
-                this.sendCommand("Build "+lowLevel.name+" "+(lowLevel.lvl+1)+" in "+city.type,"cities/"+city.id+"/buildings/"+lowLevel.id+".json","_method=put",city);
-                lowLevel.building.level++;
-                return true;
+            } else {
+                this.debugBuild(building.type+" has no requirements",city);
             }
-        }
-        return false;
+            if(canBuild && prio && prio.cost) {
+                if(!this.hasResources(city,building.type,prio.cost,building.level,this.calcBuldingCost)) {
+                    canBuild = false;
+                } else {
+                    this.debugBuild("Lots of resources",city);
+                }
+            } else if(canBuild) {
+                this.debugBuild("Not cost info for "+building.type,city);
+            }
+            if(canBuild &&
+               (lowLevel.lvl > building.level ||
+				(building.level > 3 && lowLevel.lvl == building.level && lowLevel.location == "neighborhood")))
+            {
+                lowLevel.lvl = building.level;
+                lowLevel.id = building.id;
+                lowLevel.name = building.type;
+                lowLevel.location = building.location;
+                lowLevel.building = building;
+            }
+		}
+
+		if(lowLevel.lvl != 20) {
+			if(lowLevel.lvl > 5) {
+				var tmp = this.upgradeImportentBuilding(neighborhood,lowLevel);
+				if(!tmp) {
+					this.debugBuild("Faild to find a building",city);
+					return false;
+				}
+				if(!this.buildings[tmp.name]) {
+					this.debug("Missing info for: "+tmp.name,city);
+				} else if(this.hasResources(city,tmp.name,this.buildings[tmp.name].cost,tmp.lvl,this.calcBuldingCost)) {
+					lowLevel = tmp;
+				} else {
+					this.debugBuild("Do not upgrade importent building, not egnogh rescources",city);
+				}
+			}
+			this.updateInfo("Build "+lowLevel.name+" "+(lowLevel.lvl+1),city);
+			this.sendCommand("Build "+lowLevel.name+" "+(lowLevel.lvl+1)+" in "+city.type,
+							 "cities/"+city.id+"/buildings/"+lowLevel.id+".json",
+							 "_method=put",city);
+			lowLevel.building.level++;
+			return true;
+		}
+
+		return false;
     },
     doBuild: function doBuild() {
         this.trace();

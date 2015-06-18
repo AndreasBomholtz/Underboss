@@ -14,15 +14,14 @@ if(window.location.href.indexOf("platforms/kabam/game") != -1) {
 			prizeBot,researchBot,
 			optionsBot,parserBot,
 			queueBot,debugBot,
-			utilBot);
+			utilBot,armorBot);
 
 	//Add all the variables
 	bot.attackUnits = attackUnits;
 	bot.defenseUnits = defenseUnits;
 	bot.buildings = buildings;
 	bot.research = research;
-	bot.prizes = prizes;
-	bot.collect = collect;
+	bot.items = items;
 
 	//Convert the obj to source
 	var src = convertToSource(bot);

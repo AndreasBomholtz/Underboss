@@ -1,7 +1,7 @@
 var defenseUnits = {
     "BarbedWire": {
 		'city': 'All',
-		'trainable': false,
+		'trainable': true,
         'requirement': {
             'research': {
                 'Logistics': 4
@@ -20,7 +20,7 @@ var defenseUnits = {
     },
     "BoobyTrap": {
 		'city': 'All',
-		'trainable': false,
+		'trainable': true,
         'requirement': {
             'research': {
                 'Logistics': 8
@@ -39,7 +39,7 @@ var defenseUnits = {
     },
     "GuardDog": {
 		'city': 'All',
-		'trainable': false,
+		'trainable': true,
         'requirement': {
             'research': {
                 'Logistics': 12
@@ -52,7 +52,7 @@ var defenseUnits = {
     },
     "ArmedGuard": {
 		'city': 'All',
-		'trainable': false,
+		'trainable': true,
         'requirement': {
             'research': {
                 'Logistics': 14
@@ -65,7 +65,7 @@ var defenseUnits = {
     },
     "Bodyguard": {
 		'city': 'All',
-		'trainable': false,
+		'trainable': true,
         'requirement': {
             'research': {
                 'Logistics': 16
@@ -78,7 +78,7 @@ var defenseUnits = {
     },
     "UnnamedDefender": {
 		'city': 'All',
-		'trainable': false,
+		'trainable': true,
         'requirement': {
             'research': {
                 'Logistics': 18
@@ -91,7 +91,7 @@ var defenseUnits = {
     },
     "Moneyman": {
 		'city': 'All',
-		'trainable': false,
+		'trainable': true,
         'requirement': {
             'research': {
                 'Medicine': 16,

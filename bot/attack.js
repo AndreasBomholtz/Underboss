@@ -76,9 +76,6 @@ var attackBot = {
         this.trace();
         var t = 60000;
         var d = new Date();
-        if(!this.cities || !this.cities[0] || !this.cities[0].data) {
-            return(1000);
-        }
 
         if(!this.options.map) {
             this.updateMap();

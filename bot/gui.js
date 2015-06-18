@@ -31,6 +31,7 @@ var guiBot = {
 
 
 		this.createOverview();
+		this.createArmorView();
 
         //this.drawButton("Cities",this.bind(this.loadCitiesData));
 
@@ -54,58 +55,6 @@ var guiBot = {
 
         this.listen("queue:update",this.updateDebugQueue);
 
-    },
-    addMissingPrizeInfo: function addMissingPrizeInfo(str) {
-        if(!this.options.missing_prize) {
-            this.options.missing_prize = [];
-        }
-        this.options.missing_prize.push(str);
-        this.saveOptions();
-    },
-    showMissingPrizeInfo: function showMissingPrizeInfo() {
-        this.trace();
-        if(this.options.missing_prize) {
-            this.debug("Show Missing prizes");
-            for(var i=0; i<this.options.missing_prize.length; i++) {
-                var prize = this.options.missing_prize[i];
-                if(this.prizes[prize]) {
-                    this.options.missing_prize.splice(i,1);
-                } else {
-                    this.debug("Missing prize info: "+prize);
-                }
-            }
-            this.saveOptions();
-        } else {
-            this.debug("No missing prizes");
-        }
-    },
-    updatePrizeList: function updatePrizeList() {
-        this.trace();
-        var min = {"cost":1000,"name":""};
-
-        if(this.prizeList && this.prizeList.length) {
-            for(var i=0; i<this.prizeList.length; i++) {
-                if(this.prizes[this.prizeList[i].type]) {
-                    if(min.cost > this.prizes[this.prizeList[i].type]) {
-                        min.cost = this.prizes[this.prizeList[i].type];
-                        min.name = this.prizeList[i].type;
-                    }
-                } else {
-                    this.updatePrizeInfo(this.prizeList[i].type +" is unknown");
-                    this.addMissingPrizeInfo(this.prizeList[i].type);
-                }
-            }
-
-            if(min.cost >= 10) {
-                this.getPrize();
-                if(this.free_ticket) {
-                    this.free_ticket = false;
-                } else if(this.items && this.items.DailyChance && this.items.DailyChance > 0) {
-                    this.items.DailyChance--;
-                }
-                this.loadPlayerData();
-            }
-        }
     },
     drawOption: function drawOption(name) {
         var div = this.drawGenericOption(name,this.html.mainPanel,"enable_","changeEnable",this.options["enable"+name]);
@@ -187,19 +136,6 @@ var guiBot = {
         this.listen("jobs:update",this.updateDebug);
         this.listen("report:update",this.handleReport);
     },
-    toggleTrace: function() {
-        this.enableTrace = !this.enableTrace;
-		console.info("Trace is now "+this.enableTrace);
-    },
-    executeCMD: function() {
-        var cmd = window.prompt("Enter CMD","");
-        try {
-            var res = eval(cmd);
-            if(res) {this.debug(res);}
-        } catch(e) {
-            alert(e);
-        }
-    },
     updateDebugQueue: function updateDebugQueue() {
         $("#debug_queue").html("<h7>Queue: "+this.queue.length+"</h7><h7>Slow Queue: "+this.slow_queue.length+"</h7>");
     },
@@ -209,7 +145,8 @@ var guiBot = {
             for(var i=0; i<this.cities.length; i++) {
                 var city = this.cities[i];
                 if(city && city.jobs) {
-                    var b, r, u, d = "&nbsp;";
+                    var b, r, u, d;
+					b = r = u = d = "&nbsp;";
                     for(var j=0; j<city.jobs.length; j++) {
                         if(city.jobs[j].queue == "research") { r = "R";}
                         if(city.jobs[j].queue == "building") { b = "B";}
@@ -275,7 +212,7 @@ var guiBot = {
         var tr;
         for(var unit in this.attackUnits) {
 			if(this.attackUnits[unit].trainable) {
-				if((count % 2) === 0) {
+				if((count % 3) === 0) {
 					tr = $("<tr/>");
 					table.append(tr);
 				}
@@ -471,6 +408,11 @@ var guiBot = {
 			$("#"+id).show();
 		};
 	},
+	createArmorView: function() {
+		this.createDialog('armorView','Armor View');
+
+
+	},
 	createOverview: function() {
 		this.createDialog('overview','Overview');
 
@@ -495,23 +437,6 @@ var guiBot = {
 		this.listen('resources:update',this.updateOverview);
 
 		this.updateOverview();
-	},
-	numberToString: function numberToString(num) {
-		num = parseInt(num,10);
-		if(num >= 1000000000) {
-			num = Math.floor(num / 100000000);
-			num /= 10;
-			num += " B";
-		} else if(num >= 1000000) {
-			num = Math.floor(num / 100000);
-			num /= 10;
-			num += " M";
-		} else if(num >= 1000) {
-			num = Math.floor(num / 100);
-			num /= 10;
-			num += " K";
-		}
-		return num;
 	},
     updateOverview: function updateOverview() {
 		var table = $("#overview_table");
@@ -542,7 +467,8 @@ var guiBot = {
 						});
 					}
 					if(city.jobs) {
-						var b, r, u, d = "&nbsp;";
+						var b, r, u, d;
+						b = r = u = d = "&nbsp;";
 						for(var j=0; j<city.jobs.length; j++) {
 							if(city.jobs[j].queue == "research") { r = "R";}
 							if(city.jobs[j].queue == "building") { b = "B";}

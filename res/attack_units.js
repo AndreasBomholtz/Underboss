@@ -92,6 +92,13 @@ var attackUnits = {
                 'Workshop': 5,
                 'Garage':5
             }
+        },
+        'cost': {
+            'cash': 3800,
+            'food': 1900,
+            'steel': 1900,
+            'cement': 1900,
+            'influence': 30
         }
     },
     'Enforcer': {
@@ -106,7 +113,15 @@ var attackUnits = {
                 'Garage': 6,
                 'Hideout': 7
             }
-        },'bailout':17100
+        },
+        'cost': {
+            'cash': 5700,
+            'food': 2138,
+            'steel': 4250,
+            'cement': 2138,
+            'influence': 30
+        },
+		'bailout':17100
     },
     'TommyGunner': {
 		'type': 'Expert',
@@ -304,7 +319,7 @@ var attackUnits = {
         },
         'bailout':62292
     },
-    'Hatchetman': {
+    'HatchetMan': {
 		'type': 'Pulitori',
 		'city': 'Chinatown',
 		'trainable': true,
@@ -319,7 +334,7 @@ var attackUnits = {
         },
         'bailout':62292
     },
-    'Triggerman': {
+    'TriggerMan': {
 		'type': 'Pulitori',
 		'city': 'Captial',
 		'trainable': true,

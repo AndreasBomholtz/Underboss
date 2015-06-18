@@ -70,7 +70,7 @@ var queueBot = {
         if(typeof(data) == "string") {
             data = JSON.parse(data);
         }
-        this.debug("Error sending command");
+        this.debug("Error sending command: "+data.responseText);
         this.debug(this.lastCommand);
 
         if(this.lastCommand.callback !== undefined) {

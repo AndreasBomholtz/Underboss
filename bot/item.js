@@ -1,29 +1,31 @@
 var itemBot = {
-    doItems: function doItems() {
-        if(this.items) {
-            if(this.cities) {
-                var city = this.cities[0];
-                for(var i=0; i<this.collect.length; i++) {
-                    if(this.items[this.collect[i]]) {
-                        this.debugItems(this.collect[i]+": "+this.items[this.collect[i]]);
-                        this.items[this.collect[i]]--;
-                        this.sendCommand("Collect "+this.collect[i],
-										 "player_items/"+this.collect[i]+".json",
-										 "_method=delete",
-										 city);
-                        this.addStat("Item",1);
-                        return(1000);
-                    } else {
-						this.debugItems("Can't find "+this.collect[i]+" in items",city);
-					}
-                }
-                //this.loadPlayerData();
-            } else {
-                this.debugItems("Cities is not ready");
-            }
-        } else {
+	doItems: function doItems() {
+		doItemsEvent();
+	},
+    doItemsEvent: function doItemsEvent() {
+        if(!this.my_items) {
             this.debugItems("Items is not ready");
+			return;
         }
-		return(1000);
+
+        if(!this.cities) {
+			this.debugItems("Cities is not ready");
+			return;
+		}
+
+        var city = this.cities[0];
+        for(var item in this.items) {
+			if(this.items[item].autoCollect && this.my_items[item]) {
+                this.debugItems(item+": "+this.my_items[item]);
+                this.my_items[item]--;
+                this.sendCommand("Use "+item,
+								 "player_items/"+item+".json",
+								 "_method=delete",
+								 city);
+                this.addStat("Item",1);
+            } else {
+				this.debugItems("Can't find "+item+" in items",city);
+			}
+        }
     }
 };

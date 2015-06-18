@@ -2,6 +2,7 @@ function convertToSource(obj) {
     //create an array that will later be joined into a string.
     var string = [];
 	var prop;
+	var tmp = [];
 
     //is object
     //    Both arrays and objects seem to return "object"
@@ -12,21 +13,30 @@ function convertToSource(obj) {
     if (typeof(obj) == "object" && (obj.join == undefined)) {
         string.push("{");
         for (prop in obj) {
-            string.push(prop, ": ", convertToSource(obj[prop]), ",");
+            tmp.push(prop+": "+convertToSource(obj[prop]));
         }
+		string.push(tmp.join(","));
         string.push("}");
 
     //is array
     } else if (typeof(obj) == "object" && !(obj.join == undefined)) {
         string.push("[");
-        for(prop in obj) {
-            string.push(convertToSource(obj[prop]), ",");
+        for(var i=0; i<obj.length; i++) {
+            tmp.push("'"+obj[i]+"'");
         }
+		string.push(tmp.join(","));
         string.push("]");
 
     //is function
     } else if (typeof(obj) == "function") {
-        string.push(obj.toString());
+		var f = obj.toString();
+		if(f.indexOf("random") != -1) {
+			console.log(obj);
+			console.log(f);
+			console.log("DROP");
+		} else {
+			string.push(f);
+		}
 
     //all other values can be done with JSON.stringify
     } else {

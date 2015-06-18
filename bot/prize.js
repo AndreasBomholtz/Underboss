@@ -30,5 +30,59 @@ var prizeBot = {
             this.debugPrize("Cities not ready");
         }
         return(0);
+    },
+	updatePrizeList: function updatePrizeList() {
+        this.trace();
+        var min = {"cost":1000,"name":""};
+
+        if(this.prizeList && this.prizeList.length) {
+            for(var i=0; i<this.prizeList.length; i++) {
+                if(this.items[this.prizeList[i].type]) {
+					var prize = this.items[this.prizeList[i].type];
+                    if(min.cost > prize.cost) {
+                        min.cost = prize.cost;
+                        min.name = this.prizeList[i].type;
+                    }
+                } else {
+                    this.updatePrizeInfo(this.prizeList[i].type +" is unknown");
+                    this.addMissingPrizeInfo(this.prizeList[i].type);
+                }
+            }
+
+            if(min.cost >= 10) {
+                this.getPrize();
+                if(this.free_ticket) {
+                    this.free_ticket = false;
+                } else if(this.items && this.items.DailyChance && this.items.DailyChance > 0) {
+                    this.items.DailyChance--;
+                }
+                this.loadPlayerData();
+            }
+        }
+    },
+
+    addMissingPrizeInfo: function addMissingPrizeInfo(str) {
+        if(!this.options.missing_prize) {
+            this.options.missing_prize = [];
+        }
+        this.options.missing_prize.push(str);
+        this.saveOptions();
+    },
+    showMissingPrizeInfo: function showMissingPrizeInfo() {
+        this.trace();
+        if(this.options.missing_prize) {
+            this.debug("Show Missing prizes");
+            for(var i=0; i<this.options.missing_prize.length; i++) {
+                var prize = this.options.missing_prize[i];
+                if(this.items[prize]) {
+                    this.options.missing_prize.splice(i,1);
+                } else {
+                    this.debug("Missing prize info: "+prize);
+                }
+            }
+            this.saveOptions();
+        } else {
+            this.debug("No missing prizes");
+        }
     }
 };

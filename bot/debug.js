@@ -33,5 +33,18 @@ var debugBot = {
             this["enableDebug"+name] = this.html["enable_debug_"+name].checked;
             this.debug("Enable Debug "+name+": " + this["enableDebug"+name]);
         };
+    },
+    toggleTrace: function() {
+        this.enableTrace = !this.enableTrace;
+		console.info("Trace is now "+this.enableTrace);
+    },
+    executeCMD: function() {
+        var cmd = window.prompt("Enter CMD","");
+        try {
+            var res = eval(cmd);
+            if(res) {this.debug(res);}
+        } catch(e) {
+            alert(e);
+        }
     }
 };

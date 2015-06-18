@@ -12,10 +12,15 @@ var bot = {
         "LoyaltyToken": {},
         "Cityscape": {},
         "Exchange": {},
-        "Items": {},
+        "Items": {
+			"event": "player:items"
+		},
         "Report": {},
         "Bonds": {},
-		"Quests": {}
+		"Quests": {},
+		"Armor": {
+			"event": "city:armor:update"
+		}
     },
 
     //Functions
@@ -26,17 +31,27 @@ var bot = {
             this.debug("Enable "+name+": " + this.options["enable"+name]);
         };
     },
-    generateAutoThread: function generateAutoThread(name) {
-        this['auto'+name+'Thread'] = function() {
-            var m = this.bind(this['auto'+name+'Thread']);
-            var t = 60000;
-            if(this.cities && this.options['enable'+name]) {
-                var res = this['do'+name]();
-                if(res) {t = res;}
-            }
-            setTimeout(m,t);
-        };
-        this['auto'+name+'Thread']();
+    generateAutoThread: function generateAutoThread(name, opt) {
+		if(opt.event) {
+			this.listen(opt.event,function(event, param) {
+				if(this.cities && this.options['enable'+name]) {
+					this['do'+name+'Event'](param);
+				}
+			});
+		} else {
+			this['auto'+name+'Thread'] = function() {
+				var m = this.bind(this['auto'+name+'Thread']);
+				var t = 60000;
+				if(this.cities && this.options['enable'+name]) {
+					var res = this['do'+name]();
+					if(res) {
+						t = res;
+					}
+				}
+				setTimeout(m,t);
+			};
+			this['auto'+name+'Thread']();
+		}
     },
     getCity: function getCity(id) {
         if(this.cities) {
@@ -60,7 +75,6 @@ var bot = {
         this.saveOptions();
         this.updateStats();
     },
-
     checkCityQueue: function checkCityQueue(city,queue,building) {
         this.trace();
         var queueReady = false;
@@ -68,13 +82,13 @@ var bot = {
             queueReady = true;
             for(var n=0; n<city.jobs.length; n++) {
                 if(building === undefined) {
-                    if(city.jobs[n].queue && city.jobs[n].queue == queue) {
+                    if(city.jobs[n].queue && city.jobs[n].queue === queue) {
                         queueReady = false;
                         break;
                     }
                 } else {
                     if(city.jobs[n].city_building_id &&
-                       city.jobs[n].city_building_id == building)
+                       city.jobs[n].city_building_id === building)
                     {
                         queueReady = false;
                         break;
@@ -214,8 +228,9 @@ var bot = {
 
         //Generate functions
         for(var fun in this.autoFunctions) {
-            this.generateChangeEnable(fun);
-            this.generateAutoThread(fun);
+			this.generateAutoThread(fun,this.autoFunctions[fun]);
+
+			this.generateChangeEnable(fun);
             this.generateDebugEnable(fun);
             this.generateDebugFunction(fun);
         }

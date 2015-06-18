@@ -16,6 +16,10 @@ var parserBot = {
                     this.signal('cities:update');
                 }
             }
+			if(data.player_armory_items) {
+				this.player_armory_items = data.player_armory_items;
+				this.signal('player:armor:update');
+			}
             if(data.neighborhoods) {
                 for(n in data.neighborhoods) {
                     var neighborhood = data.neighborhoods[n];
@@ -46,6 +50,8 @@ var parserBot = {
             if(data.city) {
                 city = this.getCity(data.city.id);
                 if(city) {
+					city.type = data.city.type;
+
                     if(city.jobs && data.city.jobs) {
                         for(i=0; i<city.jobs.length; i++) {
                             var present = false;
@@ -55,7 +61,7 @@ var parserBot = {
                                     break;
                                 }
                             }
-                            if(!present && city.jobs[i].queue) {
+                            if(!present && city.jobs[i].queue && city.jobs[i].id) {
                                 this.handleQueueComplete(city.jobs[i].queue);
                             }
                         }
@@ -82,7 +88,13 @@ var parserBot = {
 						city.jobs = data.city.jobs;
 						this.signal("jobs:update");
 					}
-					city.type = data.city.type;
+					if(data.city.equipped_armory_items) {
+						city.armor = data.city.equipped_armory_items;
+						this.signal("city:armor:update",city);
+					}
+
+					// for debug
+					city.data = data.city;
                 }
             }
             if(data.terrain) {
@@ -112,7 +124,7 @@ var parserBot = {
                 this.free_ticket = data.has_free_ticket;
             }
             if(data.items) {
-                this.items = data.items;
+                this.my_items = data.items;
 				this.signal('player:items');
             }
 			if(data.quests) {
