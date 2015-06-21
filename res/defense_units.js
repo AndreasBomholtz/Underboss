@@ -90,7 +90,7 @@ var defenseUnits = {
         }
     },
     "Moneyman": {
-		'city': 'All',
+		'city': 'Captial',
 		'trainable': true,
         'requirement': {
             'research': {

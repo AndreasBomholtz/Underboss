@@ -22,10 +22,17 @@ var trainBot = {
 			}
 
             for(var unit in this.attackUnits) {
-				if(!this.attackUnits[unit].trainable) {
+				var aUnit = this.attackUnits[unit];
+				if(!aUnit.trainable) {
 					this.debugTrain(unit+" is not trainable",city);
 					continue;
 				}
+
+				if(aUnit.city && aUnit.city != "All" && aUnit.city != city.type) {
+					this.debugDefense(unit+" can't be trained in "+city.type+" only in "+aUnit.city);
+					continue;
+				}
+
 
 				var count = this.options.trainOrders[unit];
 				if(!count) {
@@ -39,7 +46,7 @@ var trainBot = {
 
 				var amount = 10;
 				var unit_count = 0;
-				var cost = this.attackUnits[unit].cost;
+				var cost = aUnit.cost;
 				if(city.units[unit]) {
 					unit_count = city.units[unit];
 				}
@@ -80,11 +87,18 @@ var trainBot = {
 			var lastUnit = undefined;
             var amount = 10;
             for(var unit in this.defenseUnits) {
-				if(!this.defenseUnits[unit].trainable) {
+				var dUnit = this.defenseUnits[unit];
+				if(!dUnit.trainable) {
 					this.debugDefense(unit+" is not trainable",city);
 					continue;
 				}
 
+				if(dUnit.city && dUnit.city != "All" && dUnit.city != city.type) {
+					this.debugDefense(unit+" can't be trained in "+city.type+" only in "+dUnit.city);
+					continue;
+				}
+
+				var skip = false;
 				var req = this.defenseUnits[unit].requirement;
 				if(req.build) {
 					for(var b in req.build) {
@@ -92,9 +106,11 @@ var trainBot = {
 						this.debugDefense(unit+" has build req "+b+" of "+req.build[b]+" and it is "+build,city);
 						if(build < req.build[b]) {
 							this.debugDefense("Skipping "+unit,city);
-							continue;
+							skip = true;
+							break;
 						}
 					}
+					if(skip) continue;
 				}
 				if(req.research) {
 					for(var r in req.research) {
@@ -105,9 +121,11 @@ var trainBot = {
 						this.debugDefense(unit+" has req "+r+" of "+req.research[r]+" and it is "+resLvl,city);
 						if(resLvl < req.research[r]) {
 							this.debugDefense("Skiping",city);
-							continue;
+							skip = true;
+							break;
 						}
 					}
+					if(skip) continue;
 				}
 
 				var cost = this.defenseUnits[unit].cost;
