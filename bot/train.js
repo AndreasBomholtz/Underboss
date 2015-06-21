@@ -12,7 +12,6 @@ var trainBot = {
 			return;
 		}
 
-
         this.debugTrain(this.options.trainOrders);
 
 		for(var i=0; i<this.cities.length; i++) {
@@ -42,6 +41,40 @@ var trainBot = {
 
 				if(!city.units) {
 					this.debugTrain("city.units is missing",city);
+				}
+
+				var skip = false;
+				var req = aUnit.requirement;
+				if(req.build) {
+					for(var b in req.build) {
+                        var build = this.findBuildingLevel(b,city);
+						this.debugTrain(unit+" has build req "+b+" of "+req.build[b]+" and it is "+build,city);
+						if(build < req.build[b]) {
+							this.debugTrain("Skipping "+unit,city);
+							skip = true;
+							break;
+						}
+					}
+					if(skip) {
+						continue;
+					}
+				}
+				if(req.research) {
+					for(var r in req.research) {
+						var resLvl = city.research[r];
+						if(resLvl === undefined) {
+							resLvl = 0;
+						}
+						this.debugTrain(unit+" has req "+r+" of "+req.research[r]+" and it is "+resLvl,city);
+						if(resLvl < req.research[r]) {
+							this.debugTrain("Skiping",city);
+							skip = true;
+							break;
+						}
+					}
+					if(skip) {
+						continue;
+					}
 				}
 
 				var amount = 10;
@@ -110,7 +143,9 @@ var trainBot = {
 							break;
 						}
 					}
-					if(skip) continue;
+					if(skip) {
+						continue;
+					}
 				}
 				if(req.research) {
 					for(var r in req.research) {
@@ -125,7 +160,9 @@ var trainBot = {
 							break;
 						}
 					}
-					if(skip) continue;
+					if(skip) {
+						continue;
+					}
 				}
 
 				var cost = this.defenseUnits[unit].cost;
