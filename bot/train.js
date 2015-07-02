@@ -1,4 +1,30 @@
 var trainBot = {
+	checkRequirements: function(name, req, city, debug) {
+		if(req.build) {
+			for(var b in req.build) {
+                var build = this.findBuildingLevel(b,city);
+				this["debug"+debug](name+" has build req "+b+" of "+req.build[b]+" and it is "+build,city);
+				if(build < req.build[b]) {
+					this["debug"+debug]("Skipping "+name,city);
+					return(false);
+				}
+			}
+		}
+		if(req.research) {
+			for(var r in req.research) {
+				var resLvl = city.research[r];
+				if(resLvl === undefined) {
+					resLvl = 0;
+				}
+				this["debug"+debug](name+" has req "+r+" of "+req.research[r]+" and it is "+resLvl,city);
+				if(resLvl < req.research[r]) {
+					this["debug"+debug]("Skiping "+name,city);
+					return(false);
+				}
+			}
+		}
+		return(true);
+	},
     doTrain: function doTrain() {
         this.trace();
 
@@ -32,7 +58,6 @@ var trainBot = {
 					continue;
 				}
 
-
 				var count = this.options.trainOrders[unit];
 				if(!count) {
 					this.debugTrain("Do not train "+count+" "+unit,city);
@@ -45,36 +70,8 @@ var trainBot = {
 
 				var skip = false;
 				var req = aUnit.requirement;
-				if(req.build) {
-					for(var b in req.build) {
-                        var build = this.findBuildingLevel(b,city);
-						this.debugTrain(unit+" has build req "+b+" of "+req.build[b]+" and it is "+build,city);
-						if(build < req.build[b]) {
-							this.debugTrain("Skipping "+unit,city);
-							skip = true;
-							break;
-						}
-					}
-					if(skip) {
-						continue;
-					}
-				}
-				if(req.research) {
-					for(var r in req.research) {
-						var resLvl = city.research[r];
-						if(resLvl === undefined) {
-							resLvl = 0;
-						}
-						this.debugTrain(unit+" has req "+r+" of "+req.research[r]+" and it is "+resLvl,city);
-						if(resLvl < req.research[r]) {
-							this.debugTrain("Skiping",city);
-							skip = true;
-							break;
-						}
-					}
-					if(skip) {
-						continue;
-					}
+				if(!this.checkRequirements(unit, req, city, "Train")) {
+					continue;
 				}
 
 				var amount = 10;
@@ -133,36 +130,8 @@ var trainBot = {
 
 				var skip = false;
 				var req = this.defenseUnits[unit].requirement;
-				if(req.build) {
-					for(var b in req.build) {
-                        var build = this.findBuildingLevel(b,city);
-						this.debugDefense(unit+" has build req "+b+" of "+req.build[b]+" and it is "+build,city);
-						if(build < req.build[b]) {
-							this.debugDefense("Skipping "+unit,city);
-							skip = true;
-							break;
-						}
-					}
-					if(skip) {
-						continue;
-					}
-				}
-				if(req.research) {
-					for(var r in req.research) {
-						var resLvl = city.research[r];
-						if(resLvl === undefined) {
-							resLvl = 0;
-						}
-						this.debugDefense(unit+" has req "+r+" of "+req.research[r]+" and it is "+resLvl,city);
-						if(resLvl < req.research[r]) {
-							this.debugDefense("Skiping",city);
-							skip = true;
-							break;
-						}
-					}
-					if(skip) {
-						continue;
-					}
+				if(!this.checkRequirements(unit, req, city, "Defense")) {
+					continue;
 				}
 
 				var cost = this.defenseUnits[unit].cost;

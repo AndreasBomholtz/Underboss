@@ -4,7 +4,13 @@ var debugBot = {
             this.debug(arguments.callee.caller.name);
         }
     },
+	setDebugCity: function setDebugCity(city) {
+		this.debugCity = city;
+	},
     debug: function debug(str,city,info) {
+		if(city && this.debugCity && this.debugCity != "All" && this.debugCity != city.type) {
+			return;
+		}
         var d = new Date();
         if(typeof(str) == "object") {
             console.debug(str);

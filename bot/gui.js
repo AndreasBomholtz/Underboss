@@ -124,48 +124,37 @@ var guiBot = {
         return div;
     },
     drawDebugTab: function drawDebugTab(infoData) {
-        $(infoData).html("<h7>Debug Info</h7>").append($("<div/>").attr("id","debug_jobs")).append($("<div/>").attr("id","debug_queue"));
-        this.drawButton("Update Jobs",this.bind(this.loadCitiesData),infoData);
+        $(infoData).html("<h7>Debug Info</h7>").append($("<div/>").attr("id","debug_queue"));
+
+		this.drawButton("Update Jobs",this.bind(this.loadCitiesData),infoData);
         this.drawButton("Execute",this.bind(this.executeCMD),infoData);
         this.drawButton("Trace",this.bind(this.toggleTrace),infoData);
         this.drawButton("Overview",this.showoverview,infoData);
 
+		InfoData.append("<select id='debug_city' />");
+
         for(var fun in this.autoFunctions) {
             this.drawDebugOption(fun);
         }
-        this.listen("jobs:update",this.updateDebug);
+
+		this.listen("city:update", this,updateDebugCities);
         this.listen("report:update",this.handleReport);
     },
+	updateDebugCities: function updateDebugCities() {
+		$("debug_city").html("").append("<option value='All'>All</option>");
+	},
     updateDebugQueue: function updateDebugQueue() {
         $("#debug_queue").html("<h7>Queue: "+this.queue.length+"</h7><h7>Slow Queue: "+this.slow_queue.length+"</h7>");
     },
-    updateDebug: function updateDebug() {
-        var job = $("#debug_jobs").html("<h7>Jobs</h7>");
-        if(this.cities) {
-            for(var i=0; i<this.cities.length; i++) {
-                var city = this.cities[i];
-                if(city && city.jobs) {
-                    var b, r, u, d;
-					b = r = u = d = "&nbsp;";
-                    for(var j=0; j<city.jobs.length; j++) {
-                        if(city.jobs[j].queue == "research") { r = "R";}
-                        if(city.jobs[j].queue == "building") { b = "B";}
-                        if(city.jobs[j].queue == "units") { u = "U";}
-                        if(city.jobs[j].queue == "defense_units") { d = "D";}
-                    }
-                    job.append("<h7>"+city.type+" ("+city.jobs.length+") "+b+" "+r+" "+u+" "+d+"</h7>");
-                }
-            }
-        }
-    },
-	drawBuildTab: function drawBuildTab(infoData) {
+    drawBuildTab: function drawBuildTab(infoData) {
         this.html.build = {};
 
         if(!this.options.build) {
             this.options.build = {};
         }
 
-        infoData.innerHTML = "<h7>Build Orders</h7><p>Build this amount of buildings and the rest will be Hideout.</p>";
+        infoData.innerHTML = "<h7>Build Orders</h7>";
+		InfoData.innerHTML += "<p>Build this amount of buildings and the rest will be Hideout.</p>";
         var table = document.createElement("table");
         infoData.appendChild(table);
 
