@@ -131,13 +131,13 @@ var guiBot = {
         this.drawButton("Trace",this.bind(this.toggleTrace),infoData);
         this.drawButton("Overview",this.showoverview,infoData);
 
-		InfoData.append("<select id='debug_city' />");
+	$(infoData).append("<select id='debug_city' />");
 
         for(var fun in this.autoFunctions) {
             this.drawDebugOption(fun);
         }
 
-		this.listen("city:update", this,updateDebugCities);
+		this.listen("city:update", this.updateDebugCities);
         this.listen("report:update",this.handleReport);
     },
 	updateDebugCities: function updateDebugCities() {
@@ -154,7 +154,7 @@ var guiBot = {
         }
 
         infoData.innerHTML = "<h7>Build Orders</h7>";
-		InfoData.innerHTML += "<p>Build this amount of buildings and the rest will be Hideout.</p>";
+	infoData.innerHTML += "<p>Build this amount of buildings and the rest will be Hideout.</p>";
         var table = document.createElement("table");
         infoData.appendChild(table);
 

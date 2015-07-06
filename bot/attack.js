@@ -12,13 +12,13 @@ var attackBot = {
         if(!this.options.map_loaded) {
             this.options.map_loaded = {};
         }
-
-		for(var i=0; i<this.cities.length; i++) {
+	
+	for(var i=0; i<this.cities.length; i++) {
             var city = this.cities[i];
             if(!city) {
-				this.debugAttack("No city for index "+i);
-				continue;
-			}
+		this.debugAttack("No city for index "+i);
+		continue;
+	    }
 
             var startX = city.x - offset;
             if(startX < 0) {
@@ -29,7 +29,7 @@ var attackBot = {
                 startY = 750 + startY;
             }
 
-			for(var x = 0; x<this.options.map_size; x++) {
+	    for(var x = 0; x<this.options.map_size; x++) {
                 for(var y=0; y<this.options.map_size; y++) {
                     var getX = (startX+(x*10)) % 750;
                     var getY = (startY+(y*10)) % 750;
@@ -38,20 +38,20 @@ var attackBot = {
                         this.options.map_loaded[getX] = {};
                     }
                     if(this.options.map_loaded[getX][getY]) {
-						this.debugAttack("Not reloading ("+getX+","+getY+")");
-						continue;
-					}
-
+			this.debugAttack("Not reloading ("+getX+","+getY+")");
+			continue;
+		    }
+		    
                     this.options.map_loaded[getX][getY] = true;
                     this.debugAttack("Get map ("+getX+","+getY+")");
                     this.sendSlowGetCommand("Get map ("+getX+","+getY+")",
-											"map.json",
-											"x="+getX+"&y="+getY,
-											city,
-											this.bind(this.drawMapInfo));
+					    "map.json",
+					    "x="+getX+"&y="+getY,
+					    city,
+					    this.bind(this.drawMapInfo));
                 }
-			}
-		}
+	    }
+	}
         this.saveOptions();
     },
     findBestGang: function findBestGang(city,level) {
@@ -64,21 +64,21 @@ var attackBot = {
         for(var keyX in this.options.map) {
             for(var keyY in this.options.map[keyX]) {
                 var gang = this.options.map[keyX][keyY];
-				if(gang.lvl != level && (level > 1 && gang.lvl != (level-1))) {
-					this.debugAttack("Gang has wrong level ("+gang.lvl+" != "+level,city);
-					continue;
-				}
-
-				if(sel.lvl > gang.lvl) {
-					this.debugAttack("Selected gang is better ("+sel.lvl+" > "+gang.lvl+")",city);
-					continue;
-				}
-
-				if(gang.attacked && gang.attacked >= d.getTime()) {
-					this.debugAttack("Gang already attacked",city);
-					continue;
-				}
-
+		if(gang.lvl != level && (level > 1 && gang.lvl != (level-1))) {
+		    this.debugAttack("Gang has wrong level ("+gang.lvl+" != "+level,city);
+		    continue;
+		}
+		
+		if(sel.lvl > gang.lvl) {
+		    this.debugAttack("Selected gang is better ("+sel.lvl+" > "+gang.lvl+")",city);
+		    continue;
+		}
+		
+		if(gang.attacked && gang.attacked >= d.getTime()) {
+		    this.debugAttack("Gang already attacked",city);
+		    continue;
+		}
+		
                 var distX = Math.abs(keyX-city.x);
                 if(distX > 250) {
                     distX = Math.abs(750-distX);
@@ -90,10 +90,10 @@ var attackBot = {
 
 
                 if((distX + distY) > sel_dist && sel.lvl === gang.lvl) {
-					this.debugAttack("Selected gang is closer",city);
-					continue;
-				}
-
+		    this.debugAttack("Selected gang is closer",city);
+		    continue;
+		}
+		
                 sel_dist = distX + distY;
                 sel = gang;
                 this.debugAttack("Found better Gang "+sel.lvl+" at ("+keyX+","+keyY+") with dist ("+distX+" + "+distY+") = "+sel_dist,city);
@@ -111,28 +111,28 @@ var attackBot = {
             return(10000);
         }
 
-        if(this.cities && this.options.attackOrders) {
+        if(!this.cities || !this.options.attackOrders) {
             this.debugAttack("City or orders not ready");
-			return(10000);
+	    return(10000);
         }
-
+	
         for(var c=0; c<this.cities.length; c++) {
             var city = this.cities[c];
             if(!city) {
-				this.debugAttack("No city at index "+c);
-				continue;
-			}
+		this.debugAttack("No city at index "+c);
+		continue;
+	    }
 
-			if(city.energy <= 1) {
+	    if(city.energy <= 1) {
                 this.debugAttack("No more energy",city);
-				continue;
-			}
+		continue;
+	    }
 
-			if(city.type == "DoriaAirport") {
-				this.debugAttack(city.type+ " is not attackable",city);
-				continue;
+	    if(city.type == "DoriaAirport") {
+		this.debugAttack(city.type+ " is not attackable",city);
+		continue;
             }
-
+	    
             var bestOrder = {"gang":0};
             for(var i=0; i<this.options.attackOrders.length; i++) {
                 var order = this.options.attackOrders[i];
@@ -144,7 +144,7 @@ var attackBot = {
 					continue;
                 }
 
-				var doIt = false;
+		var doIt = true;
                 var aUnits = JSON.parse(order.units);
                 for(var u in aUnits) {
                     if(!city.units[u] || city.units[u] < aUnits[u]) {
@@ -164,8 +164,8 @@ var attackBot = {
             }
 
             if(!bestOrder.units) {
-				continue;
-			}
+		continue;
+	    }
 
             var attackGang = this.findBestGang(city,bestOrder.gang);
             if(attackGang.lvl === 0) {
@@ -173,7 +173,7 @@ var attackBot = {
 				continue;
             }
 
-			this.debugAttack("Attack "+attackGang.lvl+" Gang at ("+attackGang.x+","+attackGang.y+")",city);
+	    this.debugAttack("Attack "+attackGang.lvl+" Gang at ("+attackGang.x+","+attackGang.y+")",city);
             if(attackGang.lvl <= 10) {
                 attackGang.attacked = d.getTime() + (30 * 60 * 1000);
             }
@@ -182,7 +182,7 @@ var attackBot = {
                 units = this.getAttackUnits(city);
             }
             this.attack(attackGang.x,attackGang.y,units,city);
-
+	    
             t = 600000;
             this.saveOptions();
         }
