@@ -43,8 +43,7 @@ install_jsl:
 	wget http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz
 	tar -zxvf jsl-0.3.0-src.tar.gz
 	rm jsl-0.3.0-src.tar.gz
-	cd jsl-0.3.0/src
-	make -f Makefile.ref
+	cd jsl-0.3.0/src && make -f Makefile.ref
 
 install_uglify:
 	sudo apt-get install npm

@@ -8,9 +8,9 @@ var debugBot = {
 		this.debugCity = city;
 	},
     debug: function debug(str,city,info) {
-		if(city && this.debugCity && this.debugCity != "All" && this.debugCity != city.type) {
-			return;
-		}
+	if(city && this.debugCity && this.debugCity != "All" && this.debugCity != city.type) {
+	    return "";
+	}
         var d = new Date();
         if(typeof(str) == "object") {
             console.debug(str);
