@@ -90,7 +90,7 @@ var collectBot = {
         this.trace();
         if(!this.cities || !this.cities[0] || !this.cities[0].neighborhood || !this.cities[0].neighborhood.length) {
 	    this.debugCollect("Neighborhood not ready");
-	    return;
+	    return(0);
 	}
 
         var city = this.cities[0];
