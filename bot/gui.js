@@ -29,11 +29,8 @@ var guiBot = {
             this.drawOption(fun);
         }
 
-
-		this.createOverview();
-		this.createArmorView();
-
-        //this.drawButton("Cities",this.bind(this.loadCitiesData));
+	this.createOverview();
+	this.createArmorView();
 
         var infoPanel = document.createElement("div");
         mainPanel.appendChild(infoPanel);
@@ -54,7 +51,11 @@ var guiBot = {
         }
     },
     drawOption: function drawOption(name) {
-        var div = this.drawGenericOption(name,this.html.mainPanel,"enable_","changeEnable",this.options["enable"+name]);
+        var div = this.drawGenericOption(name,
+					 this.html.mainPanel,
+					 "enable_",
+					 "changeEnable",
+					 this.options["enable"+name]);
 
         var sep = document.createElement("span");
         sep.innerHTML = " - ";
@@ -63,7 +64,11 @@ var guiBot = {
         this.drawButton(name+" Now",this.bind(this["do"+name]),div);
     },
     drawDebugOption: function drawDebugOption(name) {
-        this.drawGenericOption(name,this.html.DebugInfoData,"enable_debug_","changeDebugEnable",false);
+        this.drawGenericOption(name,
+			       this.html.DebugInfoData,
+			       "enable_debug_",
+			       "changeDebugEnable",
+			       false);
     },
     drawGenericOption: function drawGenericOption(name,p,strEnable,optEnable,checked) {
         var div = document.createElement("div");
@@ -118,7 +123,7 @@ var guiBot = {
         var div = document.createElement("div");
         div.id = id+"_data";
 	div.className = "tabcontent";
-	if(id) {
+	if(id != 1) {
             div.className += " hide";
 	}
         return div;
@@ -143,6 +148,13 @@ var guiBot = {
     },
     updateDebugCities: function updateDebugCities() {
 	$("debug_city").html("").append("<option value='All'>All</option>");
+	for(var i=0; i<this.cities.length; i++) {
+            var city = this.cities[i];
+            if(!city || !city.type) {
+		continue;
+	    }
+	    $("debug_city").append("<option value='"+city.type+"'>"+city.type+"</option>");
+	}
     },
     updateDebugQueue: function updateDebugQueue() {
         $("#debug_queue").html("<h7>CMD Queue: "+this.queue.length+"</h7><h7>Data Queue: "+this.data_queue.length+"</h7><h7>Slow Queue: "+this.slow_queue.length+"</h7><h7>Queue Type: "+this.queue_type+"</h7>");
@@ -161,24 +173,25 @@ var guiBot = {
 
         var saveChanges = false;
         for(var b in this.buildings) {
-            if(this.buildings[b].buildNew) {
-                var tr = document.createElement("tr");
-                table.appendChild(tr);
-                var td = document.createElement("td");
-                td.innerHTML = b;
-                tr.appendChild(td);
-                td = document.createElement("td");
-                tr.appendChild(td);
-                var input = document.createElement("input");
-                if(this.options.build.hasOwnProperty(b) && typeof(this.options.build[b]) == 'number') {
-                    input.value = this.options.build[b];
-                } else {
-                    input.value = this.buildings[b].buildNew;
-                    saveChanges = true;
-                }
-                this.html.build[b] = input;
-                td.appendChild(input);
+            if(!this.buildings[b].buildNew) {
+		continue;
+	    }
+            var tr = document.createElement("tr");
+            table.appendChild(tr);
+            var td = document.createElement("td");
+            td.innerHTML = b;
+            tr.appendChild(td);
+            td = document.createElement("td");
+            tr.appendChild(td);
+            var input = document.createElement("input");
+            if(this.options.build.hasOwnProperty(b) && typeof(this.options.build[b]) == 'number') {
+                input.value = this.options.build[b];
+            } else {
+                input.value = this.buildings[b].buildNew;
+                saveChanges = true;
             }
+            this.html.build[b] = input;
+            td.appendChild(input);
         }
         if(saveChanges) {
             this.saveBuildOrder();
@@ -201,18 +214,19 @@ var guiBot = {
         var count = 0;
         var tr;
         for(var unit in this.attackUnits) {
-			if(this.attackUnits[unit].trainable) {
-				if((count % 3) === 0) {
-					tr = $("<tr/>");
-					table.append(tr);
-				}
-				tr.append($("<td/>").text(unit).append($("<td/>").append($("<input class='number'/>").attr("id","unit_"+unit))));
-				if(this.options.trainOrders && this.options.trainOrders[unit]) {
-					$("#unit_"+unit).val(this.options.trainOrders[unit]);
-				}
-				count++;
-			}
-        }
+	    if(!this.attackUnits[unit].trainable) {
+		continue;
+	    }
+	    if((count % 3) === 0) {
+		tr = $("<tr/>");
+		table.append(tr);
+	    }
+	    tr.append($("<td/>").text(unit).append($("<td/>").append($("<input class='number'/>").attr("id","unit_"+unit))));
+	    if(this.options.trainOrders && this.options.trainOrders[unit]) {
+		$("#unit_"+unit).val(this.options.trainOrders[unit]);
+	    }
+	    count++;
+	}
         this.drawButton("Save",this.bind(this.saveTrainOrder),infoData);
     },
     saveTrainOrder: function saveTrainOrder() {
@@ -260,6 +274,7 @@ var guiBot = {
     drawMapTab: function drawMapTab(infoData) {
         infoData.innerHTML = "<h7>Map</h7>";
         this.drawButton("Update Map",this.bind(this.updateMap),infoData);
+	this.drawButton("Reset Map",this.bind(this.resetMap),infoData);
         this.drawMapInfo();
     },
     drawAttackTab: function drawAttackTab(infoData) {
@@ -389,28 +404,28 @@ var guiBot = {
     updatePrizeInfo: function updatePrizeInfo(str,city) {
         $(".prize_info").text(this.debug(str,city) +"\n"+$(".prize_info").text());
     },
-	createDialog: function createDialog(id, title) {
-		$("#panel").append("<dialog id='"+id+"' class='overlay'><h1>"+title+"</h1><button id='"+id+"_close'>Close</button></dialog>");
-		$("#"+id+"_close").click(function() {
-			$("#"+id).hide();
-		});
-		this["show"+id] = function() {
-			$("#"+id).show();
-		};
-	},
-	createArmorView: function() {
-		this.createDialog('armorView','Armor View');
-
-
-	},
-	createOverview: function() {
-	    this.createDialog('overview','Overview');
-	    
-	    $("#overview").append("<button id='overview_update'>Update</button>");
-	    $("#overview_update").click(this.bind(this.updateOverview,this));
-	    
-	    $("#overview").append("<table id='overview_table'></table>");
-	    $("#overview_table").append("\
+    createDialog: function createDialog(id, title) {
+	$("#panel").append("<dialog id='"+id+"' class='overlay'><h1>"+title+"</h1><button id='"+id+"_close'>Close</button></dialog>");
+	$("#"+id+"_close").click(function() {
+	    $("#"+id).hide();
+	});
+	this["show"+id] = function() {
+	    $("#"+id).show();
+	};
+    },
+    createArmorView: function() {
+	this.createDialog('armorView','Armor View');
+	
+	
+    },
+    createOverview: function() {
+	this.createDialog('overview','Overview');
+	
+	$("#overview").append("<button id='overview_update'>Update</button>");
+	$("#overview_update").click(this.bind(this.updateOverview,this));
+	
+	$("#overview").append("<table id='overview_table'></table>");
+	$("#overview_table").append("\
 <tr><td>City</td>\
 <th>Cash</th><th>Cement</th><th>Food</th><th>Steel</th>\
 <th>Jobs</th>\
@@ -422,60 +437,62 @@ var guiBot = {
 <td id='jobs'></td>\
 </tr>");
 
-	    $("overview").append($("<div></div>").addClass("stats").attr("id","stats"));
-
-	    this.listen("jobs:update",this.updateOverview);
-	    this.listen('cities:update',this.updateOverview);
-	    this.listen('resources:update',this.updateOverview);
-	    
-	    this.updateOverview();
-	    this.updateStats();
-	},
+	$("#overview").append($("<div></div>").addClass("stats").attr("id","stats"));
+	
+	this.listen("jobs:update",this.updateOverview);
+	this.listen('cities:update',this.updateOverview);
+	this.listen('resources:update',this.updateOverview);
+	
+	this.updateOverview();
+	this.updateStats();
+    },
     updateOverview: function updateOverview() {
 	var table = $("#overview_table");
 	var total = table.find("#total");
 	var conv = this.numberToString;
-        if(this.cities) {
-	    var total_res = {};
-            for(var i=0; i<this.cities.length; i++) {
-                var city = this.cities[i];
-                if(city && city.type) {
-		    var el = table.find("#"+city.type);
-		    if(el.length === 0) {
-			total.before("\
+        if(!this.cities) {
+	    return;
+	}
+	var total_res = {};
+        for(var i=0; i<this.cities.length; i++) {
+            var city = this.cities[i];
+            if(!city || !city.type) {
+		continue;
+	    }
+	    var el = table.find("#"+city.type);
+	    if(el.length === 0) {
+		total.before("\
 <tr id='"+city.type+"'>\
 <td>"+city.type+"</td>\
 <td id='cash'>0</td><td id='cement'>0</td>\
 <td id='food'>0</td><td id='steel'>0</td>\
 <td id='jobs'></td>\
 </tr>");
-			el = table.find("#"+city.type);
-		    }
-		    if(city.resources) {
-			$.each(city.resources, function(k,v) {
-			    var t = total_res[k] || 0;
-			    t += parseInt(v,10);
-			    total_res[k] = t;
-			    el.find("#"+k).html(conv(v));
-			});
-		    }
-		    if(city.jobs) {
-			var b, r, u, d, m;
-			b = r = u = d = m = "&nbsp;";
-			for(var j=0; j<city.jobs.length; j++) {
-			    if(city.jobs[j].queue == "research") { r = "R";}
-			    if(city.jobs[j].queue == "building") { b = "B";}
-			    if(city.jobs[j].queue == "units") { u = "U";}
-			    if(city.jobs[j].queue == "defense_units") { d = "D";}
-			    if(city.jobs[j].queue == "march") { m = "M";}
-			}
-			el.find("#jobs").html("("+city.jobs.length+") "+b+" "+r+" "+u+" "+d+" "+m);
-		    }
-		}
+		el = table.find("#"+city.type);
 	    }
-	    $.each(total_res, function(k,v) {
-		total.find("#"+k).html(conv(v));
-	    });
+	    if(city.resources) {
+		$.each(city.resources, function(k,v) {
+		    var t = total_res[k] || 0;
+		    t += parseInt(v,10);
+		    total_res[k] = t;
+		    el.find("#"+k).html(conv(v));
+		});
+	    }
+	    if(city.jobs) {
+		var b, r, u, d, m;
+		b = r = u = d = m = "&nbsp;";
+		for(var j=0; j<city.jobs.length; j++) {
+		    if(city.jobs[j].queue == "research") { r = "R";}
+		    if(city.jobs[j].queue == "building") { b = "B";}
+		    if(city.jobs[j].queue == "units") { u = "U";}
+		    if(city.jobs[j].queue == "defense_units") { d = "D";}
+		    if(city.jobs[j].queue == "march") { m = "M";}
+		}
+		el.find("#jobs").html("("+city.jobs.length+") "+b+" "+r+" "+u+" "+d+" "+m);
+	    }
 	}
+	$.each(total_res, function(k,v) {
+	    total.find("#"+k).html(conv(v));
+	});
     }
 };

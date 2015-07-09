@@ -1,12 +1,18 @@
 var attackBot = {
+    resetMap: function resetMap() {
+	this.trace();
+	this.options.map_size = 3;
+	this.options.map_loaded = {};
+	this.updateMap();
+    },
     updateMap: function updateMap() {
         this.trace();
         if(!this.cities || !this.cities[0] || !this.cities[0].data) {
             setTimeout(this.bind(this.updateMap),1000);
-			return;
+	    return;
         }
 
-        this.options.map_size+=2;
+        this.options.map_size += 2;
         var offset = 10 * ((this.options.map_size-1) / 2);
 
         if(!this.options.map_loaded) {
@@ -31,8 +37,8 @@ var attackBot = {
 
 	    for(var x = 0; x<this.options.map_size; x++) {
                 for(var y=0; y<this.options.map_size; y++) {
-                    var getX = (startX+(x*10)) % 750;
-                    var getY = (startY+(y*10)) % 750;
+                    var getX = (startX + (x * 10)) % 750;
+                    var getY = (startY + (y * 10)) % 750;
 
                     if(!this.options.map_loaded[getX]) {
                         this.options.map_loaded[getX] = {};
