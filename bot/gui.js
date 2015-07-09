@@ -126,7 +126,6 @@ var guiBot = {
 	this.drawButton("Update Jobs",this.bind(this.loadCitiesData),infoData);
         this.drawButton("Execute",this.bind(this.executeCMD),infoData);
         this.drawButton("Trace",this.bind(this.toggleTrace),infoData);
-        this.drawButton("Overview",this.showoverview,infoData);
 
 	$(infoData).append("<select id='debug_city' />");
 
@@ -374,6 +373,7 @@ var guiBot = {
         }
     },
     drawInfoTab: function drawInfoTab(infoData) {
+	this.drawButton("Overview",this.showoverview,infoData);
         $(infoData).append($("<div></div>").addClass("stats").attr("id","stats"));
         this.updateStats();
         $(infoData).append($("<textarea></textarea>").addClass("info").attr("id","debug_info"));
@@ -402,13 +402,13 @@ var guiBot = {
 
 	},
 	createOverview: function() {
-		this.createDialog('overview','Overview');
-
-		$("#overview").append("<button id='overview_update'>Update</button>");
-		$("#overview_update").click(this.bind(this.updateOverview,this));
-
-		$("#overview").append("<table id='overview_table'></table>");
-		$("#overview_table").append("\
+	    this.createDialog('overview','Overview');
+	    
+	    $("#overview").append("<button id='overview_update'>Update</button>");
+	    $("#overview_update").click(this.bind(this.updateOverview,this));
+	    
+	    $("#overview").append("<table id='overview_table'></table>");
+	    $("#overview_table").append("\
 <tr><td>City</td>\
 <th>Cash</th><th>Cement</th><th>Food</th><th>Steel</th>\
 <th>Jobs</th>\
@@ -420,56 +420,57 @@ var guiBot = {
 <td id='jobs'></td>\
 </tr>");
 
-		this.listen("jobs:update",this.updateOverview);
-		this.listen('cities:update',this.updateOverview);
-		this.listen('resources:update',this.updateOverview);
-
+	    this.listen("jobs:update",this.updateOverview);
+	    this.listen('cities:update',this.updateOverview);
+	    this.listen('resources:update',this.updateOverview);
+	    
 		this.updateOverview();
 	},
     updateOverview: function updateOverview() {
-		var table = $("#overview_table");
-		var total = table.find("#total");
-		var conv = this.numberToString;
+	var table = $("#overview_table");
+	var total = table.find("#total");
+	var conv = this.numberToString;
         if(this.cities) {
-			var total_res = {};
+	    var total_res = {};
             for(var i=0; i<this.cities.length; i++) {
                 var city = this.cities[i];
                 if(city && city.type) {
-					var el = table.find("#"+city.type);
-					if(el.length === 0) {
-						total.before("\
+		    var el = table.find("#"+city.type);
+		    if(el.length === 0) {
+			total.before("\
 <tr id='"+city.type+"'>\
 <td>"+city.type+"</td>\
 <td id='cash'>0</td><td id='cement'>0</td>\
 <td id='food'>0</td><td id='steel'>0</td>\
 <td id='jobs'></td>\
 </tr>");
-						el = table.find("#"+city.type);
-					}
-					if(city.resources) {
-						$.each(city.resources, function(k,v) {
-							var t = total_res[k] || 0;
-							t += parseInt(v,10);
-							total_res[k] = t;
-							el.find("#"+k).html(conv(v));
-						});
-					}
-					if(city.jobs) {
-						var b, r, u, d;
-						b = r = u = d = "&nbsp;";
-						for(var j=0; j<city.jobs.length; j++) {
-							if(city.jobs[j].queue == "research") { r = "R";}
-							if(city.jobs[j].queue == "building") { b = "B";}
-							if(city.jobs[j].queue == "units") { u = "U";}
-							if(city.jobs[j].queue == "defense_units") { d = "D";}
-						}
-						el.find("#jobs").html("("+city.jobs.length+") "+b+" "+r+" "+u+" "+d);
-					}
-				}
-			}
-			$.each(total_res, function(k,v) {
-				total.find("#"+k).html(conv(v));
+			el = table.find("#"+city.type);
+		    }
+		    if(city.resources) {
+			$.each(city.resources, function(k,v) {
+			    var t = total_res[k] || 0;
+			    t += parseInt(v,10);
+			    total_res[k] = t;
+			    el.find("#"+k).html(conv(v));
 			});
+		    }
+		    if(city.jobs) {
+			var b, r, u, d, m;
+			b = r = u = d = m = "&nbsp;";
+			for(var j=0; j<city.jobs.length; j++) {
+			    if(city.jobs[j].queue == "research") { r = "R";}
+			    if(city.jobs[j].queue == "building") { b = "B";}
+			    if(city.jobs[j].queue == "units") { u = "U";}
+			    if(city.jobs[j].queue == "defense_units") { d = "D";}
+			    if(city.jobs[j].queue == "march") { m = "M";}
+			}
+			el.find("#jobs").html("("+city.jobs.length+") "+b+" "+r+" "+u+" "+d+" "+m);
+		    }
 		}
+	    }
+	    $.each(total_res, function(k,v) {
+		total.find("#"+k).html(conv(v));
+	    });
 	}
+    }
 };

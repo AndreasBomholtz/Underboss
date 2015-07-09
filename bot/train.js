@@ -54,7 +54,7 @@ var trainBot = {
 				}
 
 				if(aUnit.city && aUnit.city != "All" && aUnit.city != city.type) {
-					this.debugDefense(unit+" can't be trained in "+city.type+" only in "+aUnit.city);
+					this.debugTrain(unit+" can't be trained in "+city.type+" only in "+aUnit.city);
 					continue;
 				}
 

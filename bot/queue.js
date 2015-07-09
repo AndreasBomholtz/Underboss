@@ -85,8 +85,9 @@ var queueBot = {
 	}
     },
     executeCommand: function executeCommand(cmd) {
-	if(!cmd) return;
-
+	if(!cmd) {
+	    return;
+	}
         this.lastCommand = cmd;
         this.signal("queue:update");
         var self = this;

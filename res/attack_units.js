@@ -245,10 +245,10 @@ var attackUnits = {
     },
 
     'Heavyweight': {
-		'type': 'Pulitori',
-		'city': 'LittleItaly',
-		'trainable': true,
-		'requirement': {
+	'type': 'Pulitori',
+	'city': 'LittleItaly',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 12,
                 'Muscle': 12
@@ -259,11 +259,27 @@ var attackUnits = {
         },
         'bailout':62292
     },
+    'Foreman': {
+	'type': 'Pulitori',
+	'city': 'Queens',
+	'trainable': true,
+	'requirement': {
+            'research': {
+                'Medicine': 12,
+                'Muscle': 12
+            },
+            'build': {
+                'Hideout': 9
+            }
+        },
+        'bailout':62292
+
+    },
     'Smuggler': {
-		'type': 'Pulitori',
-		'city': 'GreenwichVillage',
-		'trainable': true,
-		'requirement': {
+	'type': 'Pulitori',
+	'city': 'GreenwichVillage',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 12,
                 'Muscle': 12
@@ -275,10 +291,10 @@ var attackUnits = {
         'bailout':62292
     },
     'Undertaker': {
-		'type': 'Pulitori',
-		'city': 'Brooklyn',
-		'trainable': true,
-		'requirement': {
+	'type': 'Pulitori',
+	'city': 'Brooklyn',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 12,
                 'Muscle': 12
@@ -290,10 +306,10 @@ var attackUnits = {
         'bailout':62292
     },
     'Doctor': {
-		'type': 'Pulitori',
-		'city': 'ParkAvenue',
-		'trainable': true,
-		'requirement': {
+	'type': 'Pulitori',
+	'city': 'ParkAve',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 12,
                 'Muscle': 12
@@ -305,10 +321,10 @@ var attackUnits = {
         'bailout':62292
     },
     'Loanshark': {
-		'type': 'Pulitori',
-		'city': 'AtlanticCity',
-		'trainable': true,
-		'requirement': {
+	'type': 'Pulitori',
+	'city': 'AtlanticCity',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 12,
                 'Muscle': 12
@@ -320,10 +336,10 @@ var attackUnits = {
         'bailout':62292
     },
     'HatchetMan': {
-		'type': 'Pulitori',
-		'city': 'Chinatown',
-		'trainable': true,
-		'requirement': {
+	'type': 'Pulitori',
+	'city': 'Chinatown',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 12,
                 'Muscle': 12
@@ -335,10 +351,10 @@ var attackUnits = {
         'bailout':62292
     },
     'TriggerMan': {
-		'type': 'Pulitori',
-		'city': 'Capital',
-		'trainable': true,
-		'requirement': {
+	'type': 'Pulitori',
+	'city': 'Capital',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 12,
                 'Muscle': 12
@@ -350,10 +366,10 @@ var attackUnits = {
         'bailout':62292
     },
     'Bartender': {
-		'type': 'Pulitori',
-		'city': 'Harlem',
-		'trainable': true,
-		'requirement': {
+	'type': 'Pulitori',
+	'city': 'Harlem',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 12,
                 'Muscle': 12
@@ -365,117 +381,138 @@ var attackUnits = {
         'bailout':62292
     },
 
-    'CrookedCop': {
-		'type': 'Johnney Law',
-		'trainable': true,
-		'requirement': {
+    'Hardliner': {
+	'type': 'Johnney Law',
+	'trainable': true,
+	'city': 'Queens',
+	'requirement': {
             'research': {
                 'Medicine': 16,
                 'Muscle': 16
             },
             'build': {
                 'Hideout': 10,
-				'Workshop': 10,
-				'Garage': 10
+		'Workshop': 10,
+		'Garage': 10
+            }
+        },
+        'bailout':68520
+    },
+    'CrookedCop': {
+	'type': 'Johnney Law',
+	'trainable': true,
+	'city': 'GreenwichVillage',
+	'requirement': {
+            'research': {
+                'Medicine': 16,
+                'Muscle': 16
+            },
+            'build': {
+                'Hideout': 10,
+		'Workshop': 10,
+		'Garage': 10
             }
         },
         'bailout':68520
     },
     'Captain': {
-		'type': 'Johnney Law',
-		'trainable': true,
-		'requirement': {
+	'type': 'Johnney Law',
+	'trainable': true,
+	'city': 'LittleItaly',
+	'requirement': {
             'research': {
                 'Medicine': 16,
                 'Muscle': 16
             },
             'build': {
                 'Hideout': 10,
-				'Workshop': 10,
-				'Garage': 10
+		'Workshop': 10,
+		'Garage': 10
             }
         },
         'bailout':68520
     },
     'DRC': {
-		'type': 'Johnney Law',
-		'trainable': true,
-		'requirement': {
+	'type': 'Johnney Law',
+	'city': 'Brooklyn',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 16,
                 'Muscle': 16
             },
             'build': {
                 'Hideout': 10,
-				'Workshop': 10,
-				'Garage': 10
+		'Workshop': 10,
+		'Garage': 10
             }
         },
         'bailout':68520
     },
     'PIG': {
-		'type': 'Johnney Law',
-		'city': 'ParkAvenue',
-		'trainable': true,
-		'requirement': {
+	'type': 'Johnney Law',
+	'city': 'ParkAve',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 16,
                 'Muscle': 16
             },
             'build': {
                 'Hideout': 10,
-				'Workshop': 10,
-				'Garage': 10
+		'Workshop': 10,
+		'Garage': 10
             }
         },
         'bailout':68520
     },
     'Highbinder': {
-		'type': 'Johnney Law',
-		'city': 'Chinatown',
-		'trainable': true,
-		'requirement': {
+	'type': 'Johnney Law',
+	'city': 'Chinatown',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 16,
                 'Muscle': 16
             },
             'build': {
                 'Hideout': 10,
-				'Workshop': 10,
-				'Garage': 10
+		'Workshop': 10,
+		'Garage': 10
             }
         },
         'bailout':68520
     },
     'Gman': {
-		'type': 'Johnney Law',
-		'trainable': true,
-		'requirement': {
+	'type': 'Johnney Law',
+	'trainable': true,
+	'city': 'AtlanticCity',
+	'requirement': {
             'research': {
                 'Medicine': 16,
                 'Muscle': 16
             },
             'build': {
                 'Hideout': 10,
-				'Workshop': 10,
-				'Garage': 10
+		'Workshop': 10,
+		'Garage': 10
             }
         },
         'bailout':68520
     },
     'Bookie': {
-		'type': 'Johnney Law',
-		'city': 'Harlem',
-		'trainable': true,
-		'requirement': {
+	'type': 'Johnney Law',
+	'city': 'Harlem',
+	'trainable': true,
+	'requirement': {
             'research': {
                 'Medicine': 16,
                 'Muscle': 16
             },
             'build': {
                 'Hideout': 10,
-				'Workshop': 10,
-				'Garage': 10
+		'Workshop': 10,
+		'Garage': 10
             }
         },
         'bailout':68520
