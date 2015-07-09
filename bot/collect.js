@@ -30,7 +30,7 @@ var collectBot = {
                     
 		    var do_collect = this.checkCityQueue(neighborhood.city,undefined,building.id);
                     if(do_collect) {
-                        this.debug("Collect "+building.type,city);
+                        this.debugCollect("Collect "+building.type,city);
                         var url = "cities/"+neighborhood.city.id+"/npc_buildings/"+building.id+".json";
                         var parm = "_method=put&city_building_id="+building.id;
                         this.sendCommand("Collect "+building.type+" in "+city.type,url,parm,neighborhood.city);

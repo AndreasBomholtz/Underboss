@@ -117,7 +117,10 @@ var guiBot = {
     drawTabData: function drawTabData(id) {
         var div = document.createElement("div");
         div.id = id+"_data";
-        div.className = "tabcontent hide";
+	div.className = "tabcontent";
+	if(id) {
+            div.className += " hide";
+	}
         return div;
     },
     drawDebugTab: function drawDebugTab(infoData) {
@@ -374,8 +377,7 @@ var guiBot = {
     },
     drawInfoTab: function drawInfoTab(infoData) {
 	this.drawButton("Overview",this.showoverview,infoData);
-        $(infoData).append($("<div></div>").addClass("stats").attr("id","stats"));
-        this.updateStats();
+                
         $(infoData).append($("<textarea></textarea>").addClass("info").attr("id","debug_info"));
     },
     drawPrizesTab: function drawPrizesTab(infoData) {
@@ -420,11 +422,14 @@ var guiBot = {
 <td id='jobs'></td>\
 </tr>");
 
+	    $("overview").append($("<div></div>").addClass("stats").attr("id","stats"));
+
 	    this.listen("jobs:update",this.updateOverview);
 	    this.listen('cities:update',this.updateOverview);
 	    this.listen('resources:update',this.updateOverview);
 	    
-		this.updateOverview();
+	    this.updateOverview();
+	    this.updateStats();
 	},
     updateOverview: function updateOverview() {
 	var table = $("#overview_table");

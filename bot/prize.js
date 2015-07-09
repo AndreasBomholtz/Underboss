@@ -71,7 +71,6 @@ var prizeBot = {
     showMissingPrizeInfo: function showMissingPrizeInfo() {
         this.trace();
         if(this.options.missing_prize) {
-            this.debug("Show Missing prizes");
             for(var i=0; i<this.options.missing_prize.length; i++) {
                 var prize = this.options.missing_prize[i];
                 if(this.items[prize]) {
@@ -81,8 +80,6 @@ var prizeBot = {
                 }
             }
             this.saveOptions();
-        } else {
-            this.debug("No missing prizes");
         }
     }
 };
