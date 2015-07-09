@@ -37,7 +37,7 @@ clean:
 	rm -fr util/*~
 	rm -fr res/*~
 
-setup: install_jsl
+setup: install_jsl install_uglify
 
 install_jsl:
 	wget http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz
@@ -50,3 +50,7 @@ install_uglify:
 	sudo npm install uglify-js -g
 	sudo npm install uglifycss -g
 	sudo ln -s /usr/bin/nodejs /usr/bin/node
+
+install_dropbox:
+	cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
+	~/.dropbox-dist/dropboxd

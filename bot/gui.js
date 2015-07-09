@@ -52,9 +52,6 @@ var guiBot = {
                 this["draw"+tabs[i]+"Tab"](infoData);
             }
         }
-
-        this.listen("queue:update",this.updateDebugQueue);
-
     },
     drawOption: function drawOption(name) {
         var div = this.drawGenericOption(name,this.html.mainPanel,"enable_","changeEnable",this.options["enable"+name]);
@@ -126,7 +123,7 @@ var guiBot = {
     drawDebugTab: function drawDebugTab(infoData) {
         $(infoData).html("<h7>Debug Info</h7>").append($("<div/>").attr("id","debug_queue"));
 
-		this.drawButton("Update Jobs",this.bind(this.loadCitiesData),infoData);
+	this.drawButton("Update Jobs",this.bind(this.loadCitiesData),infoData);
         this.drawButton("Execute",this.bind(this.executeCMD),infoData);
         this.drawButton("Trace",this.bind(this.toggleTrace),infoData);
         this.drawButton("Overview",this.showoverview,infoData);
@@ -137,14 +134,16 @@ var guiBot = {
             this.drawDebugOption(fun);
         }
 
-		this.listen("city:update", this.updateDebugCities);
+        this.listen("queue:update",this.updateDebugQueue);
+        this.listen("queue:change",this.updateDebugQueue);
+	this.listen("city:update", this.updateDebugCities);
         this.listen("report:update",this.handleReport);
     },
-	updateDebugCities: function updateDebugCities() {
-		$("debug_city").html("").append("<option value='All'>All</option>");
-	},
+    updateDebugCities: function updateDebugCities() {
+	$("debug_city").html("").append("<option value='All'>All</option>");
+    },
     updateDebugQueue: function updateDebugQueue() {
-        $("#debug_queue").html("<h7>Queue: "+this.queue.length+"</h7><h7>Slow Queue: "+this.slow_queue.length+"</h7>");
+        $("#debug_queue").html("<h7>CMD Queue: "+this.queue.length+"</h7><h7>Data Queue: "+this.data_queue.length+"</h7><h7>Slow Queue: "+this.slow_queue.length+"</h7><h7>Queue Type: "+this.queue_type+"</h7>");
     },
     drawBuildTab: function drawBuildTab(infoData) {
         this.html.build = {};

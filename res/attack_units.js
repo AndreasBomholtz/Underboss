@@ -336,7 +336,7 @@ var attackUnits = {
     },
     'TriggerMan': {
 		'type': 'Pulitori',
-		'city': 'Captial',
+		'city': 'Capital',
 		'trainable': true,
 		'requirement': {
             'research': {

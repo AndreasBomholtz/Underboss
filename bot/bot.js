@@ -13,14 +13,14 @@ var bot = {
         "Cityscape": {},
         "Exchange": {},
         "Items": {
-			"event": "player:items"
-		},
+	    "event": "player:items"
+	},
         "Report": {},
         "Bonds": {},
-		"Quests": {},
-		"Armor": {
-			"event": "city:armor:update"
-		}
+	"Quests": {},
+	"Armor": {
+	    "event": "city:armor:update"
+	}
     },
 
     //Functions
@@ -117,8 +117,8 @@ var bot = {
             if(city.type) {
                 name = city.type;
             }
-            this.sendGetCommand("Load city "+name,"cities/"+city.id+".json","",city);
-            this.sendGetCommand("Load city "+name+" neighborhood","cities/"+city.id+"/neighborhood_buildings.json","",city);
+            this.sendDataGetCommand("Load city "+name,"cities/"+city.id+".json","",city);
+            this.sendDataGetCommand("Load city "+name+" neighborhood","cities/"+city.id+"/neighborhood_buildings.json","",city);
             var d = new Date();
             city.lastUpdate = d.getTime();
         }
@@ -147,19 +147,19 @@ var bot = {
         this.trace();
         if(this.cities && this.cities[0] && this.cities[0].id) {
             for(var i=0; i<this.cities.length; i++) {
-                this.sendCommand("Load Game Data","player/game_loaded.json","_method=put",this.cities[i]);
+                this.sendDataCommand("Load Game Data","player/game_loaded.json","_method=put",this.cities[i]);
             }
             this.loadCitiesData();
         }
     },
     loadPlayerData: function loadPlayerData() {
         this.trace();
-        this.sendGetCommand("Load Player","player.json");
+        this.sendDataGetCommand("Load Player","player.json");
     },
     loadPlayerDataInit: function loadPlayerDataInit() {
         this.trace();
         var cb = this.bind(this.loadGameLoadedData);
-        this.sendGetCommand("Load Player Init","player.json","",undefined,cb);
+        this.sendDataGetCommand("Load Player Init","player.json","",undefined,cb);
     },
     //------- END SEND FUNCTIONS ------
 
@@ -211,12 +211,14 @@ var bot = {
     init: function init(data) {
         this.loadOptions();
 
-		// Init variables
-		this.queue = [];
-		this.slow_queue = [];
-		this.lastCommand = {};
-		this.html = {};
-		this.enableTrace = false;
+	// Init variables
+	this.queue = [];
+	this.data_queue = [];
+	this.slow_queue = [];
+	this.queue_type = 'data';
+	this.lastCommand = {};
+	this.html = {};
+	this.enableTrace = false;
 
         //Save options
         this.server = data.apiServer+"/";

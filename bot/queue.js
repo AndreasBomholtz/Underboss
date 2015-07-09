@@ -1,5 +1,5 @@
 var queueBot = {
-    enqueCommand: function enqueCommand(name,url,data,type,city,callback,slow) {
+    enqueCommand: function enqueCommand(name,url,data,type,city,callback,queue_type) {
         this.trace();
 
         if(city !== undefined) {
@@ -16,8 +16,10 @@ var queueBot = {
         cmd.data = data+"&_session_id="+this.session+"&gangster="+this.gangster+"&user_id="+this.user;
         cmd.callback = callback;
 
-        if(slow === true) {
+        if(queue_type === 'slow') {
             this.addToQueue(this.slow_queue,cmd);
+        } else if(queue_type === 'data') {
+            this.addToQueue(this.data_queue,cmd);
         } else {
             this.addToQueue(this.queue,cmd);
         }
@@ -36,25 +38,55 @@ var queueBot = {
         this.signal("queue:update");
     },
     sendCommand: function sendCommand(name,url,data,city,callback) {
-        this.enqueCommand(name,url,data,'POST',city,callback,false);
+        this.enqueCommand(name,url,data,'POST',city,callback,'cmd');
     },
     sendGetCommand: function sendGetCommand(name,url,data,city,callback) {
-        this.enqueCommand(name,url,data,'GET',city,callback,false);
+        this.enqueCommand(name,url,data,'GET',city,callback,'cmd');
     },
     sendSlowCommand: function sendCommand(name,url,data,city,callback) {
-        this.enqueCommand(name,url,data,'POST',city,callback,true);
+        this.enqueCommand(name,url,data,'POST',city,callback,'slow');
     },
     sendSlowGetCommand: function sendGetCommand(name,url,data,city,callback) {
-        this.enqueCommand(name,url,data,'GET',city,callback,true);
+        this.enqueCommand(name,url,data,'GET',city,callback,'slow');
+    },
+    sendDataCommand: function sendCommand(name,url,data,city,callback) {
+        this.enqueCommand(name,url,data,'POST',city,callback,'data');
+    },
+    sendDataGetCommand: function sendGetCommand(name,url,data,city,callback) {
+        this.enqueCommand(name,url,data,'GET',city,callback,'data');
     },
     sendQueue: function sendQueue() {
-        if(this.queue.length > 0) {
-            this.executeCommand(this.queue.shift());
-        } else if(this.slow_queue.length > 0) {
-            this.executeCommand(this.slow_queue.shift());
-        }
+	var q;
+
+	if(this.queue_type === 'data') {
+	    if(this.data_queue.length) {
+		q = this.data_queue;
+	    } else if(this.queue.length) {
+		q = this.queue;
+		this.queue_type = 'cmd';
+		this.signal('queue:change');
+	    }
+	} else {
+	    if(this.queue.length) {
+		q = this.queue;
+	    } else if(this.data_queue.length) {
+		q = this.data_queue;
+		this.queue_type = 'data';
+		this.signal('queue:change');
+	    }
+	}
+	if(q === undefined && this.slow_queue.length) {
+	    q = this.slow_queue;
+	}
+        
+	//Send cmd
+	if(q) {
+            this.executeCommand(q.shift());
+	}
     },
     executeCommand: function executeCommand(cmd) {
+	if(!cmd) return;
+
         this.lastCommand = cmd;
         this.signal("queue:update");
         var self = this;
@@ -85,11 +117,11 @@ var queueBot = {
             if(!data.result.success) {
                 this.debug("Command send Error: "+data.result.errors[0]);
                 this.debug(this.lastCommand);
-                if(this.lastCommand.city) {
+                /*if(this.lastCommand.city) {
                     this.loadCityData(this.lastCommand.city);
                 } else {
                     this.loadPlayerData();
-                }
+                }*/
             }
         }
         this.parseData(data);
