@@ -31,6 +31,8 @@ var guiBot = {
 
 	this.createOverview();
 	this.createArmorView();
+	this.createTrainView();
+	this.createOptionsView();
 
         var infoPanel = document.createElement("div");
         mainPanel.appendChild(infoPanel);
@@ -39,7 +41,7 @@ var guiBot = {
         tabBox.className = "tab-box";
         infoPanel.appendChild(tabBox);
 
-        var tabs = ["Info","Prizes","Attack","Map","Train","Build","Debug"];
+        var tabs = ["Info","Prizes","Attack","Map","Build","Debug"];
         for(var i=0; i<tabs.length; i++) {
             tabBox.appendChild(this.drawTab("info-"+(i+1),tabs[i]));
             var infoData = this.drawTabData("info-"+(i+1));
@@ -51,6 +53,11 @@ var guiBot = {
         }
     },
     drawOption: function drawOption(name) {
+	// Default option is set to true
+	if(this.options["enable"+name] === undefined) {
+	    this.options["enable"+name] = true;
+	    this.saveOptions();
+	}
         var div = this.drawGenericOption(name,
 					 this.html.mainPanel,
 					 "enable_",
@@ -137,6 +144,8 @@ var guiBot = {
 
 	$(infoData).append("<select id='debug_city' />");
 
+	$("#debug_city").change(this.bind(this.changeDebugCity,this));
+
         for(var fun in this.autoFunctions) {
             this.drawDebugOption(fun);
         }
@@ -146,14 +155,17 @@ var guiBot = {
 	this.listen("city:update", this.updateDebugCities);
         this.listen("report:update",this.handleReport);
     },
+    changeDebugCity: function changeDebugCity() {
+	this.debugCity = $("#debug_city").val();
+    },
     updateDebugCities: function updateDebugCities() {
-	$("debug_city").html("").append("<option value='All'>All</option>");
+	$("#debug_city").html("").append("<option value='All'>All</option>");
 	for(var i=0; i<this.cities.length; i++) {
             var city = this.cities[i];
             if(!city || !city.type) {
 		continue;
 	    }
-	    $("debug_city").append("<option value='"+city.type+"'>"+city.type+"</option>");
+	    $("#debug_city").append("<option value='"+city.type+"'>"+city.type+"</option>");
 	}
     },
     updateDebugQueue: function updateDebugQueue() {
@@ -207,38 +219,7 @@ var guiBot = {
         }
         this.saveOptions();
     },
-    drawTrainTab: function drawTrainTab(infoData) {
-        infoData.innerHTML = "<h7>Training Orders</h7>";
-        var table = $("<table/>");
-        $(infoData).append(table);
-        var count = 0;
-        var tr;
-        for(var unit in this.attackUnits) {
-	    if(!this.attackUnits[unit].trainable) {
-		continue;
-	    }
-	    if((count % 3) === 0) {
-		tr = $("<tr/>");
-		table.append(tr);
-	    }
-	    tr.append($("<td/>").text(unit).append($("<td/>").append($("<input class='number'/>").attr("id","unit_"+unit))));
-	    if(this.options.trainOrders && this.options.trainOrders[unit]) {
-		$("#unit_"+unit).val(this.options.trainOrders[unit]);
-	    }
-	    count++;
-	}
-        this.drawButton("Save",this.bind(this.saveTrainOrder),infoData);
-    },
-    saveTrainOrder: function saveTrainOrder() {
-        this.trace();
-        if(!this.options.trainOrders) {
-            this.options.trainOrders = {};
-        }
-        for(var unit in this.attackUnits) {
-            this.options.trainOrders[unit] = $("#unit_"+unit).val();
-        }
-        this.saveOptions();
-    },
+    
     drawMapInfo: function drawMapInfo() {
         if(!this.html.map_info) {
             this.html.map_info = document.createElement("div");
@@ -392,6 +373,7 @@ var guiBot = {
     },
     drawInfoTab: function drawInfoTab(infoData) {
 	this.drawButton("Overview",this.showoverview,infoData);
+	this.drawButton("Traning",this.showtrainview,infoData);
                 
         $(infoData).append($("<textarea></textarea>").addClass("info").attr("id","debug_info"));
     },
@@ -405,7 +387,7 @@ var guiBot = {
         $(".prize_info").text(this.debug(str,city) +"\n"+$(".prize_info").text());
     },
     createDialog: function createDialog(id, title) {
-	$("#panel").append("<dialog id='"+id+"' class='overlay'><h1>"+title+"</h1><button id='"+id+"_close'>Close</button></dialog>");
+	$("#panel").append("<dialog id='"+id+"' class='overlay'><h1>"+title+"</h1><button class='close' id='"+id+"_close'>Close</button></dialog>");
 	$("#"+id+"_close").click(function() {
 	    $("#"+id).hide();
 	});
@@ -417,6 +399,61 @@ var guiBot = {
 	this.createDialog('armorView','Armor View');
 	
 	
+    },
+    addTableRow: function addTableRow(table,name, value) {
+	var c1 = $("<td/>").append(name);
+	var c2 = $("<td/>").append(value);
+	table.append($("<tr/>").append(c1,c2));
+    },
+    createOptionsView: function createOptionsView() {
+	this.createDialog('optionsview','Options');
+	
+	var view = $("#optionsview");
+	view.append("<h7>Options</h7>");
+	var table = $("<table/>");
+        view.append(table);
+	this.addTableRow(table,"Reload Time","");
+	this.addTableRow(table,"Underboss Size","");
+	this.addTableRow(table,"Queue Send Interval","");
+	this.addTableRow(table,"Hide side panel","");
+	this.addTableRow(table,"","");
+
+	this.createButton(view,"Save",this.bind(this.saveOptionsPage,this));
+    }, 
+    createTrainView: function createTrainView() {
+	this.createDialog('trainview','Traning View');
+
+	$("#trainview").append("<h7>Training Orders</h7>");
+        var table = $("<table/>");
+        $("#trainview").append(table);
+        var count = 0;
+        var tr;
+        for(var unit in this.attackUnits) {
+	    if(!this.attackUnits[unit].trainable) {
+		continue;
+	    }
+	    if((count % 3) === 0) {
+		tr = $("<tr/>");
+		table.append(tr);
+	    }
+	    
+	    tr.append($("<td/>").text(unit).append($("<td/>").append($("<input class='number'/>").attr("id","unit_"+unit))));
+	    if(this.options.trainOrders && this.options.trainOrders[unit]) {
+		$("#unit_"+unit).val(this.options.trainOrders[unit]);
+	    }
+	    count++;
+	}
+        this.drawButton("Save",this.bind(this.saveTrainOrder),$("#trainview"));
+    },
+    saveTrainOrder: function saveTrainOrder() {
+        this.trace();
+        if(!this.options.trainOrders) {
+            this.options.trainOrders = {};
+        }
+        for(var unit in this.attackUnits) {
+            this.options.trainOrders[unit] = $("#unit_"+unit).val();
+        }
+        this.saveOptions();
     },
     createOverview: function() {
 	this.createDialog('overview','Overview');

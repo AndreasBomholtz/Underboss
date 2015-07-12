@@ -28,7 +28,7 @@ var queueBot = {
         for(var i=0; i<queue.length; i++) {
             if(queue[i].url == cmd.url &&
                queue[i].data == cmd.data &&
-			   cmd.name.indexOf("Collect ") == -1) {
+	       cmd.name.indexOf("Collect ") == -1) {
                 this.debug("Dropping double command: "+cmd.name,cmd.city);
                 return;
             }
@@ -80,7 +80,10 @@ var queueBot = {
 	}
         
 	//Send cmd
-	if(q) {
+	if(this.lastCommand) {
+	    this.debug("Resending last command");
+	    this.executeCommand(this.lastCommand);
+	} else if(q) {
             this.executeCommand(q.shift());
 	}
     },
@@ -99,7 +102,7 @@ var queueBot = {
             error: function(data) {self.errorCommand(data);}
         });
     },
-    errorCommand: function errorCommand(data) {
+    errorCommand: function errorCommand(data,status,error) {
         if(typeof(data) == "string") {
             data = JSON.parse(data);
         }
@@ -109,6 +112,8 @@ var queueBot = {
         if(this.lastCommand.callback !== undefined) {
             this.lastCommand.callback();
         }
+
+	//this.lastCommand = undefined;
     },
     revCommand: function revCommand(data) {
         if(typeof(data) == "string") {
@@ -130,5 +135,7 @@ var queueBot = {
         if(this.lastCommand.callback !== undefined) {
             this.lastCommand.callback();
         }
+
+	this.lastCommand = undefined;
     }
 };

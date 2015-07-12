@@ -132,3 +132,9 @@ h7 {
 	border-top: double;
 	border-bottom: solid;
 }
+
+input.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+}

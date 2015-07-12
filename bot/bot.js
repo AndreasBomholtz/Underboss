@@ -245,7 +245,11 @@ var bot = {
 
         //Start polling events
         var q = this.bind(this.sendQueue);
-        setInterval(q,800);
+	if(this.options.queue_interval === undefined) {
+	    this.options.queue_interval = 800;
+	    this.saveOptions();
+	}
+        setInterval(q,this.options.queue_interval);
 
         var r = this.bind(this.autoLoadCities);
         setInterval(r,60000);
