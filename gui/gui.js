@@ -4,8 +4,7 @@ var guiBot = {
         panel.setAttribute("id","panel");
         panel.setAttribute("class", "panel");
         document.body.appendChild(panel);
-        this.html.panel = panel;
-
+        
         var header = document.createElement("p");
         header.className = "header";
         header.innerHTML = "The Underboss";
@@ -22,7 +21,7 @@ var guiBot = {
 
         var mainPanel = document.createElement("div");
         mainPanel.setAttribute("id","mainPanel");
-        this.html.panel.appendChild(mainPanel);
+        panel.appendChild(mainPanel);
         this.html.mainPanel = mainPanel;
 
         for(var fun in this.autoFunctions) {
@@ -98,16 +97,11 @@ var guiBot = {
         return div;
     },
     drawButton: function drawButton(name,func,cont) {
-        var button = document.createElement("input");
-        button.name = name;
-        button.value = name;
-        //button.className = "button";
-        button.type = "button";
-        button.onclick = func;
+        var button = $("<button/>").val(name).click(func);
         if(cont === undefined) {
-            this.html.mainPanel.appendChild(button);
+            $(this.html.mainPanel).append(button);
         } else {
-            cont.appendChild(button);
+            $(cont).append(button);
         }
     },
     drawTab: function drawTab(id,name) {
@@ -172,38 +166,28 @@ var guiBot = {
         $("#debug_queue").html("<h7>CMD Queue: "+this.queue.length+"</h7><h7>Data Queue: "+this.data_queue.length+"</h7><h7>Slow Queue: "+this.slow_queue.length+"</h7><h7>Queue Type: "+this.queue_type+"</h7>");
     },
     drawBuildTab: function drawBuildTab(infoData) {
-        this.html.build = {};
-
         if(!this.options.build) {
             this.options.build = {};
         }
 
-        infoData.innerHTML = "<h7>Build Orders</h7>";
-	infoData.innerHTML += "<p>Build this amount of buildings and the rest will be Hideout.</p>";
-        var table = document.createElement("table");
-        infoData.appendChild(table);
+        $(infoData).append("<h7>Build Orders</h7>");
+	$(infoData).append("<p>Build this amount of buildings and the rest will be Hideout.</p>");
+        var table = $("<table/>");
+        $(infoData).append(table);
 
         var saveChanges = false;
         for(var b in this.buildings) {
             if(!this.buildings[b].buildNew) {
 		continue;
 	    }
-            var tr = document.createElement("tr");
-            table.appendChild(tr);
-            var td = document.createElement("td");
-            td.innerHTML = b;
-            tr.appendChild(td);
-            td = document.createElement("td");
-            tr.appendChild(td);
-            var input = document.createElement("input");
-            if(this.options.build.hasOwnProperty(b) && typeof(this.options.build[b]) == 'number') {
-                input.value = this.options.build[b];
+	    var input = $("<input id='build_"+b+"' />");
+            if(this.options.build[b] && typeof(this.options.build[b]) == 'number') {
+                input.val(this.options.build[b]);
             } else {
-                input.value = this.buildings[b].buildNew;
+                input.val(this.buildings[b].buildNew);
                 saveChanges = true;
             }
-            this.html.build[b] = input;
-            td.appendChild(input);
+	    this.addTableRow(table,b,input);
         }
         if(saveChanges) {
             this.saveBuildOrder();
@@ -214,7 +198,7 @@ var guiBot = {
         this.options.build = {};
         for(var b in this.buildings) {
             if(this.buildings[b].buildNew) {
-                this.options.build[b] = parseInt(this.html.build[b].value,10);
+                this.options.build[b] = parseInt($("#build_"+b).val(),10);
             }
         }
         this.saveOptions();

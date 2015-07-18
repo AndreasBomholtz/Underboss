@@ -19,14 +19,8 @@ var attackBot = {
             this.options.map_loaded = {};
         }
 	
-	for(var i=0; i<this.cities.length; i++) {
-            var city = this.cities[i];
-            if(!city) {
-		this.debugAttack("No city for index "+i);
-		continue;
-	    }
-
-            var startX = city.x - offset;
+	this.eachCity(function(city) {
+	    var startX = city.x - offset;
             if(startX < 0) {
                 startX = 750 + startX;
             }
@@ -57,7 +51,8 @@ var attackBot = {
 					    this.bind(this.drawMapInfo));
                 }
 	    }
-	}
+	});
+
         this.saveOptions();
     },
     findBestGang: function findBestGang(city,level) {
@@ -122,21 +117,15 @@ var attackBot = {
 	    return(10000);
         }
 	
-        for(var c=0; c<this.cities.length; c++) {
-            var city = this.cities[c];
-            if(!city) {
-		this.debugAttack("No city at index "+c);
-		continue;
-	    }
-
-	    if(city.energy <= 1) {
+	this.eachCity(function(city) {
+            if(city.energy <= 1) {
                 this.debugAttack("No more energy",city);
-		continue;
+		return;
 	    }
-
+	    
 	    if(city.type == "DoriaAirport") {
 		this.debugAttack(city.type+ " is not attackable",city);
-		continue;
+		return;
             }
 	    
             var bestOrder = {"gang":0};
@@ -147,7 +136,7 @@ var attackBot = {
 
                 if(order.city && order.city != 'all' && order.city != city.type) {
                     this.debugAttack("Wrong city ("+order.city+" != "+city.type+")",city);
-					continue;
+		    continue;
                 }
 
 		var doIt = true;
@@ -170,13 +159,13 @@ var attackBot = {
             }
 
             if(!bestOrder.units) {
-		continue;
+		return;
 	    }
 
             var attackGang = this.findBestGang(city,bestOrder.gang);
             if(attackGang.lvl === 0) {
                 this.debugAttack("Failed to find a gang to attack",city);
-				continue;
+		return;
             }
 
 	    this.debugAttack("Attack "+attackGang.lvl+" Gang at ("+attackGang.x+","+attackGang.y+")",city);
@@ -191,7 +180,8 @@ var attackBot = {
 	    
             t = 600000;
             this.saveOptions();
-        }
+        });
+
         return(t);
     },
     getAttackUnits: function getAttackUnits(city) {
@@ -207,9 +197,9 @@ var attackBot = {
             for(var unit in units) {
                 if(total >= city.maximum_troops) {
                     delete units[unit];
-					continue;
+		    continue;
                 }
-
+		
                 if(units[unit] > (city.maximum_troops - total)) {
                     units[unit] = (city.maximum_troops - total);
                 }
@@ -223,9 +213,9 @@ var attackBot = {
     attack: function attack(x,y,units,city) {
         this.trace();
         this.sendCommand("Attack ("+x+","+y+") from "+city.type,
-						 "cities/"+city.id+"/marches.json",
-						 "_method=post&march[x]="+x+"&march[y]="+y+"&march[units]="+units,
-						 city);
+			 "cities/"+city.id+"/marches.json",
+			 "_method=post&march[x]="+x+"&march[y]="+y+"&march[units]="+units,
+			 city);
         this.addStat("Attack",1);
     }
 };

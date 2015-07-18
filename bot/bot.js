@@ -32,33 +32,34 @@ var bot = {
         };
     },
     generateAutoThread: function generateAutoThread(name, opt) {
-		if(opt.event) {
-			this.listen(opt.event,function(event, param) {
-				if(this.cities && this.options['enable'+name]) {
-					this['do'+name+'Event'](param);
-				}
-			});
-		} else {
-			this['auto'+name+'Thread'] = function() {
-				var m = this.bind(this['auto'+name+'Thread']);
-				var t = 60000;
-				if(this.cities && this.options['enable'+name]) {
-					var res = this['do'+name]();
-					if(res) {
-						t = res;
-					}
-				}
-				setTimeout(m,t);
-			};
-			this['auto'+name+'Thread']();
+	if(opt.event) {
+	    this.listen(opt.event,function(event, param) {
+		if(this.cities && this.options['enable'+name]) {
+		    this['do'+name+'Event'](param);
 		}
+	    });
+	} else {
+	    this['auto'+name+'Thread'] = function() {
+		var m = this.bind(this['auto'+name+'Thread']);
+		var t = 60000;
+		if(this.cities && this.options['enable'+name]) {
+		    var res = this['do'+name]();
+		    if(res) {
+			t = res;
+		    }
+		}
+		setTimeout(m,t);
+	    };
+	    this['auto'+name+'Thread']();
+	}
     },
     getCity: function getCity(id) {
-        if(this.cities) {
-            for(var i=0; i<this.cities.length; i++) {
-                if(this.cities[i].id == id) {
-                    return this.cities[i];
-                }
+        if(!this.cities) {
+            return undefined;
+	}
+	for(var i=0; i<this.cities.length; i++) {
+            if(this.cities[i].id == id) {
+                return this.cities[i];
             }
         }
         return undefined;
@@ -77,80 +78,86 @@ var bot = {
     },
     checkCityQueue: function checkCityQueue(city,queue,building) {
         this.trace();
-        var queueReady = false;
-        if(city && city.jobs) {
-            queueReady = true;
-            for(var n=0; n<city.jobs.length; n++) {
-                if(building === undefined) {
-                    if(city.jobs[n].queue && city.jobs[n].queue === queue) {
-                        queueReady = false;
-                        break;
-                    }
-                } else {
-                    if(city.jobs[n].city_building_id &&
-                       city.jobs[n].city_building_id === building)
-                    {
-                        queueReady = false;
-                        break;
-                    }
+        
+        if(!city || !city.jobs) {
+	    return false;
+	}
+
+        var queueReady = true;
+        for(var n=0; n<city.jobs.length; n++) {
+            if(building === undefined) {
+                if(city.jobs[n].queue && city.jobs[n].queue === queue) {
+                    queueReady = false;
+                    break;
                 }
-            }
-            if(queueReady) {
-                var d = new Date();
-                var t = d.getTime();
-                var obj = {'run_at': t};
-                if(building === undefined) {
-                    obj.queue = queue;
-                } else {
-                    obj.city_building_id = building;
+            } else {
+                if(city.jobs[n].city_building_id &&
+                   city.jobs[n].city_building_id === building)
+                {
+                    queueReady = false;
+                    break;
                 }
-                city.jobs.push(obj);
             }
         }
+        if(queueReady) {
+            var d = new Date();
+            var t = d.getTime();
+            var obj = {'run_at': t};
+            if(building === undefined) {
+                obj.queue = queue;
+            } else {
+                obj.city_building_id = building;
+            }
+            city.jobs.push(obj);
+        }
+   
         return queueReady;
     },
     //------- LOAD DATA FUNCTIONS -----
     loadCityData: function loadCityData(city) {
         this.trace();
-        if(city && city.id) {
-            var name = "unknown";
-            if(city.type) {
-                name = city.type;
-            }
-            this.sendDataGetCommand("Load city "+name,"cities/"+city.id+".json","",city);
-            this.sendDataGetCommand("Load city "+name+" neighborhood","cities/"+city.id+"/neighborhood_buildings.json","",city);
-            var d = new Date();
-            city.lastUpdate = d.getTime();
+        if(!city || !city.id) {
+	    return;
+	}
+
+        var name = "unknown";
+        if(city.type) {
+            name = city.type;
         }
+        this.sendDataGetCommand("Load city "+name,
+				"cities/"+city.id+".json",
+				"",city);
+        this.sendDataGetCommand("Load city "+name+" neighborhood",
+				"cities/"+city.id+"/neighborhood_buildings.json",
+				"",city);
+        var d = new Date();
+        city.lastUpdate = d.getTime();
     },
     loadCitiesData: function loadCitiesData() {
         this.trace();
-        if(this.cities) {
-            for(var i=0; i<this.cities.length; i++) {
-                this.loadCityData(this.cities[i]);
-            }
-        }
+	this.eachCity(function(city) {
+            this.loadCityData(city);
+        });
     },
     autoLoadCities: function autoLoadCities() {
         this.trace();
-        if(this.cities) {
-            for(var i=0; i<this.cities.length; i++) {
-                var d = new Date();
-                if(!this.cities[i].lastUpdate || this.cities[i].lastUpdate < (d.getTime() + (60 * 5))) {
-                    this.loadCityData(this.cities[i]);
-                }
+	this.eachCity(function(city) {
+            var d = new Date();
+            if(!city.lastUpdate || city.lastUpdate < (d.getTime() + (60 * 5))) {
+                this.loadCityData(city);
             }
-        }
-
+        });
     },
     loadGameLoadedData: function loadGameLoadedData() {
         this.trace();
-        if(this.cities && this.cities[0] && this.cities[0].id) {
-            for(var i=0; i<this.cities.length; i++) {
-                this.sendDataCommand("Load Game Data","player/game_loaded.json","_method=put",this.cities[i]);
-            }
-            this.loadCitiesData();
-        }
+	this.eachCity(function(city) {
+            this.sendDataCommand("Load Game Data",
+				 "player/game_loaded.json",
+				 "_method=put",
+				 city);
+        });
+    
+	this.loadCitiesData();
     },
     loadPlayerData: function loadPlayerData() {
         this.trace();
@@ -230,9 +237,9 @@ var bot = {
 
         //Generate functions
         for(var fun in this.autoFunctions) {
-			this.generateAutoThread(fun,this.autoFunctions[fun]);
-
-			this.generateChangeEnable(fun);
+	    this.generateAutoThread(fun,this.autoFunctions[fun]);
+	    
+	    this.generateChangeEnable(fun);
             this.generateDebugEnable(fun);
             this.generateDebugFunction(fun);
         }
@@ -241,7 +248,9 @@ var bot = {
         this.loadPlayerDataInit();
 
         //Draw GUI
-        this.initGUI();
+	if(this.initGUI) {
+            this.initGUI();
+	}
 
         //Start polling events
         var q = this.bind(this.sendQueue);
@@ -264,7 +273,7 @@ var bot = {
         if (typeof C != 'undefined') {
             this.init(C.attrs);
         } else {
-            window.setTimeout(this.bind(this.start,this), 1000);
+            window.setTimeout(this.bind(this.start), 1000);
         }
     }
 

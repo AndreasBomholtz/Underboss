@@ -3,6 +3,7 @@ UGLIFY:=uglifyjs -o underboss.js --lint --screw-ie8 -c ${COMPRESS_OPT}  -m --man
 JSL:=jsl-0.3.0/src/Linux_All_DBG.OBJ/jsl -conf jsl.conf -nosummary -nologo -process
 FILES+=`ls res/*.js`
 FILES+=`ls bot/*.js`
+FILES+=`ls gui/*.js`
 FILES+=`ls util/*.js`
 FILES+=main.js
 

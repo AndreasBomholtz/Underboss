@@ -1,24 +1,22 @@
 var buildBot = {
-	findBuildingLevel: function findBuildingLevel(name,city) {
+    findBuildingLevel: function findBuildingLevel(name,city) {
         var maxLevel = 0;
-        if(city && city.neighborhood && city.neighborhood.length) {
-            for(var i=0; i<city.neighborhood.length; i++) {
-                var neighborhood = city.neighborhood[i];
-                if(neighborhood && neighborhood.buildings) {
-                    var buildings = neighborhood.buildings;
-                    for(var b=0; b<buildings.length; b++) {
-                        if(buildings[b].type == name) {
-                            if(maxLevel < buildings[b].level) {
-                                maxLevel = buildings[b].level;
-                            }
+	this.eachNeighborhood(function(city, neighborhood) {
+            if(neighborhood.buildings) {
+                var buildings = neighborhood.buildings;
+                for(var b=0; b<buildings.length; b++) {
+                    if(buildings[b].type == name) {
+                        if(maxLevel < buildings[b].level) {
+                            maxLevel = buildings[b].level;
                         }
                     }
                 }
             }
-        }
+        });
+        
         return maxLevel;
     },
-	countBuilding: function countBuilding(neighborhood,name) {
+    countBuilding: function countBuilding(neighborhood,name) {
         this.trace();
         var count = 0;
         if(neighborhood && neighborhood.buildings) {
@@ -35,7 +33,7 @@ var buildBot = {
         }
         return count;
     },
-	findBuildingSlot: function findBuildingSlot(neighborhood) {
+    findBuildingSlot: function findBuildingSlot(neighborhood) {
         this.trace();
         var slots = [],i=0;
         for(i=0; i<45; i++) {
@@ -64,14 +62,14 @@ var buildBot = {
             var res = city.resources;
             for (var c in cost) {
                 var rc = 0;
-				if(func) {
-					rc = func(parseInt(level,10),cost[c]);
-				} else {
-					rc = cost[c] * level;
-				}
+		if(func) {
+		    rc = func(parseInt(level,10),cost[c]);
+		} else {
+		    rc = cost[c] * level;
+		}
                 if(rc > parseInt(res[c],10)) {
-					if(func === undefined) {
-						this.debugTrain("Can't train "+name+" because "+c+" ("+rc+") is more then "+res[c],city);
+		    if(func === undefined) {
+			this.debugTrain("Can't train "+name+" because "+c+" ("+rc+") is more then "+res[c],city);
                     } else if(func == this.calcBuldingCost) {
                         this.debugBuild("Can't build "+name+" because "+c+" ("+rc+") is more then "+res[c],city);
                     } else {
@@ -81,17 +79,17 @@ var buildBot = {
                 }
             }
             for (var cc in cost) {
-				var dc;
-				if(func) {
-					dc = func(parseInt(level,10),cost[cc]);
-				} else {
-					dc = cost[cc] * level;
-				}
+		var dc;
+		if(func) {
+		    dc = func(parseInt(level,10),cost[cc]);
+		} else {
+		    dc = cost[cc] * level;
+		}
                 city.resources[cc] = parseInt(city.resources[cc],10) - dc;
             }
         } else if(cost) {
-			if(func === undefined) {
-				this.debugTrain("Missing city data");
+	    if(func === undefined) {
+		this.debugTrain("Missing city data");
             } else if(func == this.calcBuldingCost) {
                 this.debugBuild("Missing city data");
             } else {
@@ -99,7 +97,7 @@ var buildBot = {
             }
         } else {
             if(func === undefined) {
-				this.debugTrain("Missing cost for "+name);
+		this.debugTrain("Missing cost for "+name);
             } else if(func == this.calcBuldingCost) {
                 this.debugBuild("Missing cost for "+name);
             } else {
@@ -120,10 +118,10 @@ var buildBot = {
             var cap = manLvl * 3 + 10;
             var total = this.countBuilding(neighborhood);
             this.debugBuild("Man Level: "+manLvl+" Total building: "+ total+" => "+cap,city);
-
+	    
             if(cap > total) {
                 var slot = this.findBuildingSlot(neighborhood);
-
+		
                 var build = "Hideout";
                 for(var b in this.buildings) {
                     var prio = this.buildings[b];
@@ -145,7 +143,7 @@ var buildBot = {
                         }
                     }
                 }
-
+		
                 this.updateInfo("Build new "+build+" at slot "+slot,city);
                 var data = "_method=post&city_building[building_type]="+build;
                 data += "&city_building[include_requirements]=false&city_building[instant_build]=false";
