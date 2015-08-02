@@ -28,11 +28,6 @@ var guiBot = {
             this.drawOption(fun);
         }
 
-	this.createOverview();
-	this.createArmorView();
-	this.createTrainView();
-	this.createOptionsView();
-
         var infoPanel = document.createElement("div");
         mainPanel.appendChild(infoPanel);
 
@@ -50,6 +45,12 @@ var guiBot = {
                 this["draw"+tabs[i]+"Tab"](infoData);
             }
         }
+
+	var views = ["Overview","Prizes","Armor","Training","Options"];
+	for(var j=0; j<views.length; j++) {
+	    this.createDialog(views[j].toLower()+"_view",views[j]);
+	    this["create"+views[j]+"View"]();
+	}
     },
     drawOption: function drawOption(name) {
 	// Default option is set to true
@@ -380,9 +381,10 @@ var guiBot = {
 	};
     },
     createArmorView: function() {
-	this.createDialog('armorView','Armor View');
-	
-	
+		
+    },
+    createPrizesView: function() {
+		
     },
     addTableRow: function addTableRow(table,name, value) {
 	var c1 = $("<td/>").append(name);
@@ -390,9 +392,7 @@ var guiBot = {
 	table.append($("<tr/>").append(c1,c2));
     },
     createOptionsView: function createOptionsView() {
-	this.createDialog('optionsview','Options');
-	
-	var view = $("#optionsview");
+	var view = $("#options_view");
 	view.append("<h7>Options</h7>");
 	var table = $("<table/>");
         view.append(table);
@@ -404,12 +404,11 @@ var guiBot = {
 
 	this.createButton(view,"Save",this.bind(this.saveOptionsPage,this));
     }, 
-    createTrainView: function createTrainView() {
-	this.createDialog('trainview','Traning View');
-
-	$("#trainview").append("<h7>Training Orders</h7>");
+    createTrainingView: function createTrainingView() {
+	var view = $("#training_view");
+	view.append("<h7>Training Orders</h7>");
         var table = $("<table/>");
-        $("#trainview").append(table);
+        view.append(table);
         var count = 0;
         var tr;
         for(var unit in this.attackUnits) {
@@ -439,13 +438,12 @@ var guiBot = {
         }
         this.saveOptions();
     },
-    createOverview: function() {
-	this.createDialog('overview','Overview');
-	
-	$("#overview").append("<button id='overview_update'>Update</button>");
+    createOverviewView: function() {
+	var view = $("#overview_view");
+	view.append("<button id='overview_update'>Update</button>");
 	$("#overview_update").click(this.bind(this.updateOverview,this));
 	
-	$("#overview").append("<table id='overview_table'></table>");
+	view.append("<table id='overview_table'></table>");
 	$("#overview_table").append("\
 <tr><td>City</td>\
 <th>Cash</th><th>Cement</th><th>Food</th><th>Steel</th>\
@@ -458,7 +456,7 @@ var guiBot = {
 <td id='jobs'></td>\
 </tr>");
 
-	$("#overview").append($("<div></div>").addClass("stats").attr("id","stats"));
+	view.append($("<div></div>").addClass("stats").attr("id","stats"));
 	
 	this.listen("jobs:update",this.updateOverview);
 	this.listen('cities:update',this.updateOverview);
