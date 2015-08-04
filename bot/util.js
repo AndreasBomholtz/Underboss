@@ -39,7 +39,7 @@ var utilBot = {
 
 	for(var i=0; i<this.cities.length; i++) {
 	    if(this.cities[i] && this.cities[i].id) {
-		func(this.cities[i]);
+		func.call(this,this.cities[i]);
 	    }
 	}
     },
@@ -49,7 +49,7 @@ var utilBot = {
 		for(var i=0; i<city.neighborhood.length; i++) {
                     var neighborhood = city.neighborhood[i];
                     if(neighborhood) {
-			func(city, neighbothood);
+			func.call(this,city, neighborhood);
 		    }
 		}
 	    }

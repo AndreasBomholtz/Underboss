@@ -33,12 +33,20 @@ var bot = {
     },
     generateAutoThread: function generateAutoThread(name, opt) {
 	if(opt.event) {
+	    if(this['do'+name+'Event'] === undefined) {
+		this.debug("Missing function: do"+name+"Event");
+		return;
+	    }
 	    this.listen(opt.event,function(event, param) {
 		if(this.cities && this.options['enable'+name]) {
 		    this['do'+name+'Event'](param);
 		}
 	    });
 	} else {
+	    if(this['do'+name] === undefined) {
+		this.debug("Missing function: do"+name);
+		return;
+	    }
 	    this['auto'+name+'Thread'] = function() {
 		var m = this.bind(this['auto'+name+'Thread']);
 		var t = 60000;
@@ -151,7 +159,7 @@ var bot = {
     loadGameLoadedData: function loadGameLoadedData() {
         this.trace();
 	this.eachCity(function(city) {
-            this.sendDataCommand("Load Game Data",
+	    this.sendDataCommand("Load Game Data",
 				 "player/game_loaded.json",
 				 "_method=put",
 				 city);
@@ -223,7 +231,6 @@ var bot = {
 	this.data_queue = [];
 	this.slow_queue = [];
 	this.queue_type = 'data';
-	this.lastCommand = {};
 	this.html = {};
 	this.enableTrace = false;
 

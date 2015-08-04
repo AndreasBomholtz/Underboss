@@ -169,7 +169,7 @@ var parserBot = {
                         this.signal("jobs:update");
                     }
                 }
-                if(this.lastCommand.city) {
+                if(this.lastCommand && this.lastCommand.city) {
                     if(data.result.units) {
                         this.lastCommand.city.bailout = data.result.units;
                         this.payBailout(this.lastCommand.city);
@@ -194,7 +194,7 @@ var parserBot = {
                     }
                 }
             }
-            if(data.energy && this.lastCommand.city) {
+            if(data.energy && this.lastCommand && this.lastCommand.city) {
                 this.lastCommand.city.energy = data.energy;
             }
         }

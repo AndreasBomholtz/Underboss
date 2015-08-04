@@ -99,7 +99,7 @@ var collectBot = {
 
         for(var i=0; i<this.tokens.length; i++) {
             if(this.tokens[i].collectable) {
-                this.debugLoyaltyToken("Collect token: "+this.token[i].type+" ("+i+")");
+                this.debugLoyaltyToken("Collect token: "+this.tokens[i].type+" ("+i+")");
                 this.sendCommand("Collect token",
 				 "loyalty_tokens/collect.json",
 				 "type="+this.tokens[i].type,this.cities[0]);

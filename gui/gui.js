@@ -48,8 +48,12 @@ var guiBot = {
 
 	var views = ["Overview","Prizes","Armor","Training","Options"];
 	for(var j=0; j<views.length; j++) {
-	    this.createDialog(views[j].toLower()+"_view",views[j]);
-	    this["create"+views[j]+"View"]();
+	    this.createDialog(views[j].toLowerCase()+"_view",views[j]);
+	    if(this["create"+views[j]+"View"]) {
+		this["create"+views[j]+"View"]();
+	    } else {
+		this.debug("create"+views[j]+"View function is missing!");
+	    }
 	}
     },
     drawOption: function drawOption(name) {
@@ -402,8 +406,11 @@ var guiBot = {
 	this.addTableRow(table,"Hide side panel","");
 	this.addTableRow(table,"","");
 
-	this.createButton(view,"Save",this.bind(this.saveOptionsPage,this));
+	this.drawButton("Save",this.bind(this.saveOptionsPage),view);
     }, 
+    saveOptionsPage: function saveOptionsPage() {
+	this.debug("Save Options");
+    },
     createTrainingView: function createTrainingView() {
 	var view = $("#training_view");
 	view.append("<h7>Training Orders</h7>");

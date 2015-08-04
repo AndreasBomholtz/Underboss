@@ -8,7 +8,7 @@ if(window.location.href.indexOf("platforms/kabam/game") != -1) {
     //Combine all the bots into one object
     combine(bot,attackBot,
 	    bondsBot,buildBot,
-	    itemBot,
+	    itemBot,cityscapeBot,
 	    reportBot,trainBot,
 	    bailoutBot,collectBot,
 	    prizeBot,researchBot,

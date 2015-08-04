@@ -81,16 +81,24 @@ var queueBot = {
         
 	//Send cmd
 	if(this.lastCommand) {
-	    this.debug("Resending last command");
+	    this.debug("Resending last command: "+this.lastCommand.name,this.lastCommand.city);
+	    this.debug(this.lastCommand);
 	    this.executeCommand(this.lastCommand);
 	} else if(q) {
             this.executeCommand(q.shift());
 	}
     },
     executeCommand: function executeCommand(cmd) {
-	if(!cmd) {
+	if(cmd === undefined) {
 	    return;
 	}
+	if(cmd.resends >= 2) {
+	    this.debug("Last command has been send 3 times: "+this.lastCommand.name,
+		       this.lastCommand.city);
+	    this.lastCommand = undefined;
+	    return;
+	}
+	cmd.resends = (cmd.resends + 1) || 1;
         this.lastCommand = cmd;
         this.signal("queue:update");
         var self = this;
@@ -103,21 +111,35 @@ var queueBot = {
         });
     },
     errorCommand: function errorCommand(data,status,error) {
-        if(typeof(data) == "string") {
-            data = JSON.parse(data);
+	if(typeof(data) == "string") {
+	    try {
+		data = JSON.parse(data);
+	    } catch(err) {
+		this.debug("Recevied invalid JSON in error handler: "+this.lastCommand.name,
+			   this.lastCommand.city);
+		this.debug(err);
+		return;
+	    }
         }
         this.debug("Error sending command: "+data.responseText);
         this.debug(this.lastCommand);
 
-        if(this.lastCommand.callback !== undefined) {
+        if(this.lastCommand && this.lastCommand.callback !== undefined) {
             this.lastCommand.callback();
         }
 
 	//this.lastCommand = undefined;
     },
     revCommand: function revCommand(data) {
-        if(typeof(data) == "string") {
-            data = JSON.parse(data);
+	if(typeof(data) == "string") {
+            try {
+		data = JSON.parse(data);
+	    } catch(err) {
+		this.debug("Received invalid JSON for command: "+this.lastCommand.name);
+		this.debug(err);
+		this.lastCommand = undefined;
+		return;
+	    }
         }
         if(data && data.result) {
             if(!data.result.success) {
@@ -132,10 +154,12 @@ var queueBot = {
         }
         this.parseData(data);
 
-        if(this.lastCommand.callback !== undefined) {
-            this.lastCommand.callback();
-        }
+        if(this.lastCommand) {
+	    if(this.lastCommand.callback !== undefined) {
+		this.lastCommand.callback();
+            }
 
-	this.lastCommand = undefined;
+	    this.lastCommand = undefined;
+	}
     }
 };

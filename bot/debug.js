@@ -4,9 +4,9 @@ var debugBot = {
             this.debug(arguments.callee.caller.name);
         }
     },
-	setDebugCity: function setDebugCity(city) {
-		this.debugCity = city;
-	},
+    setDebugCity: function setDebugCity(city) {
+	this.debugCity = city;
+    },
     debug: function debug(str,city,info) {
 	if(city && this.debugCity && this.debugCity != "All" && this.debugCity != city.type) {
 	    return "";
@@ -34,7 +34,7 @@ var debugBot = {
             }
         };
     },
-	generateDebugEnable: function generateDebugEnable(name) {
+    generateDebugEnable: function generateDebugEnable(name) {
         this["changeDebugEnable"+name] = function() {
             this["enableDebug"+name] = this.html["enable_debug_"+name].checked;
             this.debug("Enable Debug "+name+": " + this["enableDebug"+name]);
@@ -42,7 +42,7 @@ var debugBot = {
     },
     toggleTrace: function() {
         this.enableTrace = !this.enableTrace;
-		console.info("Trace is now "+this.enableTrace);
+	console.info("Trace is now "+this.enableTrace);
     },
     executeCMD: function() {
         var cmd = window.prompt("Enter CMD","");
