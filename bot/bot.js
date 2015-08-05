@@ -234,12 +234,13 @@ var bot = {
 	this.html = {};
 	this.enableTrace = false;
 
+	this.debug(data);
+
         //Save options
-        this.server = data.apiServer+"/";
-        this.server = this.server.replace("http","https");
-        this.player = data.playerId;
-        this.session = data.sessionId;
-        this.user = data.userId;
+        this.server   = data.apiServer.replace("http","https")+"/";
+        this.player   = data.playerId;
+        this.session  = data.sessionId;
+        this.user     = data.userId;
         this.gangster = data.gangster;
 
         //Generate functions
