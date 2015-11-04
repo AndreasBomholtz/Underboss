@@ -1,7 +1,7 @@
 var bailoutBot = {
     doBailout: function doBailout() {
         this.trace();
-	this.eachCity(function(city) {
+        this.eachCity(function(city) {
             if(city.type != "DoriaAirport") {
                 this.sendGetCommand("Update bail","cities/"+city.id+"/cash_jail.json","",city);
             }
@@ -9,10 +9,10 @@ var bailoutBot = {
     },
     payBailout: function payBailout(city) {
         this.trace();
-        if(!city || city.bailout) {
+        if(!city || !city.bailout) {
             this.debugBailout('No city or bailout',city);
-	    return;
-	}
+            return;
+        }
 
         var cash = 0;
         if(city.resources) {
@@ -23,7 +23,7 @@ var bailoutBot = {
         var data = "";
         var str = "";
         var total_cost = 0;
-	
+
         for(var unit in city.bailout) {
             var pay = 0;
             if(this.attackUnits[unit] && this.attackUnits[unit].bailout) {

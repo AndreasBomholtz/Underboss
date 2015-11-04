@@ -16,10 +16,10 @@ var parserBot = {
                     this.signal('cities:update');
                 }
             }
-			if(data.player_armory_items) {
-				this.player_armory_items = data.player_armory_items;
-				this.signal('player:armor:update');
-			}
+            if(data.player_armory_items) {
+                this.player_armory_items = data.player_armory_items;
+                this.signal('player:armor:update');
+            }
             if(data.neighborhoods) {
                 for(n in data.neighborhoods) {
                     var neighborhood = data.neighborhoods[n];
@@ -50,7 +50,7 @@ var parserBot = {
             if(data.city) {
                 city = this.getCity(data.city.id);
                 if(city) {
-					city.type = data.city.type;
+                    city.type = data.city.type;
 
                     if(city.jobs && data.city.jobs) {
                         for(i=0; i<city.jobs.length; i++) {
@@ -66,35 +66,35 @@ var parserBot = {
                             }
                         }
                     }
-					if(data.city.units) {
-						city.units = data.city.units;
-						this.signal("units:update");
-					}
-					if(data.city.research) {
-						city.research = data.city.research;
-						this.signal("research:update");
-					}
-					if(data.city.resources) {
-						city.resources = data.city.resources;
-						this.signal("resources:update");
-					}
-					if(data.city.figures && data.city.figures.marches) {
+                    if(data.city.units) {
+                        city.units = data.city.units;
+                        this.signal("units:update");
+                    }
+                    if(data.city.research) {
+                        city.research = data.city.research;
+                        this.signal("research:update");
+                    }
+                    if(data.city.resources) {
+                        city.resources = data.city.resources;
+                        this.signal("resources:update");
+                    }
+                    if(data.city.figures && data.city.figures.marches) {
                         city.maximum_troops = data.city.figures.marches.maximum_troops;
                     }
-					if(data.city.wildernesses) {
-						city.wildernesses = data.city.wildernesses;
-					}
-					if(data.city.jobs) {
-						city.jobs = data.city.jobs;
-						this.signal("jobs:update");
-					}
-					if(data.city.equipped_armory_items) {
-						city.armor = data.city.equipped_armory_items;
-						this.signal("city:armor:update",city);
-					}
+                    if(data.city.wildernesses) {
+                        city.wildernesses = data.city.wildernesses;
+                    }
+                    if(data.city.jobs) {
+                        city.jobs = data.city.jobs;
+                        this.signal("jobs:update");
+                    }
+                    if(data.city.equipped_armory_items) {
+                        city.armor = data.city.equipped_armory_items;
+                        this.signal("city:armor:update",city);
+                    }
 
-					// for debug
-					city.data = data.city;
+                    // for debug
+                    city.data = data.city;
                 }
             }
             if(data.terrain) {
@@ -125,12 +125,12 @@ var parserBot = {
             }
             if(data.items) {
                 this.my_items = data.items;
-				this.signal('player:items');
+                this.signal('player:items');
             }
-			if(data.quests) {
-				this.quests = data.quests;
-				this.signal("player:quests");
-			}
+            if(data.quests) {
+                this.quests = data.quests;
+                this.signal("player:quests");
+            }
             if(data.level) {
                 this.player_level = data.level;
             }

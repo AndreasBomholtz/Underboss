@@ -4,7 +4,7 @@ var guiBot = {
         panel.setAttribute("id","panel");
         panel.setAttribute("class", "panel");
         document.body.appendChild(panel);
-        
+
         var header = document.createElement("p");
         header.className = "header";
         header.innerHTML = "The Underboss";
@@ -102,7 +102,7 @@ var guiBot = {
         return div;
     },
     drawButton: function drawButton(name,func,cont) {
-        var button = $("<button/>").val(name).click(func);
+        var button = $("<button/>").html(name).click(func);
         if(cont === undefined) {
             $(this.html.mainPanel).append(button);
         } else {
@@ -208,7 +208,7 @@ var guiBot = {
         }
         this.saveOptions();
     },
-    
+
     drawMapInfo: function drawMapInfo() {
         if(!this.html.map_info) {
             this.html.map_info = document.createElement("div");
@@ -363,7 +363,7 @@ var guiBot = {
     drawInfoTab: function drawInfoTab(infoData) {
 	this.drawButton("Overview",this.showoverview,infoData);
 	this.drawButton("Traning",this.showtrainview,infoData);
-                
+
         $(infoData).append($("<textarea></textarea>").addClass("info").attr("id","debug_info"));
     },
     drawPrizesTab: function drawPrizesTab(infoData) {
@@ -385,10 +385,10 @@ var guiBot = {
 	};
     },
     createArmorView: function() {
-		
+
     },
     createPrizesView: function() {
-		
+
     },
     addTableRow: function addTableRow(table,name, value) {
 	var c1 = $("<td/>").append(name);
@@ -407,7 +407,7 @@ var guiBot = {
 	this.addTableRow(table,"","");
 
 	this.drawButton("Save",this.bind(this.saveOptionsPage),view);
-    }, 
+    },
     saveOptionsPage: function saveOptionsPage() {
 	this.debug("Save Options");
     },
@@ -426,7 +426,7 @@ var guiBot = {
 		tr = $("<tr/>");
 		table.append(tr);
 	    }
-	    
+
 	    tr.append($("<td/>").text(unit).append($("<td/>").append($("<input class='number'/>").attr("id","unit_"+unit))));
 	    if(this.options.trainOrders && this.options.trainOrders[unit]) {
 		$("#unit_"+unit).val(this.options.trainOrders[unit]);
@@ -449,7 +449,7 @@ var guiBot = {
 	var view = $("#overview_view");
 	view.append("<button id='overview_update'>Update</button>");
 	$("#overview_update").click(this.bind(this.updateOverview,this));
-	
+
 	view.append("<table id='overview_table'></table>");
 	$("#overview_table").append("\
 <tr><td>City</td>\
@@ -464,11 +464,11 @@ var guiBot = {
 </tr>");
 
 	view.append($("<div></div>").addClass("stats").attr("id","stats"));
-	
+
 	this.listen("jobs:update",this.updateOverview);
 	this.listen('cities:update',this.updateOverview);
 	this.listen('resources:update',this.updateOverview);
-	
+
 	this.updateOverview();
 	this.updateStats();
     },
