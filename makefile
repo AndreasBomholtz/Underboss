@@ -14,7 +14,7 @@ all: Underboss-dev.user.js
 
 release: Underboss.user.js
 
-Underboss-dev.user.js: makefile res/underboss.css.js Underboss.meta.js
+Underboss-dev.user.js: makefile res/underboss.css.js Underboss.meta.js $(FILES)
 	make lint
 	cat Underboss.meta.js $(FILES) > Underboss-dev.user.js
 

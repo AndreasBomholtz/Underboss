@@ -10,7 +10,7 @@ var trainBot = {
                 }
             }
         }
-        if(rreq && eq.research) {
+        if(req && req.research) {
             for(var r in req.research) {
                 var resLvl = city.research[r];
                 if(resLvl === undefined) {
