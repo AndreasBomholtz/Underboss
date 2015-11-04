@@ -47,7 +47,7 @@ var researchBot = {
                 if(req.research) {
                     for(var i=0; i<req.research.length; i++) {
                         var r = req.research[i];
-						var resLvl = city.research[r];
+                        var resLvl = city.research[r];
                         if(resLvl === undefined) {
                             resLvl = 0;
                         }
