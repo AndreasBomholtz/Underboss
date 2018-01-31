@@ -126,78 +126,78 @@ var items = {
 
     "ContractBundle100": {
         'cost': 1,
-		'autoCollect': true
+        'autoCollect': true
     },
     "ContractBundle500": {
         'cost': 2,
-		'autoCollect': true
-	},
+        'autoCollect': true
+    },
     "ContractBundle1000": {
         'cost': 5,
-		'autoCollect': true
+        'autoCollect': true
     },
 
     "FavorBundle100": {
         'cost': 1,
-		'autoCollect': true
+        'autoCollect': true
     },
-	"FavorBundle250": {
+    "FavorBundle250": {
         'cost': 2,
-		'autoCollect': true
+        'autoCollect': true
     },
     "FavorBundle500": {
         'cost': 2,
-		'autoCollect': true
+        'autoCollect': true
     },
     "FavorBundle1000": {
         'cost': 5,
-		'autoCollect': true
+        'autoCollect': true
     },
     "FavorBundle3000": {
         'cost': 9,
-		'autoCollect': true
+        'autoCollect': true
     },
 
     "KickbackBundle100": {
         'cost': 1,
-		'autoCollect': true
+        'autoCollect': true
     },
-	"KickbackBundle250": {
+    "KickbackBundle250": {
         'cost': 1,
-		'autoCollect': true
+        'autoCollect': true
     },
     "KickbackBundle500": {
         'cost': 3,
-		'autoCollect': true
+        'autoCollect': true
     },
     "KickbackBundle1000": {
         'cost': 5,
-		'autoCollect': true
+        'autoCollect': true
     },
     "KickbackBundle3000": {
         'cost': 6,
-		'autoCollect': true
+        'autoCollect': true
     },
 
     "AppointmentBundle100": {
         'cost': 1,
-		'autoCollect': true
+        'autoCollect': true
     },
     "AppointmentBundle250": {
         'cost': 2,
-		'autoCollect': true
+        'autoCollect': true
     },
     "AppointmentBundle500": {
         'cost': 3,
-		'autoCollect': true
+        'autoCollect': true
     },
     "AppointmentBundle1000": {
         'cost': 4,
-		'autoCollect': true
+        'autoCollect': true
     },
     "AppointmentBundle3000": {
         'cost': 5,
-		'autoCollect': true
+        'autoCollect': true
     },
 
     "ThugBundle25": {
@@ -330,20 +330,20 @@ var items = {
         'cost': 30
     },
 
-	"TributeTicketBundle10": {
-		'cost': 5,
-		'autoCollect': true
-	},
-	"InitiateBundle": {
+    "TributeTicketBundle10": {
+        'cost': 5,
+        'autoCollect': true
+    },
+    "InitiateBundle": {
         'cost': 10,
-		'autoCollect': true
+        'autoCollect': true
     },
     "AssortedResourcesBundle": {
         'cost': 9,
-		'autoCollect': true
+        'autoCollect': true
     },
     "AssortedResources250KBundle": {
         'cost': 9,
-		'autoCollect': true
+        'autoCollect': true
     }
 };

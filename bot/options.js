@@ -9,5 +9,15 @@ var optionsBot = {
         } else {
             this.options = {};
         }
+
+        if(!this.options.attackOrders) {
+            var order = {};
+            order.gang = 10;
+            order.units = "";
+            order.city = "all";
+            order.use_all = true;
+
+            //this.options.attackOrders
+        }
     }
 };
