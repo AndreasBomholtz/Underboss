@@ -12,7 +12,7 @@ var buildBot = {
                     }
                 }
             }
-        });
+        }, city);
 
         return maxLevel;
     },
@@ -33,10 +33,10 @@ var buildBot = {
         }
         return count;
     },
-    findBuildingSlot: function findBuildingSlot(neighborhood) {
+    findBuildingSlot: function findBuildingSlot(neighborhood, cap) {
         this.trace();
         var slots = [],i=0;
-        for(i=0; i<45; i++) {
+        for(i=0; i<cap; i++) {
             slots[i] = true;
         }
         if(neighborhood && neighborhood.buildings) {
@@ -120,8 +120,11 @@ var buildBot = {
             this.debugBuild("Man Level: "+manLvl+" Total building: "+ total+" => "+cap,city);
 
             if(cap > total) {
-                var slot = this.findBuildingSlot(neighborhood);
-
+                var slot = this.findBuildingSlot(neighborhood, cap);
+                if(slot == 0) {
+                    this.debugBuild("Failed to find a valid slot",city);
+                    return false;
+                }
                 var build = "Hideout";
                 for(var b in this.buildings) {
                     var prio = this.buildings[b];

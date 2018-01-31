@@ -46,6 +46,11 @@ var trainBot = {
                 continue;
             }
 
+            if(!city.units) {
+                this.debugTrain("Missing units in city",city);
+                continue;
+            }
+
             for(var unit in this.attackUnits) {
                 var aUnit = this.attackUnits[unit];
                 if(!aUnit.trainable) {

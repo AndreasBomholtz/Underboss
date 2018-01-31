@@ -7,7 +7,7 @@ var researchBot = {
     },
     researchLowest: function researchLowest(city) {
         this.trace();
-        var lowLevel = {'lvl': 20, 'pri': 20, 'id': ""};
+        var lowLevel = {'lvl': 1000, 'pri': 1000, 'id': ""};
         if(!city) {
             this.debugResearch("No city");
             return;
@@ -35,7 +35,11 @@ var researchBot = {
                     this.debugResearch(key+" ("+currentResearch+"/"+(currentResearch-4)+") has req "+req.build+" and it is "+build+" ("+(build*4)+")",city);
 
                     if(req.build == "Garage" || req.build == "Workshop" || req.build == "GuardPost") {
-                        build *= 4;
+                        if(currentResearch >= 20) {
+                            build *= 2;
+                        } else {
+                            build *= 4;
+                        }
                     } else {
                         build *= 2;
                     }
@@ -79,7 +83,7 @@ var researchBot = {
             }
         }
 
-        if(lowLevel.lvl != 20) {
+        if(lowLevel.lvl != 1000) {
             this.updateInfo("Research "+lowLevel.name+" lvl "+(lowLevel.lvl+1),city);
             this.sendCommand("Research "+lowLevel.name+" lvl "+(lowLevel.lvl+1)+" in "+city.type,
                              "cities/"+city.id+"/researches.json",

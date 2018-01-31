@@ -122,7 +122,8 @@ var research =  {
 		"requirement": {
 			"research" : [
 				"Trafficking"
-			]
+			],
+            "build": "Wall"
 		},
 		'cost': {
 			'cash': 250,

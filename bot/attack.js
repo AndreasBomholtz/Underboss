@@ -1,15 +1,15 @@
 var attackBot = {
     resetMap: function resetMap() {
-	this.trace();
-	this.options.map_size = 3;
-	this.options.map_loaded = {};
-	this.updateMap();
+        this.trace();
+        this.options.map_size = 3;
+        this.options.map_loaded = {};
+        this.updateMap();
     },
     updateMap: function updateMap() {
         this.trace();
         if(!this.cities || !this.cities[0] || !this.cities[0].data) {
             setTimeout(this.bind(this.updateMap),1000);
-	    return;
+            return;
         }
 
         this.options.map_size += 2;
@@ -18,9 +18,9 @@ var attackBot = {
         if(!this.options.map_loaded) {
             this.options.map_loaded = {};
         }
-	
-	this.eachCity(function(city) {
-	    var startX = city.x - offset;
+
+        this.eachCity(function(city) {
+            var startX = city.x - offset;
             if(startX < 0) {
                 startX = 750 + startX;
             }
@@ -29,7 +29,7 @@ var attackBot = {
                 startY = 750 + startY;
             }
 
-	    for(var x = 0; x<this.options.map_size; x++) {
+            for(var x = 0; x<this.options.map_size; x++) {
                 for(var y=0; y<this.options.map_size; y++) {
                     var getX = (startX + (x * 10)) % 750;
                     var getY = (startY + (y * 10)) % 750;
@@ -38,20 +38,20 @@ var attackBot = {
                         this.options.map_loaded[getX] = {};
                     }
                     if(this.options.map_loaded[getX][getY]) {
-			this.debugAttack("Not reloading ("+getX+","+getY+")");
-			continue;
-		    }
-		    
+                        this.debugAttack("Not reloading ("+getX+","+getY+")");
+                        continue;
+                    }
+
                     this.options.map_loaded[getX][getY] = true;
                     this.debugAttack("Get map ("+getX+","+getY+")");
                     this.sendSlowGetCommand("Get map ("+getX+","+getY+")",
-					    "map.json",
-					    "x="+getX+"&y="+getY,
-					    city,
-					    this.bind(this.drawMapInfo));
+                                            "map.json",
+                                            "x="+getX+"&y="+getY,
+                                            city,
+                                            this.bind(this.drawMapInfo));
                 }
-	    }
-	});
+            }
+        });
 
         this.saveOptions();
     },
@@ -65,21 +65,21 @@ var attackBot = {
         for(var keyX in this.options.map) {
             for(var keyY in this.options.map[keyX]) {
                 var gang = this.options.map[keyX][keyY];
-		if(gang.lvl != level && (level > 1 && gang.lvl != (level-1))) {
-		    this.debugAttack("Gang has wrong level ("+gang.lvl+" != "+level,city);
-		    continue;
-		}
-		
-		if(sel.lvl > gang.lvl) {
-		    this.debugAttack("Selected gang is better ("+sel.lvl+" > "+gang.lvl+")",city);
-		    continue;
-		}
-		
-		if(gang.attacked && gang.attacked >= d.getTime()) {
-		    this.debugAttack("Gang already attacked",city);
-		    continue;
-		}
-		
+                if(gang.lvl != level && (level > 1 && gang.lvl != (level-1))) {
+                    this.debugAttack("Gang has wrong level ("+gang.lvl+" != "+level,city);
+                    continue;
+                }
+
+                if(sel.lvl > gang.lvl) {
+                    this.debugAttack("Selected gang is better ("+sel.lvl+" > "+gang.lvl+")",city);
+                    continue;
+                }
+
+                if(gang.attacked && gang.attacked >= d.getTime()) {
+                    this.debugAttack("Gang already attacked",city);
+                    continue;
+                }
+
                 var distX = Math.abs(keyX-city.x);
                 if(distX > 250) {
                     distX = Math.abs(750-distX);
@@ -91,10 +91,10 @@ var attackBot = {
 
 
                 if((distX + distY) > sel_dist && sel.lvl === gang.lvl) {
-		    this.debugAttack("Selected gang is closer",city);
-		    continue;
-		}
-		
+                    this.debugAttack("Selected gang is closer",city);
+                    continue;
+                }
+
                 sel_dist = distX + distY;
                 sel = gang;
                 this.debugAttack("Found better Gang "+sel.lvl+" at ("+keyX+","+keyY+") with dist ("+distX+" + "+distY+") = "+sel_dist,city);
@@ -114,20 +114,20 @@ var attackBot = {
 
         if(!this.cities || !this.options.attackOrders) {
             this.debugAttack("City or orders not ready");
-	    return(10000);
+            return(10000);
         }
-	
-	this.eachCity(function(city) {
+
+        this.eachCity(function(city) {
             if(city.energy <= 1) {
                 this.debugAttack("No more energy",city);
-		return;
-	    }
-	    
-	    if(city.type == "DoriaAirport") {
-		this.debugAttack(city.type+ " is not attackable",city);
-		return;
+                return;
             }
-	    
+
+            if(city.type == "DoriaAirport") {
+                this.debugAttack(city.type+ " is not attackable",city);
+                return;
+            }
+
             var bestOrder = {"gang":0};
             for(var i=0; i<this.options.attackOrders.length; i++) {
                 var order = this.options.attackOrders[i];
@@ -136,17 +136,22 @@ var attackBot = {
 
                 if(order.city && order.city != 'all' && order.city != city.type) {
                     this.debugAttack("Wrong city ("+order.city+" != "+city.type+")",city);
-		    continue;
+                    continue;
                 }
 
-		var doIt = true;
+                var doIt = true;
                 var aUnits = JSON.parse(order.units);
-                for(var u in aUnits) {
-                    if(!city.units[u] || city.units[u] < aUnits[u]) {
-                        this.debugAttack("Do not have "+u+" ("+aUnits[u]+")",city);
-                        doIt = false;
-                        break;
+                if(city.units) {
+                    for(var u in aUnits) {
+                        if(!city.units[u] || city.units[u] < aUnits[u]) {
+                            this.debugAttack("Do not have "+u+" ("+aUnits[u]+")",city);
+                            doIt = false;
+                            break;
+                        }
                     }
+                } else {
+                    doIt = false;
+                    this.debugAttack("Missing units in city",city);
                 }
 
                 if(doIt) {
@@ -159,16 +164,16 @@ var attackBot = {
             }
 
             if(!bestOrder.units) {
-		return;
-	    }
+                return;
+            }
 
             var attackGang = this.findBestGang(city,bestOrder.gang);
             if(attackGang.lvl === 0) {
                 this.debugAttack("Failed to find a gang to attack",city);
-		return;
+                return;
             }
 
-	    this.debugAttack("Attack "+attackGang.lvl+" Gang at ("+attackGang.x+","+attackGang.y+")",city);
+            this.debugAttack("Attack "+attackGang.lvl+" Gang at ("+attackGang.x+","+attackGang.y+")",city);
             if(attackGang.lvl <= 10) {
                 attackGang.attacked = d.getTime() + (30 * 60 * 1000);
             }
@@ -177,7 +182,7 @@ var attackBot = {
                 units = this.getAttackUnits(city);
             }
             this.attack(attackGang.x,attackGang.y,units,city);
-	    
+
             t = 600000;
             this.saveOptions();
         });
@@ -197,9 +202,9 @@ var attackBot = {
             for(var unit in units) {
                 if(total >= city.maximum_troops) {
                     delete units[unit];
-		    continue;
+                    continue;
                 }
-		
+
                 if(units[unit] > (city.maximum_troops - total)) {
                     units[unit] = (city.maximum_troops - total);
                 }
@@ -213,9 +218,9 @@ var attackBot = {
     attack: function attack(x,y,units,city) {
         this.trace();
         this.sendCommand("Attack ("+x+","+y+") from "+city.type,
-			 "cities/"+city.id+"/marches.json",
-			 "_method=post&march[x]="+x+"&march[y]="+y+"&march[units]="+units,
-			 city);
+                         "cities/"+city.id+"/marches.json",
+                         "_method=post&march[x]="+x+"&march[y]="+y+"&march[units]="+units,
+                         city);
         this.addStat("Attack",1);
     }
 };
