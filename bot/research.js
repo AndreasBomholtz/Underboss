@@ -43,7 +43,7 @@ var researchBot = {
                     } else {
                         build *= 2;
                     }
-                    if(currentResearch > 1 && build <= currentResearch) {
+                    if(build === 0 || (currentResearch > 1 && build <= currentResearch)) {
                         this.debugResearch("skip because "+build+" is less then "+currentResearch,city);
                         continue;
                     }

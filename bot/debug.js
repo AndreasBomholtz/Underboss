@@ -5,19 +5,23 @@ var debugBot = {
         }
     },
     setDebugCity: function setDebugCity(city) {
-	this.debugCity = city;
+        this.debugCity = city;
     },
-    debug: function debug(str,city,info) {
-	if(city && this.debugCity && this.debugCity != "All" && this.debugCity != city.type) {
-	    return "";
-	}
+    debug: function debug(str, city, info, neighborhood) {
+        if(city && this.debugCity && this.debugCity != "All" && this.debugCity != city.type) {
+            return "";
+        }
         var d = new Date();
         if(typeof(str) == "object") {
             console.debug(str);
             str = "";
         }
         if(city && city.type) {
-            str = city.type+": "+str;
+            if(neighborhood && neighborhood.id) {
+                str = city.type + " (" + neighborhood.id + "): " + str;
+            } else {
+                str = city.type+": "+str;
+            }
         }
         if(info) {
             str = info+": "+str;
@@ -27,10 +31,10 @@ var debugBot = {
         return str;
     },
     generateDebugFunction: function(name) {
-        this["enableDebug"+name] = false;
-        this["debug"+name] = function(str,city) {
-            if(this["enableDebug"+name]) {
-                this.debug(str,city,name);
+        this["enableDebug" + name] = false;
+        this["debug" + name] = function(str, city, neighborhood) {
+            if(this["enableDebug" + name]) {
+                this.debug(str, city, name, neighborhood);
             }
         };
     },
@@ -42,13 +46,15 @@ var debugBot = {
     },
     toggleTrace: function() {
         this.enableTrace = !this.enableTrace;
-	console.info("Trace is now "+this.enableTrace);
+        console.info("Trace is now "+this.enableTrace);
     },
     executeCMD: function() {
         var cmd = window.prompt("Enter CMD","");
         try {
             var res = eval(cmd);
-            if(res) {this.debug(res);}
+            if(res) {
+                this.debug(res);
+            }
         } catch(e) {
             alert(e);
         }

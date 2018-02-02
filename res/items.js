@@ -206,6 +206,9 @@ var items = {
     "ArsonistBundle25": {
         'cost': 5
     },
+    "ArsonistBundle400": {
+        'cost': 100
+    },
     "BruiserBundle25": {
         'cost': 5
     },
@@ -217,6 +220,9 @@ var items = {
     },
     "ArmedGuardBundle100": {
         'cost': 5
+    },
+    "ArmedGuardBundle500": {
+        'cost': 25
     },
     "SniperBundle25": {
         'cost': 5
@@ -256,7 +262,9 @@ var items = {
     "BodyguardBundle100": {
         'cost': 5
     },
-
+    "BodyguardBundle500": {
+        'cost': 25
+    },
     "LesserAttireMedallion": {
         'cost': 40
     },
@@ -345,5 +353,107 @@ var items = {
     "AssortedResources250KBundle": {
         'cost': 9,
         'autoCollect': true
+    },
+    "PromotionBundle1000": {
+        'cost': 40
+    },
+    "BootleggerBundle25": {
+        'cost': 10
+    },
+    "AddiopizzoBundle10": {
+        'cost': 10
+    },
+    "AddiopizzoBundle50": {
+        'cost': 50
+    },
+    "AddiopizzoBundle100": {
+        'cost': 100
+    },
+    "BonnieBundle250": {
+        'cost': 200
+    },
+    "BrassManBundle500": {
+        'cost': 250
+    },
+    "MastermindBundle500": {
+        'cost': 250
+    },
+    "MissusPatchBundle500": {
+        'cost': 250
+    },
+    "FrontManBundle500": {
+        'cost': 250
+    },
+    "BassistBundle500": {
+        'cost': 250
+    },
+    "MisterHaulBundle500": {
+        'cost': 250
+    },
+    "JazzManBundle500": {
+        'cost': 250
+    },
+    "DeathSquadBundle500": {
+        'cost': 250
+    },
+    "GManBundle500": {
+        'cost': 250
+    },
+    "MisterSplitBundle500": {
+        'cost': 250
+    },
+    "BookieBundle500": {
+        'cost': 250
+    },
+    "PIGBundle500": {
+        'cost': 250
+    },
+    "HitSquadBundle500": {
+        'cost': 250
+    },
+    "MisterKippyBundle500": {
+        'cost': 250
+    },
+    "AssassinBundle500": {
+        'cost': 250
+    },
+    "HatchetManBundle500": {
+        'cost': 250
+    },
+    "BlackWidowBundle500": {
+        'cost': 250
+    },
+    "DeliveryBomberBundle500": {
+        'cost': 250
+    },
+    "MisterFixitBundle500": {
+        'cost': 250
+    },
+    "UndertakerBundle500": {
+        'cost': 250
+    },
+    "MisterSplitBundle500": {
+        'cost': 250
+    },
+    "TriggerManBundle500": {
+        'cost': 250
+    },
+    "PromotionBundle500": {
+        'cost': 250
+    },
+    "GuardDogBundle500": {
+        'cost': 100,
+    },
+    "HardlinerBundle500": {
+        'cost': 250
+    },
+    "MissesNeatBundle500": {
+        'cost': 250
+    },
+    "MoneyManBundle500": {
+        'cost': 250
+    },
+    "LeatherHeadBundle500": {
+        'cost': 250
     }
 };

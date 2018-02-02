@@ -31,10 +31,10 @@ var defenseUnits = {
             }
         },
         'cost': {
-            'cash': 1700,
-            'food': 638,
-            'steel': 638,
-            'cement': 1275
+            'cash': 2700,
+            'food': 1013,
+            'steel': 1013,
+            'cement': 2025
         }
     },
     "GuardDog": {
@@ -48,6 +48,12 @@ var defenseUnits = {
                 'GuardPost': 6,
                 'Wall': 6
             }
+        },
+        'cost': {
+            'cash': 8000,
+            'food': 6000,
+            'steel': 4000,
+            'cement': 1000
         }
     },
     "ArmedGuard": {
@@ -60,6 +66,12 @@ var defenseUnits = {
             'build': {
                 'GuardPost': 7,
                 'Wall': 7
+            },
+            'cost': {
+                'cash': 10000,
+                'food': 1600,
+                'steel': 4000,
+                'cement': 8000
             }
         }
     },
@@ -74,6 +86,12 @@ var defenseUnits = {
                 'GuardPost': 8,
                 'Wall': 8
             }
+        },
+        'cost': {
+            'cash': 17160,
+            'food': 6435,
+            'steel': 6435,
+            'cement': 12870
         }
     },
     "UnnamedDefender": {
@@ -87,6 +105,12 @@ var defenseUnits = {
                 'GuardPost': 9,
                 'Wall': 9
             }
+        },
+        'cost': {
+            'cash': 18876,
+            'food': 7049,
+            'steel': 7049,
+            'cement': 14157
         }
     },
     "Moneyman": {
@@ -102,6 +126,12 @@ var defenseUnits = {
                 'GuardPost': 10,
                 'Wall': 10
             }
+        },
+        'cost': {
+            'cash': 23000,
+            'food': 15000,
+            'steel': 15000,
+            'cement': 15000
         }
     },
 

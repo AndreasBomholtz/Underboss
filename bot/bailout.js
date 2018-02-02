@@ -3,22 +3,22 @@ var bailoutBot = {
         this.trace();
         this.eachCity(function(city) {
             if(city.type != "DoriaAirport") {
-                this.sendGetCommand("Update bail","cities/"+city.id+"/cash_jail.json","",city);
+                this.sendGetCommand("Update bail" , "cities/" + city.id + "/cash_jail.json", "", city);
             }
         });
     },
     payBailout: function payBailout(city) {
         this.trace();
         if(!city || !city.bailout) {
-            this.debugBailout('No city or bailout',city);
+            this.debugBailout('No city or bailout', city);
             return;
         }
 
         var cash = 0;
         if(city.resources) {
-            cash = parseInt(city.resources.cash,10);
+            cash = parseInt(city.resources.cash, 10);
         } else {
-            this.debugBailout('No resources',city);
+            this.debugBailout('No resources', city);
         }
         var data = "";
         var str = "";
@@ -28,33 +28,33 @@ var bailoutBot = {
             var pay = 0;
             if(this.attackUnits[unit] && this.attackUnits[unit].bailout) {
                 var cost = this.attackUnits[unit].bailout;
-                var all = parseInt(city.bailout[unit],10);
+                var all = parseInt(city.bailout[unit], 10);
                 var all_cost = cost * all;
-                this.debugBailout(unit+" costs "+all_cost+" and all units costs "+total_cost+" and I have "+cash,city);
-                var count = parseInt((cash-total_cost) / cost,10);
+                this.debugBailout(unit + " costs " + all_cost + " and all units costs " + total_cost + " and I have " + cash, city);
+                var count = parseInt((cash-total_cost) / cost, 10);
                 if(count > 0) {
                     count = count > all ? all : count;
                     var count_cost = count * cost;
-                    this.debugBailout("I can affort "+count+" "+unit+" because it cost "+count_cost+" and I have "+(cash-total_cost)+" ("+cash+")",city);
+                    this.debugBailout("I can affort " + count + " " + unit + " because it cost " + count_cost + " and I have " + (cash - total_cost) + " (" + cash + ")", city);
                     pay = count;
                     total_cost += count_cost;
                 } else {
-                    this.debugBailout("Can't affort "+unit+" because it cost "+cost+" and I have "+(cash-total_cost)+" ("+cash+")",city);
+                    this.debugBailout("Can't affort " + unit + " because it cost " + cost + " and I have " + (cash - total_cost) + " (" + cash + ")", city);
                 }
             } else {
-                this.debug("Missing bailout for "+unit,city);
+                this.debug("Missing bailout for " + unit, city);
             }
             if(pay > 0) {
-                data += "&units["+unit+"]="+pay;
-                str += pay+" "+unit+", ";
+                data += "&units[" + unit + "]=" + pay;
+                str += pay + " " + unit + ", ";
             }
         }
         city.bailout = {};
         if(data !== "") {
-            this.debugBailout(str,city);
-            this.sendCommand("Pay Bailout in "+city.type,"cities/"+city.id+"/cash_jail/bail.json","payment_method=cash"+data,city);
+            this.debugBailout(str, city);
+            this.sendCommand("Pay Bailout in " + city.type, "cities/" + city.id + "/cash_jail/bail.json", "payment_method=cash" + data, city);
         } else {
-            this.debugBailout('No bailout data to send',city);
+            this.debugBailout('No bailout data to send', city);
         }
     }
 };

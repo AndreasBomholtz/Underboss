@@ -121,7 +121,7 @@ var buildBot = {
 
             if(cap > total) {
                 var slot = this.findBuildingSlot(neighborhood, cap);
-                if(slot == 0) {
+                if(slot === 0) {
                     this.debugBuild("Failed to find a valid slot",city);
                     return false;
                 }
@@ -151,7 +151,7 @@ var buildBot = {
                 var data = "_method=post&city_building[building_type]="+build;
                 data += "&city_building[include_requirements]=false&city_building[instant_build]=false";
                 data += "&city_building[neighborhood_id]="+neighborhood.id+"&city_building[slot]="+slot;
-                this.sendCommand("Build new "+build+" at slot "+slot+" in "+city.type,"cities/"+city.id+"/buildings.json",data,city);
+                this.sendCommand("Build new "+build+" at slot "+slot+" in "+city.type+" ("+neighborhood.id+")","cities/"+city.id+"/buildings.json",data,city);
                 this.addStat("Build",1);
                 neighborhood.buildings.push({'slot': slot, 'location': "neighborhood", 'type': build});
                 return true;
@@ -290,7 +290,7 @@ var buildBot = {
                 var city = this.cities[i];
                 if(city.type == "DoriaAirport") {
                     this.debugBuild("Build is disabled for Doria Airport",city);
-                    return;
+                    continue;
                 }
                 var doUpgrade = this.checkCityQueue(city,"building");
                 if(doUpgrade) {

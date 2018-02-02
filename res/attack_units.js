@@ -135,6 +135,13 @@ var attackUnits = {
                 'Workshop': 6,
                 'Hideout': 8
             }
+        },
+        'cost': {
+            'cash': 8500,
+            'food': 6375,
+            'steel': 3188,
+            'cement': 3188,
+            'influence': 40
         }
     },
     'Professional': {
@@ -149,6 +156,13 @@ var attackUnits = {
                 'Garage': 9,
                 'Hideout': 9
             }
+        },
+        'cost': {
+            'cash': 13000,
+            'food': 4875,
+            'steel': 9750,
+            'cement': 4875,
+            'influence': 40
         }
     },
     'Sniper': {
@@ -166,6 +180,13 @@ var attackUnits = {
                 'Garage': 9
             }
         },
+        'cost': {
+            'cash': 15600,
+            'food': 7800,
+            'steel': 7800,
+            'cement': 7800,
+            'influence': 40
+        },
         'bailout': 46800
     },
     'Butcher': {
@@ -181,6 +202,13 @@ var attackUnits = {
                 'Workshop': 9,
                 'Hideout': 9
             }
+        },
+         'cost': {
+            'cash': 17160,
+            'food': 12870,
+            'steel': 6435,
+            'cement': 6435,
+            'influence': 35
         }
     },
     'BlackWidow': {
@@ -196,6 +224,13 @@ var attackUnits = {
                 'Workshop': 9
             }
         },
+         'cost': {
+            'cash': 18876,
+            'food': 14157,
+            'steel': 7079,
+            'cement': 7079,
+            'influence': 35
+        },
         'bailout': 56628
     },
     'Assassin': {
@@ -210,6 +245,13 @@ var attackUnits = {
                 'Hideout': 9,
                 'Garage': 9
             }
+        },
+         'cost': {
+            'cash': 18876,
+            'food': 7079,
+            'steel': 14157,
+            'cement': 7079,
+            'influence': 35
         },
         'bailout':56628
     },
@@ -238,9 +280,14 @@ var attackUnits = {
                 'Hideout': 5,
                 'Garage': 2
             }
+        },
+         'cost': {
+            'cash': 3800,
+            'food': 1425,
+            'steel': 1425,
+            'cement': 2850,
+            'influence': 15
         }
-    },
-    'Freighttrain': {
     },
     'Heavyweight': {
         'type': 'Pulitori',
@@ -545,6 +592,9 @@ var attackUnits = {
         'bailout':75000
     },
 
+    'Freighttrain': {
+        'trainable': false
+    },
     'Hitsquad': {
         'trainable': false
     },
