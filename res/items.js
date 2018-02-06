@@ -442,7 +442,7 @@ var items = {
         'cost': 250
     },
     "GuardDogBundle500": {
-        'cost': 100,
+        'cost': 100
     },
     "HardlinerBundle500": {
         'cost': 250

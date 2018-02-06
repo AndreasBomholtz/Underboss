@@ -20,6 +20,9 @@ var parserBot = {
                 this.player_armory_items = data.player_armory_items;
                 this.signal('player:armor:update');
             }
+            if(data.alliance) {
+                this.alliance = data.alliance;
+            }
             if(data.neighborhoods) {
                 for(n in data.neighborhoods) {
                     var neighborhood = data.neighborhoods[n];

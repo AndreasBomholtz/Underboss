@@ -195,5 +195,27 @@ var buildings = {
             'steel': 300,
             'cement': 1000
         }
+    },
+    "CrewBank": {
+        'requirement': {
+            'alliance': true
+        },
+        'cost': {
+            'cash': 43885,
+            'food': 11445,
+            'steel': 11445,
+            'cement': 11445
+        }
+    },
+    "FinanciersOffice": {
+        'cost': {
+            'cash': 43885,
+            'food': 11445,
+            'steel': 11445,
+            'cement': 11445
+        }
+    },
+    "Condo": {
+        "skip": true
     }
 };

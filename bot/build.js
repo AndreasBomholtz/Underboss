@@ -35,9 +35,22 @@ var buildBot = {
     },
     findBuildingSlot: function findBuildingSlot(neighborhood, cap) {
         this.trace();
-        var slots = [],i=0;
+
+        var n_id = neighborhood.id;
+        if(!this.options.reserved_slots) {
+            this.options.reserved_slots = {};
+        }
+        if(!this.options.reserved_slots[n_id]) {
+            this.options.reserved_slots[n_id] = {};
+        }
+
+        var slots = [], i=0;
         for(i=0; i<cap; i++) {
-            slots[i] = true;
+            if(this.options.reserved_slots[n_id][i] === 'reserved') {
+                slots[i] = false;
+            } else {
+                slots[i] = true;
+            }
         }
         if(neighborhood && neighborhood.buildings) {
             var buildings = neighborhood.buildings;
@@ -54,28 +67,40 @@ var buildBot = {
         }
         return 0;
     },
-    calcBuldingCost: function calcBuldingCost(level,cost) {
-        return cost * Math.pow(2,(level - 1));
+    calcBuldingCost: function calcBuldingCost(level, cost) {
+        if(level == 1) {
+            return cost;
+        } else {
+            return cost * Math.pow(2, (level - 1));
+        }
     },
-    hasResources: function hasResources(city,name,cost,level,func) {
+    hasResources: function hasResources(city, name, cost, level, func) {
         if(cost && city && city.resources) {
             var res = city.resources;
             for (var c in cost) {
                 var rc = 0;
                 if(func) {
-                    rc = func(parseInt(level,10),cost[c]);
+                    rc = func(parseInt(level, 10), cost[c]);
                 } else {
                     rc = cost[c] * level;
                 }
-                if(rc > parseInt(res[c],10)) {
+                if(rc > parseInt(res[c], 10)) {
                     if(func === undefined) {
-                        this.debugTrain("Can't train "+name+" because "+c+" ("+rc+") is more then "+res[c],city);
+                        this.debugTrain("Can't train "+name+" because "+c+" ("+rc+") is more then "+res[c], city);
                     } else if(func == this.calcBuldingCost) {
-                        this.debugBuild("Can't build "+name+" because "+c+" ("+rc+") is more then "+res[c],city);
+                        this.debugBuild("Can't build "+name+" because "+c+" ("+rc+") is more then "+res[c], city);
                     } else {
-                        this.debugResearch("Can't research "+name+" because "+c+" ("+rc+") is more then "+res[c],city);
+                        this.debugResearch("Can't research "+name+" because "+c+" ("+rc+") is more then "+res[c], city);
                     }
                     return false;
+                } else {
+                    if(func === undefined) {
+                        this.debugTrain("I have " + res[c] + " " + c + " and " + name + " costs " + rc, city);
+                    } else if(func == this.calcBuldingCost) {
+                        this.debugBuild("I have " + res[c] + " " + c + " and " + name + " costs " + rc, city);
+                    } else {
+                        this.debugResearch("I have " + res[c] + " " + c + " and " + name + " costs " + rc, city);
+                    }
                 }
             }
             for (var cc in cost) {
@@ -111,21 +136,28 @@ var buildBot = {
         if(neighborhood && neighborhood.buildings && neighborhood.city) {
             var city = neighborhood.city;
             if(city.type == "DoriaAirport") {
-                this.debugBuild("Do not build new building in Doria Airport",city);
+                this.debugBuild("Do not build new building in Doria Airport", city, neighborhood);
                 return false;
             }
-            var manLvl = this.findBuildingLevel("Mansion",neighborhood.city);
-            var cap = manLvl * 3 + 10;
+            var manLvl = this.findBuildingLevel("Mansion", neighborhood.city);
+            var cap = neighborhood.max_slot_number; //manLvl * 3 + 10;
             var total = this.countBuilding(neighborhood);
-            this.debugBuild("Man Level: "+manLvl+" Total building: "+ total+" => "+cap,city);
+            this.debugBuild("Man Level: "+manLvl+" Total building: "+ total+" => "+cap, city, neighborhood);
 
             if(cap > total) {
                 var slot = this.findBuildingSlot(neighborhood, cap);
                 if(slot === 0) {
-                    this.debugBuild("Failed to find a valid slot",city);
+                    this.debugBuild("Failed to find a valid slot",city, neighborhood);
                     return false;
                 }
+
                 var build = "Hideout";
+                var cost = this.buildings[build].cost;
+                if(!this.hasResources(city, build, cost, 1, this.calcBuldingCost)) {
+                    this.debugBuild("Can't build new building, can't afford it", city, neighborhood);
+                    return false;
+                }
+
                 for(var b in this.buildings) {
                     var prio = this.buildings[b];
                     var buildCountGoal = 0;
@@ -135,10 +167,10 @@ var buildBot = {
                         buildCountGoal = prio.buildNew;
                     }
                     if(buildCountGoal) {
-                        var buildCount = this.countBuilding(neighborhood,b);
+                        var buildCount = this.countBuilding(neighborhood, b);
                         if(buildCount < buildCountGoal) {
-                            var cost = prio.cost;
-                            if(!this.hasResources(city,b,cost,1,this.calcBuldingCost)) {
+                            cost = prio.cost;
+                            if(!this.hasResources(city, b, cost, 1, this.calcBuldingCost)) {
                                 continue;
                             }
                             build = b;
@@ -147,19 +179,20 @@ var buildBot = {
                     }
                 }
 
-                this.updateInfo("Build new "+build+" at slot "+slot,city);
+
+                this.updateInfo("Build new "+build+" at slot "+slot, city, neighborhood);
                 var data = "_method=post&city_building[building_type]="+build;
                 data += "&city_building[include_requirements]=false&city_building[instant_build]=false";
                 data += "&city_building[neighborhood_id]="+neighborhood.id+"&city_building[slot]="+slot;
-                this.sendCommand("Build new "+build+" at slot "+slot+" in "+city.type+" ("+neighborhood.id+")","cities/"+city.id+"/buildings.json",data,city);
+                this.sendCommand("Build new "+build+" at slot "+slot+" in "+city.type+" ("+neighborhood.id+")","cities/"+city.id+"/buildings.json", data, city, undefined, neighborhood, {'slot': slot});
                 this.addStat("Build",1);
                 neighborhood.buildings.push({'slot': slot, 'location': "neighborhood", 'type': build});
                 return true;
             } else {
-                this.debugBuild("No more slots for new buildings ("+cap+")",city);
+                this.debugBuild("No more slots for new buildings ("+cap+")", city, neighborhood);
             }
         } else {
-            this.debugBuild("Can't find neighborhood or buildings",city);
+            this.debugBuild("Can't find neighborhood or buildings", city, neighborhood);
         }
         return false;
     },
@@ -210,6 +243,10 @@ var buildBot = {
 
             var canBuild = true;
             var prio = this.buildings[building.type];
+            if(prio.skip) {
+                this.debugBuild("Skipping " + building.type, city, neighborhood);
+                continue;
+            }
             if(prio && prio.requirement) {
                 var reqs = prio.requirement;
                 if(reqs.build) {
@@ -218,33 +255,40 @@ var buildBot = {
                         for(var req in build_prio) {
                             var lvl = this.findBuildingLevel(req,neighborhood.city);
                             if(lvl < build_prio[req]) {
-                                this.debugBuild("Can't build "+building.type+" because "+req+" is not "+build_prio[req],city);
+                                this.debugBuild("Can't build "+building.type+" because "+req+" is not "+build_prio[req], city, neighborhood);
                                 canBuild = false;
                                 break;
                             } else {
-                                this.debugBuild(building.type+" has req "+req+" ("+build_prio[req]+") and it is "+lvl,city);
+                                this.debugBuild(building.type+" has req "+req+" ("+build_prio[req]+") and it is "+lvl, city, neighborhood);
                             }
                         }
                     }
                 }
-                if(reqs.gangster && reqs.gangster > this.player_level) {
-                    this.debugBuild("Can't build "+building.type+" because gangster is not "+reqs.gangster,city);
+                if(reqs.gangster) {
+                    if(reqs.gangster > this.player_level) {
+                        this.debugBuild("Can't build "+building.type+" because gangster is not "+reqs.gangster, city, neighborhood);
+                        canBuild = false;
+                        break;
+                    } else {
+                        this.debugBuild(building.type+" has gangster "+reqs.gangster+" and we are "+this.player_level, city, neighborhood);
+                    }
+                }
+                if(reqs.alliance && !this.alliance) {
+                    this.debugBuild(building.type + " has alliance as a requirement and we are not part of a Crew: " + this.alliance, city, neighborhood);
                     canBuild = false;
                     break;
-                } else if(reqs.gangster) {
-                    this.debugBuild(building.type+" has gangster "+reqs.gangster+" and we are "+this.player_level,city);
                 }
             } else {
-                this.debugBuild(building.type+" has no requirements",city);
+                this.debugBuild(building.type+" has no requirements", city, neighborhood);
             }
             if(canBuild && prio && prio.cost) {
-                if(!this.hasResources(city,building.type,prio.cost,building.level,this.calcBuldingCost)) {
+                if(!this.hasResources(city,building.type, prio.cost, building.level, this.calcBuldingCost)) {
                     canBuild = false;
                 } else {
-                    this.debugBuild("Lots of resources",city);
+                    this.debugBuild("Lots of resources", city, neighborhood);
                 }
             } else if(canBuild) {
-                this.debugBuild("Not cost info for "+building.type,city);
+                this.debugBuild("Not cost info for "+building.type, city, neighborhood);
             }
             if(canBuild &&
                (lowLevel.lvl > building.level ||
@@ -262,21 +306,21 @@ var buildBot = {
             if(lowLevel.lvl > 5) {
                 var tmp = this.upgradeImportentBuilding(neighborhood,lowLevel);
                 if(!tmp) {
-                    this.debugBuild("Faild to find a building",city);
+                    this.debugBuild("Faild to find a building", city, neighborhood);
                     return false;
                 }
                 if(!this.buildings[tmp.name]) {
-                    this.debug("Missing info for: "+tmp.name,city);
+                    this.debug("Missing info for: "+tmp.name, city, neighborhood);
                 } else if(this.hasResources(city,tmp.name,this.buildings[tmp.name].cost,tmp.lvl,this.calcBuldingCost)) {
                     lowLevel = tmp;
                 } else {
-                    this.debugBuild("Do not upgrade importent building, not egnogh rescources",city);
+                    this.debugBuild("Do not upgrade importent building, not egnogh rescources", city, neighborhood);
                 }
             }
             this.updateInfo("Build "+lowLevel.name+" "+(lowLevel.lvl+1),city);
             this.sendCommand("Build "+lowLevel.name+" "+(lowLevel.lvl+1)+" in "+city.type,
                              "cities/"+city.id+"/buildings/"+lowLevel.id+".json",
-                             "_method=put",city);
+                             "_method=put", city, undefined, neighborhood);
             lowLevel.building.level++;
             return true;
         }
@@ -289,7 +333,7 @@ var buildBot = {
             for(var i=0; i<this.cities.length; i++) {
                 var city = this.cities[i];
                 if(city.type == "DoriaAirport") {
-                    this.debugBuild("Build is disabled for Doria Airport",city);
+                    this.debugBuild("Build is disabled for Doria Airport", city);
                     continue;
                 }
                 var doUpgrade = this.checkCityQueue(city,"building");
@@ -301,10 +345,10 @@ var buildBot = {
                             }
                         }
                     } else {
-                        this.debugBuild("Neighborhood not ready",city);
+                        this.debugBuild("Neighborhood not ready", city);
                     }
                 } else {
-                    this.debugBuild("Build queue not ready",city);
+                    this.debugBuild("Build queue not ready", city);
                 }
             }
         } else {
