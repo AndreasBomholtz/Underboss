@@ -3,8 +3,8 @@ A bot for the game, The Godfather: Five Familes on Facebook from Kabam / rockYou
 
 ## USE AT OWN RISK!
 
-You might get banned by using this bot.
-It might use all your gems!
+* You might get banned by using this bot.
+* It might use all your gems!
 
 ## Usage
 
