@@ -222,5 +222,23 @@ var research =  {
             'steel': 150,
             'cement': 150
         }
+    },
+    "Barricade": {
+        "priority": 6,
+        "requirement": {
+            "research" : [
+                "Construction",
+                "Medicine"
+            ],
+            "city": [
+                "Queens"
+            ]
+        },
+        "cost": {
+            'cash': 5000,
+            'food': 2500,
+            'steel': 2500,
+            'cement': 2500
+        }
     }
 };

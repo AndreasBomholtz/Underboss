@@ -26,7 +26,7 @@ res/underboss.css.js: res/underboss.css
 
 lint:
 	@for f in $(FILES); do \
-		${JSL} $$f; \
+		${JSL} $$f || exit 1; \
 	done
 
 Underboss.user.js: Underboss-dev.user.js

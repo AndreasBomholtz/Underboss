@@ -151,7 +151,7 @@ var guiBot = {
 
         this.listen("queue:update",this.updateDebugQueue);
         this.listen("queue:change",this.updateDebugQueue);
-        this.listen("city:update", this.updateDebugCities);
+        this.listen("cities:update", this.updateDebugCities);
         this.listen("report:update",this.handleReport);
     },
     changeDebugCity: function changeDebugCity() {
