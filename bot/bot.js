@@ -26,34 +26,39 @@ var bot = {
     //Functions
     generateChangeEnable: function generateChangeEnable(name) {
         this["changeEnable"+name] = function() {
-            this.options["enable"+name] = this.html["enable_"+name].checked;
+            this.options["enable" + name] = this.html["enable_" + name].checked;
             this.saveOptions();
-            this.debug("Enable "+name+": " + this.options["enable"+name]);
+            this.debug("Enable " + name + ": " + this.options["enable" + name]);
         };
     },
     generateAutoThread: function generateAutoThread(name, opt) {
         if(opt.event) {
-            if(this['do'+name+'Event'] === undefined) {
-                this.debug("Missing function: do"+name+"Event");
+            if(this['do' + name + 'Event'] === undefined) {
+                this.debug("Missing function: do" + name + "Event");
                 return;
             }
             this.listen(opt.event,function(event, param) {
-                if(this.cities && this.options['enable'+name]) {
-                    this['do'+name+'Event'](param);
+                if(this.cities && this.options['enable' + name]) {
+                    this['do' + name + 'Event'](param);
                 }
             });
         } else {
             if(this['do'+name] === undefined) {
-                this.debug("Missing function: do"+name);
+                this.debug("Missing function: do" + name);
                 return;
             }
-            this['auto'+name+'Thread'] = function() {
-                var m = this.bind(this['auto'+name+'Thread']);
+            this['auto' + name + 'Thread'] = function() {
+                var m = this.bind(this['auto' + name + 'Thread']);
                 var t = 60000;
-                if(this.cities && this.options['enable'+name]) {
-                    var res = this['do'+name]();
-                    if(res) {
-                        t = res;
+                if(this.cities && this.options['enable' + name]) {
+                    if(this.enablePause) {
+                        this.debug("Do not " + name + " because we are on pause");
+                        t = 10000;
+                    } else {
+                        var res = this['do' + name]();
+                        if(res) {
+                            t = res;
+                        }
                     }
                 }
                 setTimeout(m,t);
@@ -132,12 +137,8 @@ var bot = {
         if(city.type) {
             name = city.type;
         }
-        this.sendDataGetCommand("Load city "+name,
-                                "cities/"+city.id+".json",
-                                "",city);
-        this.sendDataGetCommand("Load city "+name+" neighborhood",
-                                "cities/"+city.id+"/neighborhood_buildings.json",
-                                "",city);
+        this.sendDataGetCommand("Load city "+name, "cities/" + city.id + ".json", "", city);
+        this.sendDataGetCommand("Load city " + name + " neighborhood", "cities/"+city.id+"/neighborhood_buildings.json", "", city);
         var d = new Date();
         city.lastUpdate = d.getTime();
     },
@@ -149,6 +150,12 @@ var bot = {
     },
     autoLoadCities: function autoLoadCities() {
         this.trace();
+
+        if(this.enablePause) {
+            this.debug("Do not load cities, because we are on pause");
+            return;
+        }
+
         this.eachCity(function(city) {
             var d = new Date();
             if(!city.lastUpdate || city.lastUpdate < (d.getTime() + (60 * 5))) {
@@ -169,12 +176,12 @@ var bot = {
     },
     loadPlayerData: function loadPlayerData() {
         this.trace();
-        this.sendDataGetCommand("Load Player","player.json");
+        this.sendDataGetCommand("Load Player", "player.json");
     },
     loadPlayerDataInit: function loadPlayerDataInit() {
         this.trace();
         var cb = this.bind(this.loadGameLoadedData);
-        this.sendDataGetCommand("Load Player Init","player.json","",undefined,cb);
+        this.sendDataGetCommand("Load Player Init", "player.json", "", undefined, cb);
     },
     //------- END SEND FUNCTIONS ------
 
@@ -210,7 +217,7 @@ var bot = {
 
                         if(t >= comp) {
                             this.loadCityData(city);
-                            city.jobs.splice(j,1);
+                            city.jobs.splice(j, 1);
                             timeout = 10000;
                             this.handleQueueComplete(job.queue);
                             break;
@@ -233,11 +240,12 @@ var bot = {
         this.queue_type = 'data';
         this.html = {};
         this.enableTrace = false;
+        this.enablePause = false;
 
         this.debug(data);
 
         //Save options
-        this.server   = data.apiServer.replace("http","https")+"/";
+        this.server   = data.apiServer.replace("http","https") + "/";
         this.player   = data.playerId;
         this.session  = data.sessionId;
         this.user     = data.userId;
@@ -266,10 +274,10 @@ var bot = {
             this.options.queue_interval = 800;
             this.saveOptions();
         }
-        setInterval(q,this.options.queue_interval);
+        setInterval(q, this.options.queue_interval);
 
         var r = this.bind(this.autoLoadCities);
-        setInterval(r,60000);
+        setInterval(r, 60000);
 
         //Start main thread
         this.updateJobs();

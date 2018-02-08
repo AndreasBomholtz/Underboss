@@ -137,22 +137,23 @@ var guiBot = {
     drawDebugTab: function drawDebugTab(infoData) {
         $(infoData).html("<h7>Debug Info</h7>").append($("<div/>").attr("id","debug_queue"));
 
-        this.drawButton("Update Jobs",this.bind(this.loadCitiesData),infoData);
-        this.drawButton("Execute",this.bind(this.executeCMD),infoData);
-        this.drawButton("Trace",this.bind(this.toggleTrace),infoData);
+        this.drawButton("Update Jobs", this.bind(this.loadCitiesData), infoData);
+        this.drawButton("Execute", this.bind(this.executeCMD), infoData);
+        this.drawButton("Trace", this.bind(this.toggleTrace), infoData);
+        this.drawButton("Pause", this.bind(this.togglePause), infoData);
 
         $(infoData).append("<select id='debug_city' />");
 
-        $("#debug_city").change(this.bind(this.changeDebugCity,this));
+        $("#debug_city").change(this.bind(this.changeDebugCity, this));
 
         for(var fun in this.autoFunctions) {
             this.drawDebugOption(fun);
         }
 
-        this.listen("queue:update",this.updateDebugQueue);
-        this.listen("queue:change",this.updateDebugQueue);
+        this.listen("queue:update", this.updateDebugQueue);
+        this.listen("queue:change", this.updateDebugQueue);
         this.listen("cities:update", this.updateDebugCities);
-        this.listen("report:update",this.handleReport);
+        this.listen("report:update", this.handleReport);
     },
     changeDebugCity: function changeDebugCity() {
         this.debugCity = $("#debug_city").val();

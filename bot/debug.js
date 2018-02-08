@@ -48,6 +48,10 @@ var debugBot = {
         this.enableTrace = !this.enableTrace;
         console.info("Trace is now "+this.enableTrace);
     },
+    togglePause: function() {
+        this.enablePause = !this.enablePause;
+        console.info("Pause is now "+this.enablePause);
+    },
     executeCMD: function() {
         var cmd = window.prompt("Enter CMD","");
         try {

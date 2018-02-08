@@ -230,9 +230,7 @@ var research =  {
                 "Construction",
                 "Medicine"
             ],
-            "city": [
-                "Queens"
-            ]
+            "city": "Queens"
         },
         "cost": {
             'cash': 5000,

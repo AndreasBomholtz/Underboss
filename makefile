@@ -1,6 +1,6 @@
 COMPRESS_OPT:=dead_code,drop_console,join_vars,warnings,unused,sequences,drop_debugger,conditionals,comparisons,evaluate,booleans,loops,if_return
 UGLIFY:=uglifyjs -o underboss.js --lint --screw-ie8 -c ${COMPRESS_OPT}  -m --reserve-domprops --stats --
-JSL:=jsl-0.3.0/src/Linux_All_DBG.OBJ/jsl -conf jsl.conf -nosummary -nologo -process
+JSL:=jsl-0.3.0/src/Linux_All_DBG.OBJ/jsl -conf jsl.conf -nosummary -nologo -nofilelisting -process
 
 FILES+=$(shell ls res/*.js)
 FILES+=$(shell ls bot/*.js)
@@ -14,9 +14,9 @@ all: Underboss-dev.user.js
 
 release: Underboss.user.js
 
-Underboss-dev.user.js: makefile res/underboss.css.js Underboss.meta.js $(FILES)
-	make lint
-	cat Underboss.meta.js $(FILES) > Underboss-dev.user.js
+Underboss-dev.user.js: makefile res/underboss.css.js Underboss.meta.js $(FILES) lint
+	@echo "Combining..."
+	@cat Underboss.meta.js $(FILES) > Underboss-dev.user.js
 
 res/underboss.css.js: res/underboss.css
 	@echo "Convert CSS to JS"
@@ -25,17 +25,20 @@ res/underboss.css.js: res/underboss.css
 	@echo -n '";' >> res/underboss.css.js
 
 lint:
+	@echo "Linting..."
 	@for f in $(FILES); do \
 		${JSL} $$f || exit 1; \
 	done
 
 Underboss.user.js: Underboss-dev.user.js
-	${UGLIFY} Underboss-dev.user.js
-	cat Underboss.meta.js underboss.js > Underboss.user.js
-	rm underboss.js
+	@echo "Uglifying..."
+	@${UGLIFY} Underboss-dev.user.js
+	@cat Underboss.meta.js underboss.js > Underboss.user.js
+	@rm underboss.js
 
 dropbox: all
-	cp Underboss-dev.user.js ~/Dropbox/Godfather_Bot/
+	@echo "Copying to Dropbox..."
+	@cp Underboss-dev.user.js ~/Dropbox/Godfather_Bot/
 
 clean:
 	rm -fr *~
