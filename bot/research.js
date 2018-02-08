@@ -23,20 +23,27 @@ var researchBot = {
 
         for(var key in this.research) {
             var research = this.research[key];
-            var currentResearch = city.research[key], skip = false;
+            var currentResearch = city.research[key];
+            var skip = false;
             if(currentResearch === undefined) {
                 currentResearch = 0;
             }
 
             var req = research.requirement;
             if(req) {
+                if(req.city && req.city !== city.type) {
+                    this.debugResearch("Skip " + key + " in " + city.name, city);
+                    continue;
+                }
                 if(req.build) {
-                    var build = this.findBuildingLevel(req.build,city);
-                    this.debugResearch(key+" ("+currentResearch+"/"+(currentResearch-4)+") has req "+req.build+" and it is "+build+" ("+(build*4)+")",city);
+                    var build = this.findBuildingLevel(req.build, city);
+                    this.debugResearch(key + " (" + currentResearch + "/" + (currentResearch - 4) + ") has req " + req.build + " and it is " + build + " (" + (build * 4) + ")", city);
 
                     if(req.build == "Garage" || req.build == "Workshop" || req.build == "GuardPost") {
                         if(currentResearch >= 20) {
                             build *= 2;
+                        } else if(currentResearch <= 5) {
+                            build = 1;
                         } else {
                             build *= 4;
                         }
@@ -44,7 +51,7 @@ var researchBot = {
                         build *= 2;
                     }
                     if(build === 0 || (currentResearch > 1 && build <= currentResearch)) {
-                        this.debugResearch("skip because "+build+" is less then "+currentResearch,city);
+                        this.debugResearch("skip because " + build + " is less then " + currentResearch, city);
                         continue;
                     }
                 }
