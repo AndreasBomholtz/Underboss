@@ -40,7 +40,7 @@ var collectBot = {
             }
         }
 
-        return(1000);
+        return(60000);
     },
     doExchange: function doExchange() {
         this.trace();
@@ -69,7 +69,7 @@ var collectBot = {
                         var data = "_method=put&_action=collect&city_building_id="+neighborhood.buildings[b].id;
                         this.sendCommand("Collect Exchange",url,data,this.cities[0]);
                         neighborhood.buildings[b].free_ticket = false;
-                        this.updateInfo("Collect Exchange");
+                        this.info("Collect Exchange", city, "collect", neighborhood);
                         this.addStat("Exchange",1);
                         return(60*60*1000);
                     }
@@ -86,24 +86,26 @@ var collectBot = {
             this.sendGetCommand("Update tokes",
                                 "loyalty_tokens.json",
                                 "",
-                                this.cities[0],this.bind(this.checkLoyalyToken));
+                                this.cities[0],
+                                this.checkLoyalyToken);
         }
         return(60*1000*60);
     },
-    checkLoyalyToken: function checkLoyalyToken() {
-        this.trace();
-        if(!this.tokens) {
-            this.debugLoyaltyToken("No tokens");
+    checkLoyalyToken: function checkLoyalyToken(bot) {
+        bot.trace();
+        if(!bot.tokens) {
+            bot.debugLoyaltyToken("No tokens");
             return;
         }
 
-        for(var i=0; i<this.tokens.length; i++) {
-            if(this.tokens[i].collectable) {
-                this.debugLoyaltyToken("Collect token: "+this.tokens[i].type+" ("+i+")");
-                this.sendCommand("Collect token",
+        for(var i=0; i<bot.tokens.length; i++) {
+            if(bot.tokens[i].collectable) {
+                bot.debugLoyaltyToken("Collect token: "+bot.tokens[i].type+" ("+i+")");
+                bot.sendCommand("Collect token",
                                  "loyalty_tokens/collect.json",
-                                 "type="+this.tokens[i].type,this.cities[0]);
-                this.addStat("Token",1);
+                                 "type="+bot.tokens[i].type,
+                                 bot.cities[0]);
+                bot.addStat("Token",1);
             }
         }
     },
@@ -127,3 +129,4 @@ var collectBot = {
                          this.cities[0]);
     }
 };
+module.exports = collectBot;

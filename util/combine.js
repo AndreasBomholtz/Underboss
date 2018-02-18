@@ -11,3 +11,4 @@ function combine(obj) {
 	}
 	return obj;
 }
+module.exports = combine;

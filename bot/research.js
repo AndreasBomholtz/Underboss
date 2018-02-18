@@ -1,23 +1,24 @@
 var researchBot = {
-    calcReseachCost: function calcReseachCost(level,cost) {
+    calcReseachCost: function calcReseachCost(level, cost) {
+        var res = cost;
         for(var i=1; i<level; i++) {
-            cost *= 1.5;
+            res *= 1.5;
         }
-        return cost;
+        return res;
     },
     researchLowest: function researchLowest(city) {
         this.trace();
-        var lowLevel = {'lvl': 1000, 'pri': 1000, 'id': ""};
+        var lowLevel = {lvl: 1000, pri: 1000, id: ""};
         if(!city) {
             this.debugResearch("No city");
             return;
         }
         if(!city.research) {
-            this.debugResearch("Missing research",city);
+            this.debugResearch("Missing research", city);
             return;
         }
         if(!city.neighborhood) {
-            this.debugResearch("Missing neighborhood",city);
+            this.debugResearch("Missing neighborhood", city);
             return;
         }
 
@@ -43,7 +44,7 @@ var researchBot = {
                         if(currentResearch >= 20) {
                             build *= 2;
                         } else if(currentResearch <= 5) {
-                            build = 1;
+                            build = 5;
                         } else {
                             build *= 4;
                         }
@@ -62,9 +63,9 @@ var researchBot = {
                         if(resLvl === undefined) {
                             resLvl = 0;
                         }
-                        this.debugResearch(key+" has req "+r+" and it is "+resLvl,city);
+                        this.debugResearch(key + " has req " + r + " and it is " + resLvl, city);
                         if(resLvl <= currentResearch) {
-                            this.debugResearch("Skip because "+resLvl+" is less then "+currentResearch,city);
+                            this.debugResearch("Skip because " + resLvl + " is less then " + currentResearch, city);
                             skip = true;
                             break;
                         }
@@ -75,8 +76,8 @@ var researchBot = {
                 }
             }
 
-            if(!this.hasResources(city,key,research.cost,currentResearch,this.calcReseachCost)) {
-                this.debugResearch("Skip because we can't affort it",city);
+            if(!this.hasResources(city, key, research.cost, currentResearch, this.calcReseachCost)) {
+                this.debugResearch("Skip because we can't affort it", city);
                 continue;
             }
 
@@ -91,13 +92,13 @@ var researchBot = {
         }
 
         if(lowLevel.lvl != 1000) {
-            this.updateInfo("Research "+lowLevel.name+" lvl "+(lowLevel.lvl+1),city);
-            this.sendCommand("Research "+lowLevel.name+" lvl "+(lowLevel.lvl+1)+" in "+city.type,
-                             "cities/"+city.id+"/researches.json",
-                             "research[research_type]="+lowLevel.name,
+            this.info("Research " + lowLevel.name + " lvl " + (lowLevel.lvl + 1), city, "research");
+            this.sendCommand("Research " + lowLevel.name + " lvl " + (lowLevel.lvl + 1) + " in " + city.type,
+                             "cities/" + city.id + "/researches.json",
+                             "research[research_type]=" + lowLevel.name,
                              city);
-            this.addStat("Research",1);
-            city.research[lowLevel.name] = (lowLevel.lvl+1);
+            this.addStat("Research", 1);
+            city.research[lowLevel.name] = (lowLevel.lvl + 1);
         }
     },
     doResearch: function doResearch() {
@@ -110,16 +111,17 @@ var researchBot = {
         for(var i=0; i<this.cities.length; i++) {
             var city = this.cities[i];
             if(city.type == "DoriaAirport") {
-                this.debugResearch("Can't research in "+city.type,city);
+                this.debugResearch("Can't research in " + city.type, city);
                 continue;
             }
 
-            var canResearch = this.checkCityQueue(city,"research");
+            var canResearch = this.checkCityQueue(city, "research");
             if(canResearch) {
                 this.researchLowest(city);
             } else {
-                this.debugResearch("Already researching",city);
+                this.debugResearch("Already researching", city);
             }
         }
     }
 };
+module.exports = researchBot;

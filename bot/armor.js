@@ -7,18 +7,18 @@ var armorBot = {
         this.trace();
 
         if(!city || city.armory) {
-            this.debugArmor("City do not have armor",city);
+            this.debugArmor("City do not have armor", city);
             return;
         }
 
         for(var i=0; i<city.armor.length; i++) {
             var id = city.armor[i].equipped_armory_item.item_id;
-            this.debugArmor("Has item id "+id,city);
+            this.debugArmor("Has item id " + id, city);
             var item = this.mapIdToName(id);
             if(item) {
-                this.debugArmor(item[0]+" ("+item[1]+") Lvl "+item[2]);
+                this.debugArmor(item[0] + " (" + item[1] + ") Lvl " + item[2]);
             } else {
-                this.debugArmor(id + " not found",city);
+                this.debugArmor(id + " not found", city);
             }
         }
     },
@@ -64,3 +64,4 @@ var armorBot = {
         }
     }
 };
+module.exports = armorBot;

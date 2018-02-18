@@ -1,4 +1,5 @@
 var queueBot = {
+    Command: function Command() {},
     enqueCommand: function enqueCommand(name, url, data, type, city, callback, queue_type, neighborhood, custom) {
         this.trace();
 
@@ -9,7 +10,8 @@ var queueBot = {
                 data = "city_id=" + city.id;
             }
         }
-        var cmd = {};
+
+        var cmd = new this.Command();
         cmd.name = name;
         cmd.type = type;
         cmd.url = this.server + url;
@@ -26,6 +28,9 @@ var queueBot = {
         } else if(queue_type === 'data') {
             this.addToQueue(this.data_queue, cmd);
         } else {
+            if(this.enableHTTP) {
+                cmd.url = cmd.url.replace("https","http");
+            }
             this.addToQueue(this.queue, cmd);
         }
     },
@@ -60,70 +65,101 @@ var queueBot = {
     sendDataGetCommand: function sendGetCommand(name, url, data, city, callback, neighborhood, custom) {
         this.enqueCommand(name, url, data, 'GET', city, callback, 'data', neighborhood, custom);
     },
-    sendQueue: function sendQueue() {
-        var q;
-
-        if(this.queue_type === 'data') {
-            if(this.data_queue.length) {
-                q = this.data_queue;
-            } else if(this.queue.length) {
-                q = this.queue;
-                this.queue_type = 'cmd';
-                this.signal('queue:change');
-            }
-        } else {
-            if(this.queue.length) {
-                q = this.queue;
-            } else if(this.data_queue.length) {
-                q = this.data_queue;
-                this.queue_type = 'data';
-                this.signal('queue:change');
-            }
-        }
-        if(q === undefined && this.slow_queue.length) {
-            q = this.slow_queue;
+    sendQueue: function sendQueue(bot) {
+        if(bot.queue_busy) {
+            return;
         }
 
         //Send cmd
-        if(this.lastCommand) {
-            this.debug("Resending last command: "+this.lastCommand.name, this.lastCommand.city);
-            this.debug(this.lastCommand);
-            this.executeCommand(this.lastCommand);
-        } else if(q) {
-            this.executeCommand(q.shift());
+        if(bot.lastCommand) {
+            bot.debug("Resending last command: " + bot.lastCommand.name, bot.lastCommand.city);
+            bot.debug(bot.lastCommand);
+            bot.executeCommand(bot.lastCommand);
+            return;
+        }
+
+        if(bot.queue_type === 'data') {
+            if(bot.data_queue.length) {
+                bot.executeCommand(bot.data_queue.shift());
+            } else if(bot.queue.length) {
+                bot.executeCommand(bot.queue.shift());
+                bot.queue_type = 'cmd';
+                bot.signal('queue:change');
+            } else if(bot.slow_queue.length) {
+                bot.executeCommand(bot.slow_queue.shift());
+            }
+        } else {
+            if(bot.queue.length) {
+                bot.executeCommand(bot.queue.shift());
+            } else if(bot.data_queue.length) {
+                bot.executeCommand(bot.data_queue.shift());
+                bot.queue_type = 'data';
+                bot.signal('queue:change');
+            } else if(bot.slow_queue.length) {
+                bot.executeCommand(bot.slow_queue.shift());
+            }
         }
     },
     executeCommand: function executeCommand(cmd) {
         if(cmd === undefined) {
             return;
         }
-        if(cmd.resends >= 2) {
-            this.debug("Last command has been send 3 times: "+this.lastCommand.name,
+        if(cmd.resends > 2) {
+            this.debug("Last command has been send 3 times: " + this.lastCommand.name,
                        this.lastCommand.city);
             this.lastCommand = undefined;
             return;
         }
+
+        this.queue_busy = true;
         cmd.resends = (cmd.resends + 1) || 1;
         this.lastCommand = cmd;
         this.signal("queue:update");
-        var self = this;
 
-        $.ajax({
-            type: this.lastCommand.type,
-            url: this.lastCommand.url,
-            data: this.lastCommand.data,
-            success: function(data) {
-                self.revCommand(data);
-            },
-            error: function(data) {
-                self.errorCommand(data);
-            },
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("X-Requested-With", "ShockwaveFlash/28.0.0.126");
+
+        this.debug(cmd.name);
+        if(typeof($) !== 'undefined') {
+            $.ajax({
+                context: this,
+                type: this.lastCommand.type,
+                url: this.lastCommand.url,
+                data: this.lastCommand.data,
+                success: this.revCommand,
+                error: this.errorCommand
+            });
+        } else {
+            if(!this.request) {
+                this.request = require('request');
             }
-        });
+
+            var options = {
+                method: this.lastCommand.type,
+                url: this.lastCommand.url,
+                body: this.lastCommand.data,
+                headers: {
+                    Origin: 'https://c1.godfather.rykaiju.com',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+                    'Cache-Control': 'max-age=0',
+                    Referer: 'https://c1.godfather.rykaiju.com/platforms/facebook/',
+                    Connection: 'keep-alive',
+                    'X-Requested-With': 'ShockwaveFlash/28.0.0.126'
+                }
+            };
+            var bot = this;
+            function callback(error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    bot.revCommand(body);
+                } else {
+                    bot.errorCommand(body);
+                }
+            }
+            this.request(options, callback);
+        }
     },
-    errorCommand: function errorCommand(data, status, error) {
+    errorCommand: function errorCommand(data) {
+        this.queue_busy = false;
         if(typeof(data) == "string") {
             try {
                 data = JSON.parse(data);
@@ -134,20 +170,20 @@ var queueBot = {
                 return;
             }
         }
-        this.debug("Error sending command: "+data.responseText);
+        this.debug("Error sending command: " + data.responseText);
         this.debug(this.lastCommand);
 
-
         if(this.lastCommand && this.lastCommand.callback !== undefined) {
-            this.lastCommand.callback();
+            this.lastCommand.callback(this);
         }
     },
     revCommand: function revCommand(data) {
+        this.queue_busy = false;
         if(typeof(data) == "string") {
             try {
                 data = JSON.parse(data);
             } catch(err) {
-                this.debug("Received invalid JSON for command: "+this.lastCommand.name);
+                this.debug("Received invalid JSON for command: " + this.lastCommand.name);
                 this.debug(err);
                 this.lastCommand = undefined;
                 return;
@@ -191,10 +227,11 @@ var queueBot = {
 
         if(this.lastCommand) {
             if(this.lastCommand.callback !== undefined) {
-                this.lastCommand.callback();
+                this.lastCommand.callback(this);
             }
 
             this.lastCommand = undefined;
         }
     }
 };
+module.exports = queueBot;

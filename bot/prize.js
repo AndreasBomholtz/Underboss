@@ -20,7 +20,7 @@ var prizeBot = {
 									"minigames/index.json",
 									"",
 									this.cities[0],
-									this.bind(this.updatePrizeList));
+									this.updatePrizeList);
             } else {
                 this.debugPrize("No prize ticket - Update player data");
                 this.loadPlayerData();
@@ -31,32 +31,32 @@ var prizeBot = {
         }
         return(0);
     },
-	updatePrizeList: function updatePrizeList() {
-        this.trace();
-        var min = {"cost":1000,"name":""};
+	updatePrizeList: function updatePrizeList(bot) {
+        bot.trace();
+        var min = {cost:1000, name:""};
 
-        if(this.prizeList && this.prizeList.length) {
-            for(var i=0; i<this.prizeList.length; i++) {
-                if(this.items[this.prizeList[i].type]) {
-					var prize = this.items[this.prizeList[i].type];
+        if(bot.prizeList && bot.prizeList.length) {
+            for(var i=0; i<bot.prizeList.length; i++) {
+                if(bot.items[bot.prizeList[i].type]) {
+					var prize = bot.items[bot.prizeList[i].type];
                     if(min.cost > prize.cost) {
                         min.cost = prize.cost;
-                        min.name = this.prizeList[i].type;
+                        min.name = bot.prizeList[i].type;
                     }
                 } else {
-                    this.updatePrizeInfo(this.prizeList[i].type +" is unknown");
-                    this.addMissingPrizeInfo(this.prizeList[i].type);
+                    bot.updatePrizeInfo(bot.prizeList[i].type +" is unknown");
+                    bot.addMissingPrizeInfo(bot.prizeList[i].type);
                 }
             }
 
             if(min.cost >= 10) {
-                this.getPrize();
-                if(this.free_ticket) {
-                    this.free_ticket = false;
-                } else if(this.items && this.items.DailyChance && this.items.DailyChance > 0) {
-                    this.items.DailyChance--;
+                bot.getPrize();
+                if(bot.free_ticket) {
+                    bot.free_ticket = false;
+                } else if(bot.items && bot.items.DailyChance && bot.items.DailyChance > 0) {
+                    bot.items.DailyChance--;
                 }
-                this.loadPlayerData();
+                bot.loadPlayerData();
             }
         }
     },
@@ -83,3 +83,4 @@ var prizeBot = {
         }
     }
 };
+module.exports = prizeBot;

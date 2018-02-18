@@ -1,5 +1,5 @@
 var trainBot = {
-    checkRequirements: function(name, req, city, debug) {
+    checkRequirements: function checkRequirements(name, req, city, debug) {
         this.trace();
 
         if(req && req.build) {
@@ -101,7 +101,7 @@ var trainBot = {
             }
         }
     },
-    doDefense: function() {
+    doDefense: function doDefense() {
         this.trace();
 
         if(!this.cities) {
@@ -158,10 +158,11 @@ var trainBot = {
             }
         }
     },
-    sendTrainOrders: function(unit, amount, city) {
+    sendTrainOrders: function sendTrainOrders(unit, amount, city) {
         this.sendCommand("Train " + amount + " " + unit + " in " + city.type,
                          "cities/" + city.id + "/units.json",
                          "_method=post&units[include_requirements]=false&units[quantity]=" + amount + "&units[unit_type]=" + unit,
                          city);
     }
 };
+module.exports = trainBot;

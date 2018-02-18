@@ -21,3 +21,4 @@ var optionsBot = {
         }
     }
 };
+module.exports = optionsBot;

@@ -1,7 +1,10 @@
 var buildBot = {
-    findBuildingLevel: function findBuildingLevel(name,city) {
+    findBuildingLevel: function findBuildingLevel(name, city) {
+        this.trace();
         var maxLevel = 0;
-        this.eachNeighborhood(function(city, neighborhood) {
+        /*jsl:ignore*/
+        this.eachNeighborhood(function findBuildingLevelEach(city, neighborhood) {
+            /*jsl:end*/
             if(neighborhood.buildings) {
                 var buildings = neighborhood.buildings;
                 for(var b=0; b<buildings.length; b++) {
@@ -16,7 +19,7 @@ var buildBot = {
 
         return maxLevel;
     },
-    countBuilding: function countBuilding(neighborhood,name) {
+    countBuilding: function countBuilding(neighborhood, name) {
         this.trace();
         var count = 0;
         if(neighborhood && neighborhood.buildings) {
@@ -86,11 +89,11 @@ var buildBot = {
                 }
                 if(rc > parseInt(res[c], 10)) {
                     if(func === undefined) {
-                        this.debugTrain("Can't train "+name+" because "+c+" ("+rc+") is more then "+res[c], city);
+                        this.debugTrain("Can't train " + name + " because " + c + " (" + rc + ") is more then " + res[c], city);
                     } else if(func == this.calcBuldingCost) {
-                        this.debugBuild("Can't build "+name+" because "+c+" ("+rc+") is more then "+res[c], city);
+                        this.debugBuild("Can't build " + name + " because " + c + " (" + rc + ") is more then " + res[c], city);
                     } else {
-                        this.debugResearch("Can't research "+name+" because "+c+" ("+rc+") is more then "+res[c], city);
+                        this.debugResearch("Can't research " + name + " because " + c + " (" + rc + ") is more then " + res[c], city);
                     }
                     return false;
                 } else {
@@ -106,11 +109,11 @@ var buildBot = {
             for (var cc in cost) {
                 var dc;
                 if(func) {
-                    dc = func(parseInt(level,10),cost[cc]);
+                    dc = func(parseInt(level, 10), cost[cc]);
                 } else {
                     dc = cost[cc] * level;
                 }
-                city.resources[cc] = parseInt(city.resources[cc],10) - dc;
+                city.resources[cc] = parseInt(city.resources[cc], 10) - parseInt(dc, 10);
             }
         } else if(cost) {
             if(func === undefined) {
@@ -122,11 +125,11 @@ var buildBot = {
             }
         } else {
             if(func === undefined) {
-                this.debugTrain("Missing cost for "+name);
+                this.debugTrain("Missing cost for " + name);
             } else if(func == this.calcBuldingCost) {
-                this.debugBuild("Missing cost for "+name);
+                this.debugBuild("Missing cost for " + name);
             } else {
-                this.debugResearch("Missing cost for "+name);
+                this.debugResearch("Missing cost for " + name);
             }
         }
         return true;
@@ -142,7 +145,7 @@ var buildBot = {
             var manLvl = this.findBuildingLevel("Mansion", neighborhood.city);
             var cap = neighborhood.max_slot_number; //manLvl * 3 + 10;
             var total = this.countBuilding(neighborhood);
-            this.debugBuild("Man Level: "+manLvl+" Total building: "+ total+" => "+cap, city, neighborhood);
+            this.debugBuild("Man Level: " + manLvl + " Total building: " + total + " => " + cap, city, neighborhood);
 
             if(cap > total) {
                 var slot = this.findBuildingSlot(neighborhood, cap);
@@ -179,17 +182,22 @@ var buildBot = {
                     }
                 }
 
-
-                this.updateInfo("Build new "+build+" at slot "+slot, city, neighborhood);
+                this.info("Build new " + build + " at slot " + slot, city, "build", neighborhood);
                 var data = "_method=post&city_building[building_type]="+build;
                 data += "&city_building[include_requirements]=false&city_building[instant_build]=false";
                 data += "&city_building[neighborhood_id]="+neighborhood.id+"&city_building[slot]="+slot;
-                this.sendCommand("Build new "+build+" at slot "+slot+" in "+city.type+" ("+neighborhood.id+")","cities/"+city.id+"/buildings.json", data, city, undefined, neighborhood, {'slot': slot});
-                this.addStat("Build",1);
-                neighborhood.buildings.push({'slot': slot, 'location': "neighborhood", 'type': build});
+                this.sendCommand("Build new " + build + " at slot " + slot + " in " + city.type + " (" + neighborhood.id + ")",
+                                 "cities/"+city.id+"/buildings.json",
+                                 data,
+                                 city,
+                                 undefined,
+                                 neighborhood,
+                                 {slot: slot});
+                this.addStat("Build", 1);
+                neighborhood.buildings.push({slot: slot, location: "neighborhood", type: build});
                 return true;
             } else {
-                this.debugBuild("No more slots for new buildings ("+cap+")", city, neighborhood);
+                this.debugBuild("No more slots for new buildings (" + cap + ")", city, neighborhood);
             }
         } else {
             this.debugBuild("Can't find neighborhood or buildings", city, neighborhood);
@@ -211,13 +219,13 @@ var buildBot = {
                         lowLevel.id = building.id;
                         lowLevel.name = building.type;
                         lowLevel.location = building.location;
-                        this.debugBuild("Build Importent "+lowLevel.name,neighborhood.city);
+                        this.debugBuild("Build Importent " + lowLevel.name, neighborhood.city);
                         return lowLevel;
                     }
                 }
             }
         }
-        this.debugBuild("Failed to find impotent building",neighborhood.city);
+        this.debugBuild("Failed to find impotent building", neighborhood.city);
         return lowLevel;
     },
     upgradeLowestBuilding: function upgradeLowestBuilding(neighborhood) {
@@ -225,13 +233,11 @@ var buildBot = {
         if(this.buildNewBuilding(neighborhood)) {
             return true;
         }
-        var lowLevel = {};
-        lowLevel.lvl = 20;
-        lowLevel.id = "";
-        lowLevel.location = "";
         if(!neighborhood || !neighborhood.buildings) {
             return false;
         }
+
+        var lowLevel = {lvl: 1000};
 
         var buildings = neighborhood.buildings;
         var city = neighborhood.city;
@@ -253,24 +259,24 @@ var buildBot = {
                     var build_prio = reqs.build[building.level];
                     if(build_prio) {
                         for(var req in build_prio) {
-                            var lvl = this.findBuildingLevel(req,neighborhood.city);
+                            var lvl = this.findBuildingLevel(req, neighborhood.city);
                             if(lvl < build_prio[req]) {
-                                this.debugBuild("Can't build "+building.type+" because "+req+" is not "+build_prio[req], city, neighborhood);
+                                this.debugBuild("Can't build " + building.type + " because " + req + " is not " + build_prio[req], city, neighborhood);
                                 canBuild = false;
                                 break;
                             } else {
-                                this.debugBuild(building.type+" has req "+req+" ("+build_prio[req]+") and it is "+lvl, city, neighborhood);
+                                this.debugBuild(building.type + " has req " + req + " (" + build_prio[req] + ") and it is " + lvl, city, neighborhood);
                             }
                         }
                     }
                 }
                 if(reqs.gangster) {
                     if(reqs.gangster > this.player_level) {
-                        this.debugBuild("Can't build "+building.type+" because gangster is not "+reqs.gangster, city, neighborhood);
+                        this.debugBuild("Can't build " + building.type + " because gangster is not " + reqs.gangster, city, neighborhood);
                         canBuild = false;
                         break;
                     } else {
-                        this.debugBuild(building.type+" has gangster "+reqs.gangster+" and we are "+this.player_level, city, neighborhood);
+                        this.debugBuild(building.type + " has gangster " + reqs.gangster + " and we are " + this.player_level, city, neighborhood);
                     }
                 }
                 if(reqs.alliance && !this.alliance) {
@@ -279,7 +285,7 @@ var buildBot = {
                     break;
                 }
             } else {
-                this.debugBuild(building.type+" has no requirements", city, neighborhood);
+                this.debugBuild(building.type + " has no requirements", city, neighborhood);
             }
             if(canBuild && prio && prio.cost) {
                 if(!this.hasResources(city,building.type, prio.cost, building.level, this.calcBuldingCost)) {
@@ -288,7 +294,7 @@ var buildBot = {
                     this.debugBuild("Lots of resources", city, neighborhood);
                 }
             } else if(canBuild) {
-                this.debugBuild("Not cost info for "+building.type, city, neighborhood);
+                this.debugBuild("Not cost info for " + building.type, city, neighborhood);
             }
             if(canBuild &&
                (lowLevel.lvl > building.level ||
@@ -302,7 +308,7 @@ var buildBot = {
             }
         }
 
-        if(lowLevel.lvl != 20) {
+        if(lowLevel.lvl != 1000) {
             if(lowLevel.lvl > 5) {
                 var tmp = this.upgradeImportentBuilding(neighborhood,lowLevel);
                 if(!tmp) {
@@ -310,15 +316,15 @@ var buildBot = {
                     return false;
                 }
                 if(!this.buildings[tmp.name]) {
-                    this.debug("Missing info for: "+tmp.name, city, neighborhood);
-                } else if(this.hasResources(city,tmp.name,this.buildings[tmp.name].cost,tmp.lvl,this.calcBuldingCost)) {
+                    this.debug("Missing info for: " + tmp.name, city, neighborhood);
+                } else if(this.hasResources(city,tmp.name, this.buildings[tmp.name].cost,tmp.lvl, this.calcBuldingCost)) {
                     lowLevel = tmp;
                 } else {
                     this.debugBuild("Do not upgrade importent building, not egnogh rescources", city, neighborhood);
                 }
             }
-            this.updateInfo("Build "+lowLevel.name+" "+(lowLevel.lvl+1),city);
-            this.sendCommand("Build "+lowLevel.name+" "+(lowLevel.lvl+1)+" in "+city.type,
+            this.info("Build " + lowLevel.name + " " + (lowLevel.lvl + 1), city, "build", neighborhood);
+            this.sendCommand("Build " + lowLevel.name + " " + (lowLevel.lvl + 1) + " in " + city.type,
                              "cities/"+city.id+"/buildings/"+lowLevel.id+".json",
                              "_method=put", city, undefined, neighborhood);
             lowLevel.building.level++;
@@ -356,3 +362,5 @@ var buildBot = {
         }
     }
 };
+
+module.exports = buildBot;

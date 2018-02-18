@@ -8,7 +8,7 @@ var guiBot = {
         var header = document.createElement("p");
         header.className = "header";
         header.innerHTML = "The Underboss";
-        header.onclick = function() {
+        header.onclick = function panelOnClick() {
             if($("#panel").hasClass("panel")) {
                 $("#panel").removeClass("panel").addClass("hiddenPanel");
                 $("#mainPanel").hide();
@@ -57,11 +57,6 @@ var guiBot = {
         }
     },
     drawOption: function drawOption(name) {
-        // Default option is set to true
-        if(this.options["enable"+name] === undefined) {
-            this.options["enable"+name] = true;
-            this.saveOptions();
-        }
         var div = this.drawGenericOption(name,
                                          this.html.mainPanel,
                                          "enable_",
@@ -115,7 +110,7 @@ var guiBot = {
         link.className = "tabLink";
         link.id = id;
         link.innerHTML = name;
-        link.onclick = function() {
+        link.onclick = function drawTabOnClick() {
             var tabeId = $(this).attr('id');
             $(".tabLink").removeClass("activeLink");
             $(this).addClass("activeLink");
@@ -210,21 +205,21 @@ var guiBot = {
         this.saveOptions();
     },
 
-    drawMapInfo: function drawMapInfo() {
-        if(!this.html.map_info) {
-            this.html.map_info = document.createElement("div");
-            this.html.MapInfoData.appendChild(this.html.map_info);
+    drawMapInfo: function drawMapInfo(bot) {
+        if(!bot.html.map_info) {
+            bot.html.map_info = document.createElement("div");
+            bot.html.MapInfoData.appendChild(bot.html.map_info);
         }
-        if(!this.options.map_size) {
-            this.options.map_size = 2;
-            this.updateMap();
+        if(!bot.options.map_size) {
+            bot.options.map_size = 2;
+            bot.updateMap();
         }
-        this.html.map_info.innerHTML = "<p>Scan size: "+this.options.map_size+"</p>";
+        bot.html.map_info.innerHTML = "<p>Scan size: "+bot.options.map_size+"</p>";
 
         var counts = {}, i, keyX;
-        for(keyX in this.options.map) {
-            for(var keyY in this.options.map[keyX]) {
-                var gang = this.options.map[keyX][keyY];
+        for(keyX in bot.options.map) {
+            for(var keyY in bot.options.map[keyX]) {
+                var gang = bot.options.map[keyX][keyY];
                 if(!counts[gang.lvl]) {
                     counts[gang.lvl] = 0;
                 }
@@ -233,12 +228,12 @@ var guiBot = {
         }
         for(i=1; i <= 10; i++) {
             if(counts[i]) {
-                this.html.map_info.innerHTML += "<p>Lvl "+(i)+" Gangs: "+counts[i]+"</p>";
+                bot.html.map_info.innerHTML += "<p>Lvl "+(i)+" Gangs: "+counts[i]+"</p>";
             }
         }
         for(i=1; i<=5; i++) {
             if(counts[10+i]) {
-                this.html.map_info.innerHTML += "<p>Murder Inc. "+(i)+": "+counts[10+i]+"</p>";
+                bot.html.map_info.innerHTML += "<p>Murder Inc. "+(i)+": "+counts[10+i]+"</p>";
             }
         }
     },
@@ -246,7 +241,7 @@ var guiBot = {
         infoData.innerHTML = "<h7>Map</h7>";
         this.drawButton("Update Map",this.bind(this.updateMap),infoData);
         this.drawButton("Reset Map",this.bind(this.resetMap),infoData);
-        this.drawMapInfo();
+        this.drawMapInfo(this);
     },
     drawAttackTab: function drawAttackTab(infoData) {
         this.html.order = {};
@@ -371,24 +366,24 @@ var guiBot = {
         $(infoData).html("<h7>Prizes</h7>").append("<p>Prize Info:</p>").append($("<textarea/>").addClass("prize_info"));
     },
     updateInfo: function updateInfo(str,city) {
-        $("#debug_info").text(this.debug(str,city)+"\n"+$("#debug_info").text());
+        $("#debug_info").text(this.log_format(str,city)+"\n"+$("#debug_info").text());
     },
     updatePrizeInfo: function updatePrizeInfo(str,city) {
         $(".prize_info").text(this.debug(str,city) +"\n"+$(".prize_info").text());
     },
     createDialog: function createDialog(id, title) {
         $("#panel").append("<dialog id='"+id+"' class='overlay'><h1>"+title+"</h1><button class='close' id='"+id+"_close'>Close</button></dialog>");
-        $("#"+id+"_close").click(function() {
+        $("#"+id+"_close").click(function createDialogClickClose() {
             $("#"+id).hide();
         });
-        this["show"+id] = function() {
+        this["show"+id] = function createDialogClickShow() {
             $("#"+id).show();
         };
     },
-    createArmorView: function() {
+    createArmorView: function createArmorView() {
 
     },
-    createPrizesView: function() {
+    createPrizesView: function createPrizesView() {
 
     },
     addTableRow: function addTableRow(table,name, value) {
@@ -446,7 +441,7 @@ var guiBot = {
         }
         this.saveOptions();
     },
-    createOverviewView: function() {
+    createOverviewView: function createOverviewView() {
         var view = $("#overview_view");
         view.append("<button id='overview_update'>Update</button>");
         $("#overview_update").click(this.bind(this.updateOverview,this));
@@ -469,6 +464,7 @@ var guiBot = {
         this.listen("jobs:update",this.updateOverview);
         this.listen('cities:update',this.updateOverview);
         this.listen('resources:update',this.updateOverview);
+        this.listen("stats:update", this.updateStats);
 
         this.updateOverview();
         this.updateStats();
@@ -498,7 +494,7 @@ var guiBot = {
                 el = table.find("#"+city.type);
             }
             if(city.resources) {
-                $.each(city.resources, function(k,v) {
+                $.each(city.resources, function updateOverviewEach(k,v) {
                     var t = total_res[k] || 0;
                     t += parseInt(v,10);
                     total_res[k] = t;
@@ -518,7 +514,7 @@ var guiBot = {
                 el.find("#jobs").html("("+city.jobs.length+") "+b+" "+r+" "+u+" "+d+" "+m);
             }
         }
-        $.each(total_res, function(k,v) {
+        $.each(total_res, function createOverviewViewEachTotal(k,v) {
             total.find("#"+k).html(conv(v));
         });
     }

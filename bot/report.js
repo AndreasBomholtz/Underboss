@@ -6,8 +6,8 @@ var reportBot = {
     handleReport: function handleReport() {
         this.debugReport("Handle Reports");
         if(!this.reports || !this.reports.reports) {
-	    return;
-	}
+            return;
+        }
         var ids = "";
         for(var i=0; i<this.reports.reports.length; i++) {
             var r = this.reports.reports[i];
@@ -21,3 +21,4 @@ var reportBot = {
         }
     }
 };
+module.exports = reportBot;

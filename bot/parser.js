@@ -1,14 +1,19 @@
 var parserBot = {
     parseData: function parseData(data) {
+        this.trace();
+
         var i, city, n;
         if(data) {
             if(typeof(data) == "string") {
                 data = JSON.parse(data);
+            } else {
+                data = this.clone(data);
             }
+
             if(data.timestamp) {
                 var d = new Date();
                 var t = d.getTime() / 1000;
-                this.time_diff = t-data.timestamp;
+                this.time_diff = t - data.timestamp;
             }
             if(data.cities && data.cities[0] && data.cities[0].id) {
                 if(!this.cities) {
@@ -34,7 +39,6 @@ var parserBot = {
                                 if(!city.neighborhood) {
                                     city.neighborhood = [];
                                 }
-                                neighborhood.city = city;
                                 var add = true;
                                 for(i=0; i<city.neighborhood.length; i++) {
                                     if(city.neighborhood[i].id == neighborhood.id) {
@@ -43,6 +47,7 @@ var parserBot = {
                                     }
                                 }
                                 if(add) {
+                                    neighborhood.city = city;
                                     city.neighborhood.push(neighborhood);
                                 }
                             }
@@ -53,7 +58,9 @@ var parserBot = {
             if(data.city) {
                 city = this.getCity(data.city.id);
                 if(city) {
-                    city.type = data.city.type;
+                    if(!city.type) {
+                        city.type = data.city.type;
+                    }
 
                     if(city.jobs && data.city.jobs) {
                         for(i=0; i<city.jobs.length; i++) {
@@ -95,17 +102,15 @@ var parserBot = {
                         city.armor = data.city.equipped_armory_items;
                         this.signal("city:armor:update",city);
                     }
-
-                    // for debug
-                    city.data = data.city;
                 }
             }
             if(data.terrain) {
                 if(!this.options.map) {
                     this.options.map = {};
                 }
-                for(var key1 in data.terrain) {
-                    var d2 = data.terrain[key1];
+                var terrain = data.terrain;
+                for(var key1 in terrain) {
+                    var d2 = terrain[key1];
                     for(var key2 in d2) {
                         var val = d2[key2];
                         if(val[0] == "Gang" || val[0] == "BossGang") {
@@ -136,15 +141,17 @@ var parserBot = {
             }
             if(data.level) {
                 this.player_level = data.level;
+                this.signal("player:level");
             }
             if(data.result) {
+                var result = data.result;
                 if(data.result.prize_list) {
-                    this.prizeList = data.result.prize_list;
-                    this.minigame_timestamp = data.result.minigame_timestamp;
+                    this.prizeList = result.prize_list;
+                    this.minigame_timestamp = result.minigame_timestamp;
                 } else if(data.result.item_won) {
                     for(var item in data.result.item_won) {
                         if(this.cities) {
-                            this.updatePrizeInfo("Won: " +item,this.cities[0]);
+                            this.updatePrizeInfo("Won: " +item, this.cities[0]);
                         } else {
                             this.updatePrizeInfo("Won: " +item);
                         }
@@ -153,11 +160,11 @@ var parserBot = {
                 if(data.result.prize) {
                     city = this.getCity(data.result.city_id);
                     if(data.result.prize.prize_type) {
-                        this.updatePrizeInfo("Won: "+data.result.prize.prize_type,city);
+                        this.updatePrizeInfo("Won: " + data.result.prize.prize_type, city);
                     } else {
                         for(var prize in data.result.prize) {
                             if(prize != "cash_multiplier") {
-                                this.updatePrizeInfo("Won: "+prize+" "+data.result.prize[prize],city);
+                                this.updatePrizeInfo("Won: " + prize  + " " + data.result.prize[prize], city);
                             }
                         }
                     }
@@ -168,6 +175,7 @@ var parserBot = {
                         if(!city.jobs) {
                             city.jobs = [];
                         }
+
                         city.jobs.push(data.result.job);
                         this.signal("jobs:update");
                     }
@@ -184,7 +192,7 @@ var parserBot = {
                 if(data.result.report_notifications) {
                     this.debugReport("Update reports");
                     this.reports = {};
-                    this.reports.total = data.result.total;
+                    this.reports.total = parseInt(data.result.total, 10);
                     this.reports.reports = data.result.report_notifications;
                     this.signal("report:update");
                 }
@@ -203,3 +211,4 @@ var parserBot = {
         }
     }
 };
+module.exports = parserBot;
