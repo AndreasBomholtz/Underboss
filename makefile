@@ -28,9 +28,7 @@ res/underboss.css.js: res/underboss.css
 
 lint:
 	@echo "Linting..."
-	@for f in $(FILES); do \
-		${JSL} $$f; \
-	done
+	@${JSL} main.js
 
 Underboss.user.js: Underboss-dev.user.js
 	@echo "Uglifying..."
