@@ -126,78 +126,78 @@ var items = {
 
     ContractBundle100: {
         cost: 1,
-        autoCollect: true
+        autoCollect: false
     },
     ContractBundle500: {
         cost: 2,
-        autoCollect: true
+        autoCollect: false
     },
     ContractBundle1000: {
         cost: 5,
-        autoCollect: true
+        autoCollect: false
     },
 
     FavorBundle100: {
         cost: 1,
-        autoCollect: true
+        autoCollect: false
     },
     FavorBundle250: {
         cost: 2,
-        autoCollect: true
+        autoCollect: false
     },
     FavorBundle500: {
         cost: 2,
-        autoCollect: true
+        autoCollect: false
     },
     FavorBundle1000: {
         cost: 5,
-        autoCollect: true
+        autoCollect: false
     },
     FavorBundle3000: {
         cost: 9,
-        autoCollect: true
+        autoCollect: false
     },
 
     KickbackBundle100: {
         cost: 1,
-        autoCollect: true
+        autoCollect: false
     },
     KickbackBundle250: {
         cost: 1,
-        autoCollect: true
+        autoCollect: false
     },
     KickbackBundle500: {
         cost: 3,
-        autoCollect: true
+        autoCollect: false
     },
     KickbackBundle1000: {
         cost: 5,
-        autoCollect: true
+        autoCollect: false
     },
     KickbackBundle3000: {
         cost: 6,
-        autoCollect: true
+        autoCollect: false
     },
 
     AppointmentBundle100: {
         cost: 1,
-        autoCollect: true
+        autoCollect: false
     },
     AppointmentBundle250: {
         cost: 2,
-        autoCollect: true
+        autoCollect: false
     },
     AppointmentBundle500: {
         cost: 3,
-        autoCollect: true
+        autoCollect: false
     },
     AppointmentBundle1000: {
         cost: 4,
-        autoCollect: true
+        autoCollect: false
     },
     AppointmentBundle3000: {
         cost: 5,
-        autoCollect: true
+        autoCollect: false
     },
 
     ThugBundle25: {
@@ -340,19 +340,19 @@ var items = {
 
     TributeTicketBundle10: {
         cost: 5,
-        autoCollect: true
+        autoCollect: false
     },
     InitiateBundle: {
         cost: 10,
-        autoCollect: true
+        autoCollect: false
     },
     AssortedResourcesBundle: {
         cost: 9,
-        autoCollect: true
+        autoCollect: false
     },
     AssortedResources250KBundle: {
         cost: 9,
-        autoCollect: true
+        autoCollect: false
     },
     PromotionBundle1000: {
         cost: 40
@@ -451,6 +451,51 @@ var items = {
         cost: 250
     },
     LeatherHeadBundle500: {
+        cost: 250
+    },
+    DRCBundle500: {
+        cost: 250
+    },
+    BartenderBundle500: {
+        cost: 250
+    },
+    SkinnerBundle500: {
+        cost: 250
+    },
+    SniperBundle500: {
+        cost: 250
+    },
+    GetawayDriverBundle500: {
+        cost: 250
+    },
+    MisterSnipBundle500: {
+        cost: 250
+    },
+    MedicalCourierBundle500: {
+        cost: 250
+    },
+    HighbinderBundle500: {
+        cost: 250
+    },
+    AddiopizzoBundle25: {
+        cost: 5
+    },
+    LoansharkBundle500: {
+        cost: 250
+    },
+    HeavyweightBundle500: {
+        cost: 250
+    },
+    TributeTicket: {
+        cost: 1
+    },
+    MisterPaoBundle500: {
+        cost: 250
+    },
+    AddiopizzoBundle5: {
+        cost: 1
+    },
+    UnnamedDefenderBundle500: {
         cost: 250
     }
 };

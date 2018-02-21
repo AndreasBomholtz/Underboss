@@ -37,22 +37,22 @@ var guiBot = {
 
         var tabs = ["Info","Prizes","Attack","Map","Build","Debug"];
         for(var i=0; i<tabs.length; i++) {
-            tabBox.appendChild(this.drawTab("info-"+(i+1),tabs[i]));
-            var infoData = this.drawTabData("info-"+(i+1));
+            tabBox.appendChild(this.drawTab("info-" + (i + 1),tabs[i]));
+            var infoData = this.drawTabData("info-" + (i + 1));
             infoPanel.appendChild(infoData);
-            this.html[tabs[i]+"InfoData"] = infoData;
-            if(this["draw"+tabs[i]+"Tab"]) {
-                this["draw"+tabs[i]+"Tab"](infoData);
+            this.html[tabs[i] + "InfoData"] = infoData;
+            if(this["draw" + tabs[i] + "Tab"]) {
+                this["draw" + tabs[i] + "Tab"](infoData);
             }
         }
 
         var views = ["Overview","Prizes","Armor","Training","Options"];
         for(var j=0; j<views.length; j++) {
-            this.createDialog(views[j].toLowerCase()+"_view",views[j]);
-            if(this["create"+views[j]+"View"]) {
-                this["create"+views[j]+"View"]();
+            this.createDialog(views[j].toLowerCase() + "_view",views[j]);
+            if(this["create" + views[j] + "View"]) {
+                this["create" + views[j] + "View"]();
             } else {
-                this.debug("create"+views[j]+"View function is missing!");
+                this.debug("create" + views[j] + "View function is missing!");
             }
         }
     },
@@ -61,13 +61,13 @@ var guiBot = {
                                          this.html.mainPanel,
                                          "enable_",
                                          "changeEnable",
-                                         this.options["enable"+name]);
+                                         this.options["enable" + name]);
 
         var sep = document.createElement("span");
         sep.innerHTML = " - ";
         div.appendChild(sep);
 
-        this.drawButton(name+" Now",this.bind(this["do"+name]),div);
+        this.drawButton(name + " Now", this["do" + name], div);
     },
     drawDebugOption: function drawDebugOption(name) {
         this.drawGenericOption(name,
@@ -82,22 +82,28 @@ var guiBot = {
 
         var span = document.createElement("div");
         span.className = "option";
-        span.innerHTML = name+": ";
+        span.innerHTML = name + ": ";
         div.appendChild(span);
 
+        var self = this;
         var input = document.createElement("input");
         input.type = "checkbox";
-        input.name = strEnable+name;
-        input.id = strEnable+name;
+        input.name = strEnable + name;
+        input.id = strEnable + name;
         input.checked = checked;
-        input.onclick = this.bind(this[optEnable+name]);
+        input.onclick = function drawGenericOptionClick() {
+            self[optEnable + name]();
+        };
         div.appendChild(input);
-        this.html[strEnable+name] = input;
+        this.html[strEnable + name] = input;
 
         return div;
     },
-    drawButton: function drawButton(name,func,cont) {
-        var button = $("<button/>").html(name).click(func);
+    drawButton: function drawButton(name, func, cont) {
+        var self = this;
+        var button = $("<button/>").html(name).click(function drawButton() {
+            func.call(self);
+        });
         if(cont === undefined) {
             $(this.html.mainPanel).append(button);
         } else {
@@ -115,31 +121,34 @@ var guiBot = {
             $(".tabLink").removeClass("activeLink");
             $(this).addClass("activeLink");
             $(".tabcontent").addClass("hide");
-            $("#"+tabeId+"_data").removeClass("hide");
+            $("#" + tabeId + "_data").removeClass("hide");
             return false;
         };
         return link;
     },
     drawTabData: function drawTabData(id) {
         var div = document.createElement("div");
-        div.id = id+"_data";
+        div.id = id + "_data";
         div.className = "tabcontent";
         if(id != 1) {
-            div.className += " hide";
+            div.className  += " hide";
         }
         return div;
     },
     drawDebugTab: function drawDebugTab(infoData) {
         $(infoData).html("<h7>Debug Info</h7>").append($("<div/>").attr("id","debug_queue"));
 
-        this.drawButton("Update Jobs", this.bind(this.loadCitiesData), infoData);
-        this.drawButton("Execute", this.bind(this.executeCMD), infoData);
-        this.drawButton("Trace", this.bind(this.toggleTrace), infoData);
-        this.drawButton("Pause", this.bind(this.togglePause), infoData);
+        this.drawButton("Update Jobs", this.loadCitiesData, infoData);
+        this.drawButton("Execute", this.executeCMD, infoData);
+        this.drawButton("Trace", this.toggleTrace, infoData);
+        this.drawButton("Pause", this.togglePause, infoData);
 
         $(infoData).append("<select id='debug_city' />");
 
-        $("#debug_city").change(this.bind(this.changeDebugCity, this));
+        var self = this;
+        $("#debug_city").change(function drawDebugTabChange() {
+            self.changeDebugCity();
+        });
 
         for(var fun in this.autoFunctions) {
             this.drawDebugOption(fun);
@@ -160,11 +169,11 @@ var guiBot = {
             if(!city || !city.type) {
                 continue;
             }
-            $("#debug_city").append("<option value='"+city.type+"'>"+city.type+"</option>");
+            $("#debug_city").append("<option value='" + city.type + "'>" + city.type + "</option>");
         }
     },
     updateDebugQueue: function updateDebugQueue() {
-        $("#debug_queue").html("<h7>CMD Queue: "+this.queue.length+"</h7><h7>Data Queue: "+this.data_queue.length+"</h7><h7>Slow Queue: "+this.slow_queue.length+"</h7><h7>Queue Type: "+this.queue_type+"</h7>");
+        $("#debug_queue").html("<h7>CMD Queue: " + this.queue.length + "</h7><h7>Data Queue: " + this.data_queue.length + "</h7><h7>Slow Queue: " + this.slow_queue.length + "</h7><h7>Queue Type: " + this.queue_type + "</h7>");
     },
     drawBuildTab: function drawBuildTab(infoData) {
         if(!this.options.build) {
@@ -181,7 +190,7 @@ var guiBot = {
             if(!this.buildings[b].buildNew) {
                 continue;
             }
-            var input = $("<input id='build_"+b+"' />");
+            var input = $("<input id='build_" + b + "' />");
             if(this.options.build[b] && typeof(this.options.build[b]) == 'number') {
                 input.val(this.options.build[b]);
             } else {
@@ -193,13 +202,13 @@ var guiBot = {
         if(saveChanges) {
             this.saveBuildOrder();
         }
-        this.drawButton("Save",this.bind(this.saveBuildOrder),infoData);
+        this.drawButton("Save", this.saveBuildOrder, infoData);
     },
     saveBuildOrder: function saveBuildOrder() {
         this.options.build = {};
         for(var b in this.buildings) {
             if(this.buildings[b].buildNew) {
-                this.options.build[b] = parseInt($("#build_"+b).val(),10);
+                this.options.build[b] = parseInt($("#build_" + b).val(),10);
             }
         }
         this.saveOptions();
@@ -214,7 +223,7 @@ var guiBot = {
             bot.options.map_size = 2;
             bot.updateMap();
         }
-        bot.html.map_info.innerHTML = "<p>Scan size: "+bot.options.map_size+"</p>";
+        bot.html.map_info.innerHTML = "<p>Scan size: " + bot.options.map_size + "</p>";
 
         var counts = {}, i, keyX;
         for(keyX in bot.options.map) {
@@ -228,19 +237,19 @@ var guiBot = {
         }
         for(i=1; i <= 10; i++) {
             if(counts[i]) {
-                bot.html.map_info.innerHTML += "<p>Lvl "+(i)+" Gangs: "+counts[i]+"</p>";
+                bot.html.map_info.innerHTML += "<p>Lvl " + (i) + " Gangs: " + counts[i] + "</p>";
             }
         }
         for(i=1; i<=5; i++) {
-            if(counts[10+i]) {
-                bot.html.map_info.innerHTML += "<p>Murder Inc. "+(i)+": "+counts[10+i]+"</p>";
+            if(counts[10 + i]) {
+                bot.html.map_info.innerHTML += "<p>Murder Inc. " + (i) + ": " + counts[10 + i] + "</p>";
             }
         }
     },
     drawMapTab: function drawMapTab(infoData) {
         infoData.innerHTML = "<h7>Map</h7>";
-        this.drawButton("Update Map",this.bind(this.updateMap),infoData);
-        this.drawButton("Reset Map",this.bind(this.resetMap),infoData);
+        this.drawButton("Update Map", this.updateMap, infoData);
+        this.drawButton("Reset Map", this.resetMap, infoData);
         this.drawMapInfo(this);
     },
     drawAttackTab: function drawAttackTab(infoData) {
@@ -254,7 +263,7 @@ var guiBot = {
             city.append($('<option value="all">All</option>'));
             if(this.cities) {
                 for(var i=0; i<this.cities.length; i++) {
-                    city.append($('<option value="'+this.cities[i].type+'">'+this.cities[i].type+'</option>'));
+                    city.append($('<option value="' + this.cities[i].type + '">' + this.cities[i].type + '</option>'));
                 }
             }
         });
@@ -263,25 +272,25 @@ var guiBot = {
         $('<div>Gang Level:</div>').append($('<select id="select_gang"></select>')).appendTo($(infoData));
         var gang = $('#select_gang');
         for(var i=1; i<=15; i++) {
-            gang.append($('<option value="'+i+'">'+i+'</option>'));
+            gang.append($('<option value="' + i + '">' + i + '</option>'));
         }
 
         $('<div id="units_p">Units:</div>').append($('<select id="select_units"></select>')).appendTo($(infoData));
         var units = $('#select_units');
         for(var unit in this.attackUnits) {
-            units.append($('<option value="'+unit+'">'+unit+'</option>'));
+            units.append($('<option value="' + unit + '">' + unit + '</option>'));
         }
 
         $('<input type="text" id="unit_count" value="0" class="unit_count" />').appendTo($('#units_p'));
-        this.drawButton("Add",this.bind(this.addUnitToAttackOrder),document.getElementById('units_p'));
+        this.drawButton("Add", this.addUnitToAttackOrder, document.getElementById('units_p'));
 
         $('<div>Use All:</div>').append('<input type="checkbox" id="check_attack_all" value="all"/>').appendTo($(infoData));
 
         $('<textarea id="total_units" class="textinfo"></textarea>').appendTo($(infoData));
 
 
-        this.drawButton("Save",this.bind(this.saveAttackOrder),infoData);
-        this.drawButton("Clear",this.bind(this.clearAttackOrder),infoData);
+        this.drawButton("Save", this.saveAttackOrder, infoData);
+        this.drawButton("Clear", this.clearAttackOrder,infoData);
 
         var line = document.createElement("hr");
         infoData.appendChild(line);
@@ -292,7 +301,7 @@ var guiBot = {
         infoData.appendChild(list);
         this.html.order.list = list;
 
-        this.drawButton("Delete",this.bind(this.deleteAttackOrder),infoData);
+        this.drawButton("Delete", this.deleteAttackOrder, infoData);
 
         this.updateAttackOrders();
     },
@@ -317,7 +326,7 @@ var guiBot = {
                 this.html.order.list.appendChild(item);
 
                 item.value = n;
-                item.innerHTML = order.city+" | "+order.gang+" | "+(order.use_all?'t':'f')+" | "+order.units;
+                item.innerHTML = order.city + " | " + order.gang + " | " + (order.use_all?'t':'f') + " | " + order.units;
             }
         }
     },
@@ -357,8 +366,8 @@ var guiBot = {
         }
     },
     drawInfoTab: function drawInfoTab(infoData) {
-        this.drawButton("Overview",this.showoverview,infoData);
-        this.drawButton("Traning",this.showtrainview,infoData);
+        this.drawButton("Overview", this.showoverview, infoData);
+        this.drawButton("Traning", this.showtrainview, infoData);
 
         $(infoData).append($("<textarea></textarea>").addClass("info").attr("id","debug_info"));
     },
@@ -402,7 +411,7 @@ var guiBot = {
         this.addTableRow(table,"Hide side panel","");
         this.addTableRow(table,"","");
 
-        this.drawButton("Save",this.bind(this.saveOptionsPage),view);
+        this.drawButton("Save", this.saveOptionsPage, view);
     },
     saveOptionsPage: function saveOptionsPage() {
         this.debug("Save Options");
@@ -429,7 +438,7 @@ var guiBot = {
             }
             count++;
         }
-        this.drawButton("Save",this.bind(this.saveTrainOrder),$("#trainview"));
+        this.drawButton("Save", this.saveTrainOrder, $("#trainview"));
     },
     saveTrainOrder: function saveTrainOrder() {
         this.trace();
@@ -443,8 +452,7 @@ var guiBot = {
     },
     createOverviewView: function createOverviewView() {
         var view = $("#overview_view");
-        view.append("<button id='overview_update'>Update</button>");
-        $("#overview_update").click(this.bind(this.updateOverview,this));
+        this.drawButton("Update", this.updateOverview, view);
 
         view.append("<table id='overview_table'></table>");
         $("#overview_table").append("\

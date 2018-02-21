@@ -249,11 +249,15 @@ var buildBot = {
 
             var canBuild = true;
             var prio = this.buildings[building.type];
+            if(!prio) {
+                this.debug("Missing data for " + building.type, city, "Build", neighborhood);
+                continue;
+            }
             if(prio.skip) {
                 this.debugBuild("Skipping " + building.type, city, neighborhood);
                 continue;
             }
-            if(prio && prio.requirement) {
+            if(prio.requirement) {
                 var reqs = prio.requirement;
                 if(reqs.build) {
                     var build_prio = reqs.build[building.level];
@@ -287,7 +291,8 @@ var buildBot = {
             } else {
                 this.debugBuild(building.type + " has no requirements", city, neighborhood);
             }
-            if(canBuild && prio && prio.cost) {
+
+            if(canBuild && prio.cost) {
                 if(!this.hasResources(city,building.type, prio.cost, building.level, this.calcBuldingCost)) {
                     canBuild = false;
                 } else {

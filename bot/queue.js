@@ -21,7 +21,7 @@ var queueBot = {
         cmd.callback = callback;
         cmd.custom = custom;
 
-        cmd.data = cmd.data.replace(new RegExp("_", 'g'), "%5F");
+        //cmd.data = cmd.data.replace(new RegExp("_", 'g'), "%5F");
 
         if(queue_type === 'slow') {
             this.addToQueue(this.slow_queue, cmd);
@@ -111,31 +111,30 @@ var queueBot = {
             return;
         }
 
-        this.queue_busy = true;
-        cmd.resends = (cmd.resends + 1) || 1;
-        this.lastCommand = cmd;
-        this.signal("queue:update");
-
-
         this.debug(cmd.name);
         if(typeof($) !== 'undefined') {
+            this.ajax_send(cmd.url, this.revCommand, this.errorCommand, cmd.type, cmd.data, true);
+            /*
             $.ajax({
+                dataType: 'text',
+
                 context: this,
-                type: this.lastCommand.type,
-                url: this.lastCommand.url,
-                data: this.lastCommand.data,
+                type: cmd.type,
+                url: cmd.url,
+                data: cmd.data,
                 success: this.revCommand,
                 error: this.errorCommand
             });
+             */
         } else {
             if(!this.request) {
                 this.request = require('request');
             }
 
             var options = {
-                method: this.lastCommand.type,
-                url: this.lastCommand.url,
-                body: this.lastCommand.data,
+                method: cmd.type,
+                url: cmd.url,
+                body: cmd.data,
                 headers: {
                     Origin: 'https://c1.godfather.rykaiju.com',
                     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140',
@@ -157,6 +156,13 @@ var queueBot = {
             }
             this.request(options, callback);
         }
+
+
+        this.queue_busy = true;
+        cmd.resends = (cmd.resends + 1) || 1;
+        this.lastCommand = cmd;
+        this.signal("queue:update");
+
     },
     errorCommand: function errorCommand(data) {
         this.queue_busy = false;

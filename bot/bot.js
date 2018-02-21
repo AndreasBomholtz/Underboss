@@ -107,7 +107,6 @@ var bot = {
         for(var n=0; n<city.jobs.length; n++) {
             if(building === undefined) {
                 if(city.jobs[n].queue && city.jobs[n].queue === queue) {
-                    this.debug(city.jobs[n].queue);
                     queueReady = false;
                     break;
                 }

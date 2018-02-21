@@ -36,7 +36,7 @@ var debugBot = {
     log: function log(func, str, city, info, neighborhood) {
         var message = this.log_format(str, city, info, neighborhood);
         if(this.updateInfo) {
-            this.updateInfo(message);
+            this.updateInfo(str, city);
         }
         func(message);
     },
