@@ -251,7 +251,7 @@ var buildBot = {
             var prio = this.buildings[building.type];
             if(!prio) {
                 this.debug("Missing data for " + building.type, city, "Build", neighborhood);
-                continue;
+                prio = {};
             }
             if(prio.skip) {
                 this.debugBuild("Skipping " + building.type, city, neighborhood);

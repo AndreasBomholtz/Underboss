@@ -35,10 +35,12 @@ var debugBot = {
     },
     log: function log(func, str, city, info, neighborhood) {
         var message = this.log_format(str, city, info, neighborhood);
-        if(this.updateInfo) {
-            this.updateInfo(str, city);
+        if(message !== "") {
+            if(this.updateInfo) {
+                this.updateInfo(str, city);
+            }
+            func(message);
         }
-        func(message);
     },
     debug: function debug(str, city, info, neighborhood) {
         this.log(console.debug, str, city, info, neighborhood);

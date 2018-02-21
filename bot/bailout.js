@@ -3,7 +3,7 @@ var bailoutBot = {
         this.trace();
         this.eachCity(function doBailOutEach(city) {
             if(city.type != "DoriaAirport") {
-                this.sendGetCommand("Update bail" , "cities/" + city.id + "/cash_jail.json", "", city);
+                this.sendGetCommand("Update bail in " + city.name , "cities/" + city.id + "/cash_jail.json", "", city);
             }
         });
     },

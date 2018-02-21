@@ -21,8 +21,6 @@ var queueBot = {
         cmd.callback = callback;
         cmd.custom = custom;
 
-        //cmd.data = cmd.data.replace(new RegExp("_", 'g'), "%5F");
-
         if(queue_type === 'slow') {
             this.addToQueue(this.slow_queue, cmd);
         } else if(queue_type === 'data') {
@@ -114,18 +112,6 @@ var queueBot = {
         this.debug(cmd.name);
         if(typeof($) !== 'undefined') {
             this.ajax_send(cmd.url, this.revCommand, this.errorCommand, cmd.type, cmd.data, true);
-            /*
-            $.ajax({
-                dataType: 'text',
-
-                context: this,
-                type: cmd.type,
-                url: cmd.url,
-                data: cmd.data,
-                success: this.revCommand,
-                error: this.errorCommand
-            });
-             */
         } else {
             if(!this.request) {
                 this.request = require('request');
@@ -164,19 +150,26 @@ var queueBot = {
         this.signal("queue:update");
 
     },
-    errorCommand: function errorCommand(data) {
+    errorCommand: function errorCommand(status, data) {
         this.queue_busy = false;
-        if(typeof(data) == "string") {
-            try {
-                data = JSON.parse(data);
-            } catch(err) {
-                this.debug("Recevied invalid JSON in error handler: "+this.lastCommand.name,
-                           this.lastCommand.city);
-                this.debug(err);
-                return;
+
+        var response = "";
+        if(status != 404) {
+            if(typeof(data) == "string") {
+                try {
+                    data = JSON.parse(data);
+                } catch(err) {
+                    this.debug("Recevied invalid JSON in error handler: "+this.lastCommand.name,
+                               this.lastCommand.city);
+                    this.debug(err);
+                    return;
+                }
             }
+            response = data.responseText;
+        } else {
+            response = data;
         }
-        this.debug("Error sending command: " + data.responseText);
+        this.debug("Error sending command: " + response);
         this.debug(this.lastCommand);
 
         if(this.lastCommand && this.lastCommand.callback !== undefined) {
@@ -221,12 +214,6 @@ var queueBot = {
                         this.debug("Missing neighborhood or custom slot to handle error");
                     }
                 }
-
-                /*if(this.lastCommand.city) {
-                 this.loadCityData(this.lastCommand.city);
-                 } else {
-                 this.loadPlayerData();
-                 }*/
             }
         }
         this.parseData(data);

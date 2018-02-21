@@ -173,7 +173,7 @@ var bot = {
     loadGameLoadedData: function loadGameLoadedData(bot) {
         bot.trace();
         bot.eachCity(function loadGameLoadedDataEach(city) {
-            bot.sendDataCommand("Load Game Data",
+            bot.sendDataCommand("Load Game Data for " + city.name,
                                  "player/game_loaded.json",
                                  "_method=put",
                                  city);

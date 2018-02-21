@@ -14,7 +14,7 @@ var ajaxBot = {
                 if(x.status == 200) {
                     sucess.call(self, x.responseText);
                 } else {
-                    error.call(self, x.responseText);
+                    error.call(self, x.status, x.responseText);
                 }
             }
         };

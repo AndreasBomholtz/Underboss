@@ -378,7 +378,7 @@ var guiBot = {
         $("#debug_info").text(this.log_format(str,city)+"\n"+$("#debug_info").text());
     },
     updatePrizeInfo: function updatePrizeInfo(str,city) {
-        $(".prize_info").text(this.debug(str,city) +"\n"+$(".prize_info").text());
+        $(".prize_info").text(this.log_format(str, city) + "\n" + $(".prize_info").text());
     },
     createDialog: function createDialog(id, title) {
         $("#panel").append("<dialog id='"+id+"' class='overlay'><h1>"+title+"</h1><button class='close' id='"+id+"_close'>Close</button></dialog>");
