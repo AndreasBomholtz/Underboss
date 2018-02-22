@@ -36,6 +36,7 @@ var buildings = {
         }
     },
     Hideout: {
+        buildNew: -1,
         cost: {
             cash: 1200,
             food: 500,

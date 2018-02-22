@@ -99,7 +99,8 @@ var attackUnits = {
             steel: 1900,
             cement: 1900,
             influence: 30
-        }
+        },
+        bailout: 11172
     },
     Enforcer: {
         type: 'Advanced',

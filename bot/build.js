@@ -150,26 +150,37 @@ var buildBot = {
             if(cap > total) {
                 var slot = this.findBuildingSlot(neighborhood, cap);
                 if(slot === 0) {
-                    this.debugBuild("Failed to find a valid slot",city, neighborhood);
+                    this.debugBuild("Failed to find a valid slot", city, neighborhood);
                     return false;
                 }
 
+                var b;
                 var build = "Hideout";
+                if(this.options.build[city.type]) {
+                    for(b in this.options.build[city.type]) {
+                        if(this.options.build[city.type][b] == -1) {
+                            this.debugBuild("Set default building to " + b, city, neighborhood);
+                            build = b;
+                            break;
+                        }
+                    }
+                }
+
                 var cost = this.buildings[build].cost;
                 if(!this.hasResources(city, build, cost, 1, this.calcBuldingCost)) {
-                    this.debugBuild("Can't build new building, can't afford it", city, neighborhood);
+                    this.debugBuild("Can't build new " + build + ", can't afford it", city, neighborhood);
                     return false;
                 }
 
-                for(var b in this.buildings) {
+                for(b in this.buildings) {
                     var prio = this.buildings[b];
                     var buildCountGoal = 0;
-                    if(this.options.build[b]) {
-                        buildCountGoal = this.options.build[b];
+                    if(this.options.build[city.type] && this.options.build[city.type][b]) {
+                        buildCountGoal = this.options.build[city.type][b];
                     } else if(prio.buildNew) {
                         buildCountGoal = prio.buildNew;
                     }
-                    if(buildCountGoal) {
+                    if(buildCountGoal > 0) {
                         var buildCount = this.countBuilding(neighborhood, b);
                         if(buildCount < buildCountGoal) {
                             cost = prio.cost;

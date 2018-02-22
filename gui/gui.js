@@ -181,34 +181,66 @@ var guiBot = {
         }
 
         $(infoData).append("<h7>Build Orders</h7>");
-        $(infoData).append("<p>Build this amount of buildings and the rest will be Hideout.</p>");
+        $(infoData).append("<p>Build this amount of buildings. If you set it to -1 it will keep building that building.</p>");
+
+        $(infoData).append("<select id='build_order_city' />");
+
+        this.buildOrderCity = 'Capital';
+        var self = this;
+        $("#build_order_city").change(function drawBuildTabChange() {
+            self.changeBuildOrderCity();
+        });
+
         var table = $("<table/>");
         $(infoData).append(table);
 
-        var saveChanges = false;
         for(var b in this.buildings) {
             if(!this.buildings[b].buildNew) {
                 continue;
             }
             var input = $("<input id='build_" + b + "' />");
-            if(this.options.build[b] && typeof(this.options.build[b]) == 'number') {
-                input.val(this.options.build[b]);
-            } else {
-                input.val(this.buildings[b].buildNew);
-                saveChanges = true;
-            }
             this.addTableRow(table,b,input);
         }
-        if(saveChanges) {
-            this.saveBuildOrder();
-        }
         this.drawButton("Save", this.saveBuildOrder, infoData);
+        this.changeBuildOrder();
+
+        this.listen("cities:update", this.updateBuildOrderCities);
+    },
+    changeBuildOrder: function changeBuildOrder() {
+        for(var b in this.buildings) {
+            if(!this.buildings[b].buildNew) {
+                continue;
+            }
+
+            var input = $("#build_"+b);
+            if(this.options.build[this.buildOrderCity] &&
+               this.options.build[this.buildOrderCity][b] &&
+               typeof(this.options.build[this.buildOrderCity][b]) == 'number') {
+                input.val(this.options.build[this.buildOrderCity][b]);
+            } else {
+                input.val(this.buildings[b].buildNew);
+            }
+        }
+    },
+    changeBuildOrderCity: function changeBuildOrderCity() {
+        this.buildOrderCity = $("#build_order_city").val();
+        this.changeBuildOrder();
+    },
+    updateBuildOrderCities: function updateBuildOrderCities() {
+        $("#build_order_city").html("");
+        for(var i=0; i<this.cities.length; i++) {
+            var city = this.cities[i];
+            if(!city || !city.type) {
+                continue;
+            }
+            $("#build_order_city").append("<option value='" + city.type + "'>" + city.type + "</option>");
+        }
     },
     saveBuildOrder: function saveBuildOrder() {
-        this.options.build = {};
+        this.options.build[this.buildOrderCity] = {};
         for(var b in this.buildings) {
             if(this.buildings[b].buildNew) {
-                this.options.build[b] = parseInt($("#build_" + b).val(),10);
+                this.options.build[this.buildOrderCity][b] = parseInt($("#build_" + b).val(),10);
             }
         }
         this.saveOptions();

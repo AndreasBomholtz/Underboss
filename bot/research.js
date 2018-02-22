@@ -2,7 +2,7 @@ var researchBot = {
     calcReseachCost: function calcReseachCost(level, cost) {
         var res = cost;
         for(var i=1; i<level; i++) {
-            res *= 1.5;
+            res = Math.ceil(res * 1.5);
         }
         return res;
     },
