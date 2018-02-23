@@ -137,7 +137,7 @@ var queueBot = {
                 if (!error && response.statusCode == 200) {
                     bot.revCommand(body);
                 } else {
-                    bot.errorCommand(body);
+                    bot.errorCommand(response.statusCode, body);
                 }
             }
             this.request(options, callback);
@@ -165,7 +165,11 @@ var queueBot = {
                     return;
                 }
             }
-            response = data.responseText;
+            if(data.responseText) {
+                response = data.responseText;
+            } else {
+                response = data;
+            }
         } else {
             response = data;
         }

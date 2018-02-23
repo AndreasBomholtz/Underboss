@@ -156,6 +156,9 @@ var buildBot = {
 
                 var b;
                 var build = "Hideout";
+                if(!this.options.build) {
+                    this.options.build = {};
+                }
                 if(this.options.build[city.type]) {
                     for(b in this.options.build[city.type]) {
                         if(this.options.build[city.type][b] == -1) {
