@@ -10,8 +10,8 @@ else
     chmod u+x login.sh
 fi
 
-if [ ! -f game.html ] || [ test `find "game.html" -mmin +120` ]
-then
+
+if [ ! -f game.html ] || [ ! test `find "game.html" -mmin +120` ]; then
     echo "Logging in to The Godfather Game"
     ./login.sh > game.html 2> /dev/null
 

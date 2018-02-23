@@ -35,6 +35,17 @@ var guiBot = {
         tabBox.className = "tab-box";
         infoPanel.appendChild(tabBox);
 
+        var views = ["Overview", "Prizes", "Armor","Training", "Options"];
+        for(var j=0; j<views.length; j++) {
+            this.createDialog(views[j].toLowerCase() + "_view", views[j]);
+            if(this["create" + views[j] + "View"]) {
+                this["create" + views[j] + "View"]();
+            } else {
+                this.debug("create" + views[j] + "View function is missing!");
+            }
+            this["show" + views[j]] = this.generateShowView(views[j]);
+        }
+
         var tabs = ["Info","Prizes","Attack","Map","Build","Debug"];
         for(var i=0; i<tabs.length; i++) {
             tabBox.appendChild(this.drawTab("info-" + (i + 1),tabs[i]));
@@ -45,16 +56,11 @@ var guiBot = {
                 this["draw" + tabs[i] + "Tab"](infoData);
             }
         }
-
-        var views = ["Overview","Prizes","Armor","Training","Options"];
-        for(var j=0; j<views.length; j++) {
-            this.createDialog(views[j].toLowerCase() + "_view",views[j]);
-            if(this["create" + views[j] + "View"]) {
-                this["create" + views[j] + "View"]();
-            } else {
-                this.debug("create" + views[j] + "View function is missing!");
-            }
-        }
+    },
+    generateShowView: function generateShowView(view) {
+        return function generateShowViewShow() {
+            $("#" + view.toLowerCase() + "_view").show();
+        };
     },
     drawOption: function drawOption(name) {
         var div = this.drawGenericOption(name,
@@ -398,8 +404,8 @@ var guiBot = {
         }
     },
     drawInfoTab: function drawInfoTab(infoData) {
-        this.drawButton("Overview", this.showoverview, infoData);
-        this.drawButton("Traning", this.showtrainview, infoData);
+        this.drawButton("Overview", this.showOverview, infoData);
+        this.drawButton("Traning", this.showTraining, infoData);
 
         $(infoData).append($("<textarea></textarea>").addClass("info").attr("id","debug_info"));
     },
@@ -407,10 +413,14 @@ var guiBot = {
         $(infoData).html("<h7>Prizes</h7>").append("<p>Prize Info:</p>").append($("<textarea/>").addClass("prize_info"));
     },
     updateInfo: function updateInfo(str,city) {
-        $("#debug_info").text(this.log_format(str,city)+"\n"+$("#debug_info").text());
+        var lines = $("#debug_info").text().split("\n") || [];
+        lines = lines.slice(0, 100).join("\n");
+        $("#debug_info").text(this.log_format(str,city) + "\n" + lines);
     },
     updatePrizeInfo: function updatePrizeInfo(str,city) {
-        $(".prize_info").text(this.log_format(str, city) + "\n" + $(".prize_info").text());
+        var lines = $(".prize_info").text().split("\n") || [];
+        lines = lines.slice(0, 100).join("\n");
+        $(".prize_info").text(this.log_format(str, city) + "\n" + lines);
     },
     createDialog: function createDialog(id, title) {
         $("#panel").append("<dialog id='"+id+"' class='overlay'><h1>"+title+"</h1><button class='close' id='"+id+"_close'>Close</button></dialog>");
@@ -488,7 +498,7 @@ var guiBot = {
 
         view.append("<table id='overview_table'></table>");
         $("#overview_table").append("\
-                                    <tr><td>City</td>\
+                                    <tr><td style>City</td>\
                                     <th>Cash</th><th>Cement</th><th>Food</th><th>Steel</th>\
                                     <th>Jobs</th>\
                                     </tr>\

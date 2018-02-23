@@ -497,6 +497,12 @@ var items = {
     },
     UnnamedDefenderBundle500: {
         cost: 250
+    },
+    ForemanBundle500: {
+        cost: 250
+    },
+    ButcherBundle500: {
+        cost: 250
     }
 };
 module.exports = items;

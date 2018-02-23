@@ -46,7 +46,8 @@ div.option {
 }
 
 div.stats {
-    width: 100%;
+    width: 50%;
+    text-align: left;
 }
 
 input.button {
@@ -123,9 +124,13 @@ h7 {
     box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
 }
 
-#overview table {
+#overview_table {
     width: 100%;
     text-align: left;
+}
+
+#overview_table th {
+    font-weight: bold;
 }
 
 #overview #total {
