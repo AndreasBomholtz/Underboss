@@ -2,9 +2,9 @@ var contrib = require('blessed-contrib');
 
 var init = true;
 
-var queue_cmd  = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
-var queue_data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
-var queue_slow = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+var queue_cmd  = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+var queue_data = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+var queue_slow = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 var screen;
 var grid;
@@ -41,11 +41,11 @@ function createDashboard() {
 
 function refreshSpark() {
     queue_cmd.shift();
-    queue_cmd.push(global.bot.queue.length + 1);
+    queue_cmd.push(global.bot.queue.length);
     queue_data.shift();
-    queue_data.push(global.bot.data_queue.length + 1);
+    queue_data.push(global.bot.data_queue.length);
     queue_slow.shift();
-    queue_slow.push(global.bot.slow_queue.length + 1);
+    queue_slow.push(global.bot.slow_queue.length);
 
     if(global.current_page == 'dashboard') {
         sparkline.setData(['CMD', 'DATA','SLOW'], [queue_cmd, queue_data, queue_slow]);

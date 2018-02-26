@@ -24,11 +24,8 @@ var researchBot = {
 
         for(var key in this.research) {
             var research = this.research[key];
-            var currentResearch = city.research[key];
+            var currentResearch = (city.research[key] || 0) + 1;
             var skip = false;
-            if(currentResearch === undefined) {
-                currentResearch = 0;
-            }
 
             var req = research.requirement;
             if(req) {
@@ -59,10 +56,8 @@ var researchBot = {
                 if(req.research) {
                     for(var i=0; i<req.research.length; i++) {
                         var r = req.research[i];
-                        var resLvl = city.research[r];
-                        if(resLvl === undefined) {
-                            resLvl = 0;
-                        }
+                        var resLvl = city.research[r] || 0;
+
                         this.debugResearch(key + " has req " + r + " and it is " + resLvl, city);
                         if(resLvl <= currentResearch) {
                             this.debugResearch("Skip because " + resLvl + " is less then " + currentResearch, city);
@@ -92,13 +87,13 @@ var researchBot = {
         }
 
         if(lowLevel.lvl != 1000) {
-            this.info("Research " + lowLevel.name + " lvl " + (lowLevel.lvl + 1), city, "research");
-            this.sendCommand("Research " + lowLevel.name + " lvl " + (lowLevel.lvl + 1) + " in " + city.type,
+            this.info("Research " + lowLevel.name + " lvl " + lowLevel.lvl, city, "research");
+            this.sendCommand("Research " + lowLevel.name + " lvl " + lowLevel.lvl + " in " + city.type,
                              "cities/" + city.id + "/researches.json",
                              "research[research_type]=" + lowLevel.name,
                              city);
             this.addStat("Research", 1);
-            city.research[lowLevel.name] = (lowLevel.lvl + 1);
+            city.research[lowLevel.name] = lowLevel.lvl;
         }
     },
     doResearch: function doResearch() {
