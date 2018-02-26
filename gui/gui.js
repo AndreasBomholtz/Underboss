@@ -397,7 +397,9 @@ var guiBot = {
         $(infoData).append("<select id='financier_all_items' />");
         if(this.my_items) {
             for(var item in this.my_items) {
-                $("#financier_all_items").append("<option value='"+item+"'>"+item+"</option>");
+                if (this.my_items.hasOwnProperty(item)) {
+                    $("#financier_all_items").append("<option value='"+item+"'>"+item+"</option>");
+                }
             }
         }
         this.listen("player:items", this.updateFinancierItems);
@@ -421,7 +423,9 @@ var guiBot = {
         if(this.my_items) {
             var keys = Object.keys(this.my_items).sort();
             for(var item in keys) {
-                $("#financier_all_items").append("<option value='"+keys[item]+"'>"+keys[item]+"</option>");
+                if (keys.hasOwnProperty(item)) {
+                    $("#financier_all_items").append("<option value='"+keys[item]+"'>"+keys[item]+"</option>");
+                }
             }
         }
     },

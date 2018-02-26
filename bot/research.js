@@ -46,7 +46,7 @@ var researchBot = {
                         } else if(currentResearch <= 5) {
                             build = 5;
                         } else {
-                            build *= 4;
+                            build *= 3;
                         }
                     } else {
                         build *= 2;
