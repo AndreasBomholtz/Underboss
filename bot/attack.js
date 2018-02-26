@@ -11,7 +11,7 @@ var attackBot = {
         }
 
         bot.trace();
-        if(!bot.cities || !bot.cities[0] || !bot.cities[0].data) {
+        if(!bot.cities || !bot.cities[0]) {
             setTimeout(bot.updateMap, 1000, bot);
             return;
         }
@@ -51,8 +51,7 @@ var attackBot = {
                     bot.sendSlowGetCommand("Get map (" + getX + "," + getY + ")",
                                             "map.json",
                                             "x=" + getX + "&y=" + getY,
-                                            city,
-                                            bot.drawMapInfo);
+                                            city);
                 }
             }
         });
