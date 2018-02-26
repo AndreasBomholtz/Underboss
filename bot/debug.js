@@ -14,11 +14,10 @@ var debugBot = {
         if(city && this.debugCity && this.debugCity != "All" && this.debugCity != city.type) {
             return "";
         }
-        var d = new Date();
         if(typeof(str) == "object") {
-            console.debug(str);
-            str = "";
+            return str;
         }
+        var d = new Date();
         if(city && city.type) {
             if(neighborhood && neighborhood.id) {
                 str = city.type + " (" + neighborhood.id + "): " + str;
@@ -36,9 +35,6 @@ var debugBot = {
     log: function log(func, str, city, info, neighborhood) {
         var message = this.log_format(str, city, info, neighborhood);
         if(message !== "") {
-            if(this.updateInfo) {
-                this.updateInfo(str, city);
-            }
             func(message);
         }
     },
@@ -47,6 +43,9 @@ var debugBot = {
     },
     info: function info(str, city, info, neighborhood) {
         this.log(console.info, str, city, info, neighborhood);
+        if(this.updateInfo) {
+            this.updateInfo(str, city);
+        }
     },
     generateDebugFunction: function generateDebugFunction(name) {
         this["enableDebug" + name] = false;
@@ -58,7 +57,7 @@ var debugBot = {
     },
     generateDebugEnable: function generateDebugEnable(name) {
         this["changeDebugEnable"+name] = function changeDebugEnable() {
-            this["enableDebug"+name] = this.html["enable_debug_"+name].checked;
+            this["enableDebug"+name] = $("#enable_debug_"+name).is(':checked');
             this.debug("Enable Debug "+name+": " + this["enableDebug"+name]);
         };
     },
