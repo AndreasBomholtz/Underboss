@@ -18,6 +18,7 @@
 /*jsl:import bot/report.js*/
 /*jsl:import bot/research.js*/
 /*jsl:import bot/ajax.js*/
+/*jsl:import bot/financier.js*/
 /*jsl:import res/attack_units.js*/
 /*jsl:import res/buildings.js*/
 /*jsl:import res/defense_units.js*/
@@ -46,7 +47,7 @@ if(window.location.href.indexOf("platforms/facebook/game") != -1) {
             optionsBot, parserBot,
             queueBot, debugBot,
             utilBot, armorBot,
-            ajaxBot);
+            ajaxBot, financierBot);
 
     if(guiBot) {
         combine(bot, guiBot);

@@ -127,6 +127,7 @@ var parserBot = {
                         }
                     }
                 }
+                this.signal("map:update");
             }
             if(data.has_free_ticket) {
                 this.free_ticket = data.has_free_ticket;
@@ -203,6 +204,12 @@ var parserBot = {
                             this.handleBonds();
                         }
                     }
+                }
+                if(data.result.financiers_office) {
+                    if(data.result.financiers_office.remaining_trades) {
+                        this.financier_trades = data.result.financiers_office.remaining_trades;
+                    }
+                    this.handleFinancier();
                 }
             }
             if(data.energy && this.lastCommand && this.lastCommand.city) {

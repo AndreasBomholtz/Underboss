@@ -20,13 +20,14 @@ var bot = {
         Quests: {},
         Armor: {
             event: "city:armor:update"
-        }
+        },
+        Financier: {}
     },
 
     //Functions
     generateChangeEnable: function generateChangeEnable(name) {
         this["changeEnable"+name] = function changeEnable() {
-            this.options["enable" + name] = this.html["enable_" + name].checked;
+            this.options["enable" + name] = $("#enable_" + name).is(':checked');
             this.saveOptions();
             this.debug("Enable " + name + ": " + this.options["enable" + name]);
         };
