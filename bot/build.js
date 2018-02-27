@@ -74,15 +74,21 @@ var buildBot = {
         if(level == 1) {
             return cost;
         } else {
-            return cost * Math.pow(2, (level - 1));
+            return cost * Math.pow(2, level);
         }
     },
-    hasResources: function hasResources(city, name, cost, level, func) {
+    hasResources: function hasResources(city, name, cost, level, func, offset) {
         if(cost && city && city.resources) {
             var res = city.resources;
             for (var c in cost) {
                 var rc = 0;
-                if(func) {
+                if(offset) {
+                    if(offset[c]) {
+                        rc = cost[c] + (offset[c] * (level - 1));
+                    } else {
+                        rc = cost[c] + (offset["res"] * (level - 1));
+                    }
+                } else if(func) {
                     rc = func(parseInt(level, 10), cost[c]);
                 } else {
                     rc = cost[c] * level;
@@ -106,6 +112,7 @@ var buildBot = {
                     }
                 }
             }
+            /*
             for (var cc in cost) {
                 var dc;
                 if(func) {
@@ -114,7 +121,7 @@ var buildBot = {
                     dc = cost[cc] * level;
                 }
                 city.resources[cc] = parseInt(city.resources[cc], 10) - parseInt(dc, 10);
-            }
+            }*/
         } else if(cost) {
             if(func === undefined) {
                 this.debugTrain("Missing city data");
@@ -307,7 +314,7 @@ var buildBot = {
             }
 
             if(canBuild && prio.cost) {
-                if(!this.hasResources(city,building.type, prio.cost, building.level, this.calcBuldingCost)) {
+                if(!this.hasResources(city, building.type, prio.cost, building.level, this.calcBuldingCost, prio.offset)) {
                     canBuild = false;
                 } else {
                     this.debugBuild("Lots of resources", city, neighborhood);

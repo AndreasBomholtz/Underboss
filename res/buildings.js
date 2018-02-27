@@ -197,7 +197,14 @@ var buildings = {
             cement: 1000
         }
     },
+    Condo: {
+        skip: true
+    },
     CrewBank: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
         requirement: {
             alliance: true
         },
@@ -209,6 +216,10 @@ var buildings = {
         }
     },
     FinanciersOffice: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
         cost: {
             cash: 43885,
             food: 11445,
@@ -216,8 +227,173 @@ var buildings = {
             cement: 11445
         }
     },
-    Condo: {
-        skip: true
+    BlackMarket: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    Haberdashery: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    Pharmacy: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    Hotel: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    Gym: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    Morgue: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    Laundromat: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    DeputyMayorsOffice: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    FerrisWheel: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    GasStation: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    Headquarters: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    Hospital: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    ClipJoint: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
+    ShootingRange: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
     }
 };
 module.exports = buildings;

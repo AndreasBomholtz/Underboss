@@ -35,6 +35,7 @@ var financierBot = {
                 if(city.type === "Queens") {
                     this.debugFinancier("Sell Financier Item: " + item, city);
                     this.financier_trades -= 1;
+                    this.my_items[item] -= 1;
                     this.addStat("Financier", 1);
                     this.sendCommand("Sell Financier Item: " + item, "financiers_office/exchange.json", "item="+item, city);
                     return;
