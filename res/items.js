@@ -340,19 +340,19 @@ var items = {
 
     TributeTicketBundle10: {
         cost: 5,
-        autoCollect: false
+        autoCollect: true
     },
     InitiateBundle: {
         cost: 10,
-        autoCollect: false
+        autoCollect: true
     },
     AssortedResourcesBundle: {
         cost: 9,
-        autoCollect: false
+        autoCollect: true
     },
     AssortedResources250KBundle: {
         cost: 9,
-        autoCollect: false
+        autoCollect: true
     },
     PromotionBundle1000: {
         cost: 40
@@ -503,6 +503,237 @@ var items = {
     },
     ButcherBundle500: {
         cost: 250
+    },
+    BasicCUCMysteryBox: {
+        autoCollect: true
+    },
+    BassistMysteryBox: {
+        autoCollect: true
+    },
+    BearerBondMysteryBox: {
+        autoCollect: true
+    },
+    BronzeBandMysteryBox: {
+        autoCollect: true
+    },
+    BronzeCUCMysteryBox: {
+        autoCollect: true
+    },
+    BronzeTier7MysteryBox: {
+        autoCollect: true
+    },
+    ConselofElitesMysteryBox: {
+        autoCollect: true
+    },
+    DefendersMysteryBox: {
+        autoCollect: true
+    },
+    DonsAssentBundle: {
+        autoCollect: true
+    },
+    DonsBlessing11Bundle5: {
+        autoCollect: true
+    },
+    DonsGateMysteryBox: {
+        autoCollect: true
+    },
+    DonsPermitBundle: {
+        autoCollect: true
+    },
+    DonsPrivilegeBundle: {
+        autoCollect: true
+    },
+    DonsRansomBundle: {
+        autoCollect: true
+    },
+    ExpressBundle: {
+        autoCollect: true
+    },
+    GoldBandMysteryBox: {
+        autoCollect: true
+    },
+    GoldCUCMysteryBox: {
+        autoCollect: true
+    },
+    GoldLuckyTokenMysteryBox: {
+        autoCollect: true
+    },
+    GoldPulitoriMysteryBox: {
+        autoCollect: true
+    },
+    GoldTier7MysteryBox: {
+        autoCollect: true
+    },
+    HolidayBox: {
+        autoCollect: true
+    },
+    JackpotBundle: {
+        autoCollect: true
+    },
+    JackpotMysteryBox: {
+        autoCollect: true
+    },
+    Level10ImperialStateMysteryBox: {
+        autoCollect: true
+    },
+    MisterFixitBundle250: {
+        autoCollect: true
+    },
+    PincherMysteryBox: {
+        autoCollect: true
+    },
+    PitStopMysteryBox: {
+        autoCollect: true
+    },
+    PlatinumCUCMysteryBox: {
+        autoCollect: true
+    },
+    PlatinumTier7MysteryBox: {
+        autoCollect: true
+    },
+    PrimoJackpotBundle: {
+        autoCollect: true
+    },
+    PrimoJackpotMysteryBox: {
+        autoCollect: true
+    },
+    ScrappersMysteryBox: {
+        autoCollect: true
+    },
+    SilverBandMysteryBox: {
+        autoCollect: true
+    },
+    SilverCUCMysteryBox: {
+        autoCollect: true
+    },
+    SilverPulitoriMysteryBox: {
+        autoCollect: true
+    },
+    SilverTier7MysteryBox: {
+        autoCollect: true
+    },
+    SkinnerMysteryBox: {
+        autoCollect: true
+    },
+    StrongmansGoldBox: {
+        autoCollect: true
+    },
+    SuperShiftBundle: {
+        autoCollect: true
+    },
+    WelcomeBundle: {
+        autoCollect: true
+    },
+    WesternBundle: {
+        autoCollect: true
+    },
+    WildWestMysteryBox: {
+        autoCollect: true
+    },
+    WitnessProtectionBundle: {
+        autoCollect: true
+    },
+    armorysyndicatebox: {
+        autoCollect: true
+    },
+    asquadmysterybox: {
+        autoCollect: true
+    },
+    associatesmysterybox: {
+        autoCollect: true
+    },
+    babyfacemysterybox: {
+        autoCollect: true
+    },
+    bountymysterybox: {
+        autoCollect: true
+    },
+    boxcarmysterybox: {
+        autoCollect: true
+    },
+    brickandmortarmysterybox: {
+        autoCollect: true
+    },
+    bronzetokenbundle5: {
+        autoCollect: true
+    },
+    brooklynwestmysterybox: {
+        autoCollect: true
+    },
+    buriedtreasure: {
+        autoCollect: true
+    },
+    carbombermysterybox: {
+        autoCollect: true
+    },
+    dualbountymysterybox: {
+        autoCollect: true
+    },
+    funtimesmysterybox: {
+        autoCollect: true
+    },
+    giadaadvisordecreebox: {
+        autoCollect: true
+    },
+    gunslingermysterybox2: {
+        autoCollect: true
+    },
+    gvwestmysterybox: {
+        autoCollect: true
+    },
+    jamieadvisordecreebox: {
+        autoCollect: true
+    },
+    kingpinarmorymysterybox: {
+        autoCollect: true
+    },
+    lucky14mysterybox: {
+        autoCollect: true
+    },
+    lucky16mysterybox: {
+        autoCollect: true
+    },
+    lucky17mysterybox: {
+        autoCollect: true
+    },
+    lucky18mysterybox: {
+        autoCollect: true
+    },
+    lucky19mysterybox: {
+        autoCollect: true
+    },
+    lucky21mysterybox: {
+        autoCollect: true
+    },
+    lucky22mysterybox: {
+        autoCollect: true
+    },
+    luckyboosterbundle: {
+        autoCollect: true
+    },
+    lutheradvisordecreebox: {
+        autoCollect: true
+    },
+    markadvisordecreebox: {
+        autoCollect: true
+    },
+    mightymysterybox: {
+        autoCollect: true
+    },
+    recruitsmysterybox: {
+        autoCollect: true
+    },
+    reinforcedmysterybox: {
+        autoCollect: true
+    },
+    rogeradvisordecreebox: {
+        autoCollect: true
+    },
+    rumrunnersmysterybox: {
+        autoCollect: true
+    },
+    seducermysterybox: {
+        autoCollect: true
     }
 };
 module.exports = items;
