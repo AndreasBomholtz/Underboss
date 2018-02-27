@@ -394,6 +394,8 @@ var guiBot = {
     drawFinancierTab: function drawFinancierTab(infoData) {
         $(infoData).append("<h7>Financiers Office</h7>").append("<p>Select items that should be sold</p>");
 
+        $(infoData).append("<p>There is <span id='financier_stats_items'>0</span> items to sell and <span id='financier_stats_trades'>0</span> trades left</p>");
+
         $(infoData).append("<select id='financier_all_items' />");
         if(this.my_items) {
             for(var item in this.my_items) {
@@ -417,6 +419,7 @@ var guiBot = {
         }
         $(infoData).append("<br />");
         this.drawButton("Save Financiers Orders", this.saveFinancierOrder, infoData);
+        this.listen("financier:sold", this.updateFinancierStats);
     },
     updateFinancierItems: function updateFinancierItems() {
         $("#financier_all_items").empty();
@@ -428,13 +431,25 @@ var guiBot = {
                 }
             }
         }
+        this.updateFinancierStats();
+    },
+    updateFinancierStats: function updateFinancierStats() {
+        var items = 0;
+        for(var i=0; i<this.options.financier_order.length; i++) {
+            var item = this.options.financier_order[i];
+            items += parseInt(this.my_items[item], 10);
+        }
+        $("#financier_stats_items").html(items);
+        $("#financier_stats_trades").html(this.financier_trades);
     },
     addFinancierItem: function addFinancierItem() {
         var val = $("#financier_all_items").val();
         $("#financier_order").append("<option value='"+val+"'>"+val+"</option>");
+        this.updateFinancierStats();
     },
     removeFinancierItem: function removeFinancierItem() {
         $("#financier_order :selected").remove();
+        this.updateFinancierStats();
     },
     saveFinancierOrder: function saveFinancierOrder() {
         this.options.financier_order = $("select#financier_order option").map(function() {return $(this).val();}).get();
@@ -534,15 +549,17 @@ var guiBot = {
 
         view.append("<table id='overview_table'></table>");
         $("#overview_table").append("\
-                                    <tr><td style>City</td>\
+                                    <tr><th>City</th>\
                                     <th>Cash</th><th>Cement</th><th>Food</th><th>Steel</th>\
                                     <th>Jobs</th>\
+                                    <th>Units</th>\
                                     </tr>\
                                     <tr id='total'>\
-                                    <td>Total</td>\
-                                    <td id='cash'>0</td><td id='cement'>0</td>\
-                                    <td id='food'>0</td><td id='steel'>0</td>\
-                                    <td id='jobs'></td>\
+                                    <th>Total</th>\
+                                    <th id='cash'>0</th><th id='cement'>0</th>\
+                                    <th id='food'>0</th><th id='steel'>0</th>\
+                                    <th id='jobs'></th>\
+                                    <th id='units'></th>\
                                     </tr>");
 
         view.append($("<div></div>").addClass("stats").attr("id","stats"));
@@ -563,6 +580,7 @@ var guiBot = {
             return;
         }
         var total_res = {};
+        var total_units = 0;
         for(var i=0; i<this.cities.length; i++) {
             var city = this.cities[i];
             if(!city || !city.type) {
@@ -572,10 +590,11 @@ var guiBot = {
             if(el.length === 0) {
                 total.before("\
                              <tr id='"+city.type+"'>\
-                             <td>"+city.type+"</td>\
+                             <th>"+city.type+"</th>\
                              <td id='cash'>0</td><td id='cement'>0</td>\
                              <td id='food'>0</td><td id='steel'>0</td>\
                              <td id='jobs'></td>\
+                             <td id='units'></td>\
                              </tr>");
                 el = table.find("#"+city.type);
             }
@@ -589,7 +608,7 @@ var guiBot = {
             }
             if(city.jobs) {
                 var b, r, u, d, m;
-                b = r = u = d = m = "&nbsp;";
+                b = r = u = d = m = "&nbsp;&nbsp;";
                 for(var j=0; j<city.jobs.length; j++) {
                     if(city.jobs[j].queue == "research") { r = "R";}
                     if(city.jobs[j].queue == "building") { b = "B";}
@@ -599,9 +618,18 @@ var guiBot = {
                 }
                 el.find("#jobs").html("("+city.jobs.length+") "+b+" "+r+" "+u+" "+d+" "+m);
             }
+            if(city.units) {
+                var units = 0;
+                $.each(city.units, function updateOverviewUnits(k) {
+                    units += city.units[k];
+                });
+                total_units += units;
+                el.find("#units").html(conv(units));
+            }
         }
         $.each(total_res, function createOverviewViewEachTotal(k,v) {
             total.find("#"+k).html(conv(v));
         });
+        total.find("#units").html(conv(total_units));
     }
 };

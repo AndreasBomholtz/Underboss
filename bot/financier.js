@@ -38,6 +38,7 @@ var financierBot = {
                     this.my_items[item] -= 1;
                     this.addStat("Financier", 1);
                     this.sendCommand("Sell Financier Item: " + item, "financiers_office/exchange.json", "item="+item, city);
+                    this.signal("financier:sold");
                     return;
                 }
             }
