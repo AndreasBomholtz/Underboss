@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="res/underboss.css" />
+    <script src="gui/gui.js"></script>
+    <script src="util/combine.js"></script>
+    <script src="bot/bot.js"></script>
+    <script src="bot/util.js"></script>
+    <script src="res/buildings.js"></script>
+    <title>Underboss</title>
+  </head>
+<body>
+  <script type="text/javascript">
+
+    var bot = combine(bot, guiBot, utilBot);
+    bot.buildings = buildings;
+    bot.updateMap = function() {};
+    bot.options = {};
+    bot.initGUI();
+  </script>
+
+</body>
+</html>
