@@ -1,4 +1,4 @@
-# Underboss
+# Underboss [![Build Status](https://travis-ci.org/AndreasBomholtz/Underboss.svg?branch=master)](https://travis-ci.org/AndreasBomholtz/Underboss)
 A bot for the game, The Godfather: Five Familes on Facebook from Kabam / rockYou.
 
 ## USE AT OWN RISK!
