@@ -78,6 +78,15 @@ var buildBot = {
         }
     },
     hasResources: function hasResources(city, name, cost, level, func, offset) {
+        var debugFunc;
+        if(func === undefined) {
+            debugFunc = this.debugTrain;
+        } else if(func == this.calcBuldingCost) {
+            debugFunc = this.debugBuild;
+        } else {
+            debugFunc = this.debugResearch;
+        }
+
         if(cost && city && city.resources) {
             var res = city.resources;
             for (var c in cost) {
@@ -94,22 +103,10 @@ var buildBot = {
                     rc = cost[c] * level;
                 }
                 if(rc > parseInt(res[c], 10)) {
-                    if(func === undefined) {
-                        this.debugTrain("Can't train " + name + " because " + c + " (" + rc + ") is more then " + res[c], city);
-                    } else if(func == this.calcBuldingCost) {
-                        this.debugBuild("Can't build " + name + " because " + c + " (" + rc + ") is more then " + res[c], city);
-                    } else {
-                        this.debugResearch("Can't research " + name + " because " + c + " (" + rc + ") is more then " + res[c], city);
-                    }
+                    debugFunc("Can't affort " + name + " because " + c + " (" + rc + ") is more then " + res[c], city);
                     return false;
                 } else {
-                    if(func === undefined) {
-                        this.debugTrain("I have " + res[c] + " " + c + " and " + name + " costs " + rc, city);
-                    } else if(func == this.calcBuldingCost) {
-                        this.debugBuild("I have " + res[c] + " " + c + " and " + name + " costs " + rc, city);
-                    } else {
-                        this.debugResearch("I have " + res[c] + " " + c + " and " + name + " costs " + rc, city);
-                    }
+                    debugFunc("I have " + res[c] + " " + c + " and " + name + " costs " + rc, city);
                 }
             }
             /*
@@ -123,21 +120,9 @@ var buildBot = {
                 city.resources[cc] = parseInt(city.resources[cc], 10) - parseInt(dc, 10);
             }*/
         } else if(cost) {
-            if(func === undefined) {
-                this.debugTrain("Missing city data");
-            } else if(func == this.calcBuldingCost) {
-                this.debugBuild("Missing city data");
-            } else {
-                this.debugResearch("Missing city data");
-            }
+            debugFunc("Missing city data");
         } else {
-            if(func === undefined) {
-                this.debugTrain("Missing cost for " + name);
-            } else if(func == this.calcBuldingCost) {
-                this.debugBuild("Missing cost for " + name);
-            } else {
-                this.debugResearch("Missing cost for " + name);
-            }
+            debugFunc("Missing cost for " + name);
         }
         return true;
     },
@@ -364,10 +349,6 @@ var buildBot = {
         if(this.cities) {
             for(var i=0; i<this.cities.length; i++) {
                 var city = this.cities[i];
-                if(city.type == "DoriaAirport") {
-                    this.debugBuild("Build is disabled for Doria Airport", city);
-                    continue;
-                }
                 var doUpgrade = this.checkCityQueue(city,"building");
                 if(doUpgrade) {
                     if(city.neighborhood) {

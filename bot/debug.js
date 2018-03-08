@@ -49,10 +49,13 @@ var debugBot = {
     },
     generateDebugFunction: function generateDebugFunction(name) {
         this["enableDebug" + name] = false;
-        this["debug" + name] = function enableDebugFunction(str, city, neighborhood) {
+        this["debug" + name] = function enableDebugFunctionDebug(str, city, neighborhood) {
             if(this["enableDebug" + name]) {
                 this.debug(str, city, name, neighborhood);
             }
+        };
+        this["info" + name] = function enableDebugFunctionInfo(str, city, neighborhood) {
+            this.info(str, city, name, neighborhood);
         };
     },
     generateDebugEnable: function generateDebugEnable(name) {

@@ -16,6 +16,7 @@ var itemBot = {
         var city = this.cities[0];
         for(var item in this.items) {
             if(this.items[item].autoCollect && this.my_items[item]) {
+                this.infoItems("Use item " + item);
                 this.debugItems(item+": "+this.my_items[item]);
                 this.my_items[item]--;
                 this.sendCommand("Use "+item,

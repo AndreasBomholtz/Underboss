@@ -49,6 +49,10 @@ var queueBot = {
         this.enqueCommand(name, url, data, 'POST', city, callback, 'cmd', neighborhood, custom);
     },
     sendGetCommand: function sendGetCommand(name, url, data, city, callback, neighborhood, custom) {
+        if(data !== "") {
+            data += "&";
+        }
+        data += "cachebreaker=" + (parseInt((new Date).getTime() / 1000, 10) + this.time_diff);
         this.enqueCommand(name, url, data, 'GET', city, callback, 'cmd', neighborhood, custom);
     },
     sendSlowCommand: function sendCommand(name, url, data, city, callback, neighborhood, custom) {
@@ -111,7 +115,26 @@ var queueBot = {
 
         this.debug(cmd.name);
         if(typeof($) !== 'undefined') {
-            this.ajax_send(cmd.url, this.revCommand, this.errorCommand, cmd.type, cmd.data, true);
+            if(typeof(GM_xmlhttpRequest) !== 'undefined') {
+                GM_xmlhttpRequest({
+                    method : cmd.type,
+                    url : cmd.url,
+                    data : cmd.type === "POST" ? cmd.data : null,
+                    headers : cmd.headers,
+                    ontimeout : cmd.timeoutSecs ? cmd.timeoutSecs * 1000 : 0,
+                    onreadystatechange: function onreadystatechange(xhr) {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+                                bot.revCommand(xhr.responseText);
+                            } else {
+                                bot.errorCommand(xhr.status, xhr.responseText);
+                            }
+                        }
+                    }
+                });
+            } else {
+                this.ajax_send(cmd.url, this.revCommand, this.errorCommand, cmd.type, cmd.data, true);
+            }
         } else {
             if(!this.request) {
                 this.request = require('request');

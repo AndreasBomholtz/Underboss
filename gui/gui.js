@@ -1,14 +1,10 @@
 var guiBot = {
     initGUI: function initGUI() {
-        var panel = document.createElement("div");
-        panel.setAttribute("id","panel");
-        panel.setAttribute("class", "panel");
-        document.body.appendChild(panel);
+        var panel = $("<div id='panel' class='panel' />");
+        $(document.body).append(panel);
 
-        var header = document.createElement("p");
-        header.className = "header";
-        header.innerHTML = "The Underboss";
-        header.onclick = function panelOnClick() {
+        var header = $("<p class='header'><span>The Underboss</span> <span id='version'>v1.1.1</span>");
+        header.click(function panelOnClick() {
             if($("#panel").hasClass("panel")) {
                 $("#panel").removeClass("panel").addClass("hiddenPanel");
                 $("#mainPanel").hide();
@@ -16,23 +12,15 @@ var guiBot = {
                 $("#panel").removeClass("hiddenPanel").addClass("panel");
                 $("#mainPanel").show();
             }
-        };
-        panel.appendChild(header);
+        });
+        var mainPanel = $("<div id='mainPanel' />");
+        var infoPanel = $("<div id='infoPanel'/>");
+        panel.append(header);
+        panel.append(mainPanel);
+        $(mainPanel).append(infoPanel);
 
-        var mainPanel = document.createElement("div");
-        mainPanel.setAttribute("id","mainPanel");
-        panel.appendChild(mainPanel);
-
-        for(var fun in this.autoFunctions) {
-            this.drawOption(fun, mainPanel);
-        }
-
-        var infoPanel = document.createElement("div");
-        mainPanel.appendChild(infoPanel);
-
-        var tabBox = document.createElement("div");
-        tabBox.className = "tab-box";
-        infoPanel.appendChild(tabBox);
+        var tabBox = $("<div class='tab-box' />");
+        infoPanel.append(tabBox);
 
         var views = ["Overview", "Prizes", "Armor","Training", "Options"];
         for(var j=0; j<views.length; j++) {
@@ -45,15 +33,17 @@ var guiBot = {
             this["show" + views[j]] = this.generateShowView(views[j]);
         }
 
-        var tabs = ["Info","Prizes","Attack","Map","Build","Financier","Debug"];
+        var tabs = ["Control", "Info","Prizes","Attack","Map","Build","Financier","Debug"];
         for(var i=0; i<tabs.length; i++) {
-            tabBox.appendChild(this.drawTab("info-" + (i + 1),tabs[i]));
+            tabBox.append(this.drawTab("info-" + (i + 1),tabs[i]));
             var infoData = this.drawTabData("info-" + (i + 1));
-            infoPanel.appendChild(infoData);
+            infoPanel.append(infoData);
             if(this["draw" + tabs[i] + "Tab"]) {
                 this["draw" + tabs[i] + "Tab"](infoData);
             }
         }
+        $("#info-1").addClass("activeLink");
+        $("#info-1_data").removeClass("hide");
     },
     generateShowView: function generateShowView(view) {
         return function generateShowViewShow() {
@@ -71,7 +61,7 @@ var guiBot = {
         sep.innerHTML = " - ";
         div.appendChild(sep);
 
-        this.drawButton(name + " Now", this["do" + name], div);
+        this.drawButton(name + " Now", this["do" + name], div, "button_large");
     },
     drawDebugOption: function drawDebugOption(name, panel) {
         this.drawGenericOption(name,
@@ -102,9 +92,12 @@ var guiBot = {
 
         return div;
     },
-    drawButton: function drawButton(name, func, cont) {
+    drawButton: function drawButton(name, func, cont, css) {
         var self = this;
-        var button = $("<button/>").html(name).click(function drawButton() {
+        if(css === undefined) {
+            css = "";
+        }
+        var button = $("<button class='"+css+"'/>").html(name).click(function drawButton() {
             func.call(self);
         });
         $(cont).append(button);
@@ -178,8 +171,11 @@ var guiBot = {
         if(!this.options.build) {
             this.options.build = {};
         }
+        $(infoData).append("<h7>Build Options</h7>");
+        $(infoData).append("<p>Upgrade builing above level 9? <input type='checkbox' id='build_above_level_9' />");
 
-        $(infoData).append("<h7>Build Orders</h7>");
+
+        $(infoData).append("<br /><h7>Build Orders</h7>");
         $(infoData).append("<p>Build this amount of buildings. If you set it to -1 it will keep building that building.</p>");
 
         $(infoData).append("<select id='build_order_city' />");
@@ -197,7 +193,7 @@ var guiBot = {
             if(!this.buildings[b].buildNew) {
                 continue;
             }
-            var input = $("<input id='build_" + b + "' />");
+            var input = $("<input class='build_order' id='build_" + b + "' />");
             this.addTableRow(table,b,input);
         }
         this.drawButton("Save", this.saveBuildOrder, infoData);
@@ -418,7 +414,6 @@ var guiBot = {
             }
         }
         $(infoData).append("<br />");
-        this.drawButton("Save Financiers Orders", this.saveFinancierOrder, infoData);
         this.listen("financier:sold", this.updateFinancierStats);
     },
     updateFinancierItems: function updateFinancierItems() {
@@ -435,9 +430,11 @@ var guiBot = {
     },
     updateFinancierStats: function updateFinancierStats() {
         var items = 0;
-        for(var i=0; i<this.options.financier_order.length; i++) {
-            var item = this.options.financier_order[i];
-            items += parseInt(this.my_items[item], 10);
+        if(this.options.financier_order) {
+            for(var i=0; i<this.options.financier_order.length; i++) {
+                var item = this.options.financier_order[i];
+                items += parseInt(this.my_items[item], 10);
+            }
         }
         $("#financier_stats_items").html(items);
         $("#financier_stats_trades").html(this.financier_trades);
@@ -445,20 +442,28 @@ var guiBot = {
     addFinancierItem: function addFinancierItem() {
         var val = $("#financier_all_items").val();
         $("#financier_order").append("<option value='"+val+"'>"+val+"</option>");
+        this.saveFinancierOrder();
         this.updateFinancierStats();
     },
     removeFinancierItem: function removeFinancierItem() {
         $("#financier_order :selected").remove();
+        this.saveFinancierOrder();
         this.updateFinancierStats();
     },
     saveFinancierOrder: function saveFinancierOrder() {
         this.options.financier_order = $("select#financier_order option").map(function() {return $(this).val();}).get();
+        this.saveOptions();
     },
     drawInfoTab: function drawInfoTab(infoData) {
         this.drawButton("Overview", this.showOverview, infoData);
         this.drawButton("Traning", this.showTraining, infoData);
-
+        $(infoData).append("<br />");
         $(infoData).append($("<textarea></textarea>").addClass("info").attr("id","debug_info"));
+    },
+    drawControlTab: function drawControlTab(infoData) {
+        for(var fun in this.autoFunctions) {
+            this.drawOption(fun, infoData);
+        }
     },
     drawPrizesTab: function drawPrizesTab(infoData) {
         $(infoData).html("<h7>Prizes</h7>").append("<p>Prize Info:</p>").append($("<textarea/>").addClass("prize_info"));

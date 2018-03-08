@@ -6,7 +6,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 300px;
+    width: 400px;
     height: 688px;
     z-index: 10;
 }
@@ -22,22 +22,31 @@
     height: 25px;
     text-align: center;
     font-size: 150%;
-    font-weight:bold;
+    font-weight: bold;
+    margin: 0;
+}
+
+.header #version {
+    font-size: 75%;
 }
 
 .info {
-    width: 295px;
-    height: 260px;
+    width: 300px;
+    height: 500px;
 }
 
 .textinfo {
-    width: 295px;
+    width: 300px;
     height: 95px;
 }
 
 .prize_info{
-    width: 295px;
-    height: 200px;
+    width: 300px;
+    height: 500px;
+}
+
+table {
+    color:white;
 }
 
 div.option {
@@ -54,6 +63,14 @@ input.button {
     background-color: darkred;
     color: white;
     border-color: red;
+}
+
+.build_order {
+    width: 30px;
+}
+
+.button_large {
+    width: 140px;
 }
 
 .tab-box {
@@ -81,7 +98,12 @@ input.button {
     border: 1px solid darkred;
     border-top: 0;
     overflow-y: auto;
-    height: 430px
+    height: 560px;
+    overflow: auto;
+}
+
+.tabcontent p {
+    margin: 0;
 }
 
 .hide {

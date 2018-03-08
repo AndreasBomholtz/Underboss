@@ -5,11 +5,11 @@ var researchBot = {
             if(i < 10) {
                 res = Math.ceil(res * 1.5);
             } else if (i < 15) {
-                res = Math.ceil(res * 1.6);
+                res = Math.ceil(res * 1.71);
             } else if(i == 15) {
                 res = Math.ceil(res * 2.7);
-            } else if(i < 20) {
-                res = Math.ceil(res * 1.2);
+            } else if(i <= 20) {
+                res = Math.ceil(res * 1.34);
             }
         }
         return res;
@@ -65,10 +65,13 @@ var researchBot = {
                     for(var i=0; i<req.research.length; i++) {
                         var r = req.research[i];
                         var resLvl = city.research[r] || 0;
-
+                        var needLevel = currentResearch;
+                        if(req.offset) {
+                            needLevel += req.offset;
+                        }
                         this.debugResearch(key + " has req " + r + " and it is " + resLvl, city);
-                        if(resLvl <= currentResearch) {
-                            this.debugResearch("Skip because " + resLvl + " is less then " + currentResearch, city);
+                        if(resLvl <= needLevel) {
+                            this.debugResearch("Skip because " + resLvl + " is less then " + needLevel, city);
                             skip = true;
                             break;
                         }

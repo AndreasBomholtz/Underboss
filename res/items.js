@@ -531,6 +531,9 @@ var items = {
     DonsAssentBundle: {
         autoCollect: true
     },
+    DonsAssentBundle5: {
+        autoCollect: true
+    },
     DonsBlessing11Bundle5: {
         autoCollect: true
     },

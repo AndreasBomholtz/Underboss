@@ -4,3 +4,11 @@
 */#*#
 tools/jsl
 Underboss-dev.user.js
+node_modules
+
+tui/game_variables.js
+tui/scratch
+tui/node_modules
+tui/game.html
+tui/login.sh
+tui/debug.log

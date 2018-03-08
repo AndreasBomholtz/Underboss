@@ -7,5 +7,6 @@
 // @include     https://*godfather.*.com/platforms/facebook/game*
 // @version     2.2.6
 // @grant       GM_addStyle
+// @grant       GM_xmlhttpRequest
 // @downloadURL https://raw.githubusercontent.com/AndreasBomholtz/Underboss/master/Underboss.user.js
 // ==/UserScript==
