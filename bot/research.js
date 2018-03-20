@@ -14,6 +14,28 @@ var researchBot = {
         }
         return res;
     },
+    checkResearchBuild: function checkResearchBuild(city, name, currentResearch, build) {
+        this.trace();
+        var build_level = this.findBuildingLevel(build, city);
+        this.debugResearch(name + " (" + currentResearch + "/" + (currentResearch - 4) + ") has req " + build + " and it is " + build_level + " (" + (build_level * 4) + ")", city);
+
+        if(build == "Garage" || build == "Workshop" || build == "GuardPost") {
+            if(currentResearch >= 20) {
+                build_level *= 2;
+            } else if(currentResearch <= 5) {
+                build_level = 5;
+            } else {
+                build_level *= 3;
+            }
+        } else {
+            build_level *= 2;
+        }
+        if(build_level === 0 || (currentResearch > 1 && build_level <= currentResearch)) {
+            this.debugResearch("skip because " + build_level + " is less then " + currentResearch, city);
+            return false;
+        }
+        return true;
+    },
     researchLowest: function researchLowest(city) {
         this.trace();
         var lowLevel = {lvl: 1000, pri: 1000, id: ""};
@@ -42,22 +64,7 @@ var researchBot = {
                     continue;
                 }
                 if(req.build) {
-                    var build = this.findBuildingLevel(req.build, city);
-                    this.debugResearch(key + " (" + currentResearch + "/" + (currentResearch - 4) + ") has req " + req.build + " and it is " + build + " (" + (build * 4) + ")", city);
-
-                    if(req.build == "Garage" || req.build == "Workshop" || req.build == "GuardPost") {
-                        if(currentResearch >= 20) {
-                            build *= 2;
-                        } else if(currentResearch <= 5) {
-                            build = 5;
-                        } else {
-                            build *= 3;
-                        }
-                    } else {
-                        build *= 2;
-                    }
-                    if(build === 0 || (currentResearch > 1 && build <= currentResearch)) {
-                        this.debugResearch("skip because " + build + " is less then " + currentResearch, city);
+                    if(!this.checkResearchBuild(city, key, currentResearch, req.build)) {
                         continue;
                     }
                 }
