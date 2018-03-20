@@ -565,31 +565,35 @@ var attackUnits = {
     },
     MisterSnip: {
         type: 'Clean-up Crew',
-        bailout:75000
+        bailout:64388
     },
     MisterHaul: {
         type: 'Clean-up Crew',
-        bailout:75000
+        bailout:64482
     },
     MisterFixit: {
         type: 'Clean-up Crew',
-        bailout:75000
+        bailout:64388
     },
     MissesNeat: {
         type: 'Clean-up Crew',
-        bailout:75000
+        bailout:100530
+    },
+    MisusPatch: {
+        type: 'Clean-up Crew',
+        bailout:100530
     },
     MisterSplit: {
         type: 'Clean-up Crew',
-        bailout:75000
+        bailout:53478
     },
     MisterKippy: {
         type: 'Clean-up Crew',
-        bailout:75000
+        bailout:64388
     },
     MisterPao: {
         type: 'Clean-up Crew',
-        bailout:75000
+        bailout:64482
     },
 
     Freighttrain: {
@@ -609,35 +613,55 @@ var attackUnits = {
     },
 
     Frontman: {
-        trainable: false
+        trainable: false,
+        bailout: 103020
     },
     Skinner: {
-        trainable: false
+        trainable: false,
+        bailout: 103020
     },
     Bassist: {
-        trainable: false
+        trainable: false,
+        bailout: 103020
     },
 
     Clyde: {
-        trainable: false
+        trainable: false,
+        bailout: 128775
     },
     Bonnie: {
-        trainable: false
+        trainable: false,
+        bailout: 128775
     },
     Romeo: {
-        trainable: false
+        trainable: false,
+        bailout: 103020
     },
     Maneater: {
-        trainable: false
+        trainable: false,
+        bailout: 103020
     },
     Carbomber: {
-        trainable: false
+        trainable: false,
+        bailout: 103020
     },
     Bootlegger: {
-        bailout: 161700
+        bailout: 141653
     },
     Gravedigger: {
         bailout: 141653
+    },
+    SquadLeader: {
+        bailout:154530
+    },
+    CollasMen: {
+        bailout:150795
+    },
+    GateawayDriver: {
+        bailout: 125663
+    },
+    JazzMan: {
+        bailout: 100530
     }
 };
 module.exports = attackUnits;
