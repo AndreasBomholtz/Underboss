@@ -215,6 +215,18 @@ var buildings = {
             cement: 11445
         }
     },
+    CrewBankBranch: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+    },
     FinanciersOffice: {
         offset: {
             cash: 146286,
@@ -394,6 +406,45 @@ var buildings = {
             steel: 114457,
             cement: 114457
         }
+    },
+    KreuserHomeRepair: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+
+    },
+    LawFirm: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        }
+
+    },
+    SafeHouse: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        },
+        maxlevel : 23
     }
 };
 module.exports = buildings;
