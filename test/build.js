@@ -27,10 +27,17 @@ test.before(t => {
     };
     city = {
         id: 'city_id',
+        resources: {
+            cash: 3000,
+            food: 300,
+            steel: 300,
+            cement: 1000
+        },
         neighborhood: [neighborhood]
     };
     bot.cities = [city];
 
+    bot.debugTrain = console.debug;
     bot.options = {};
 });
 
@@ -52,12 +59,33 @@ test('Find building slot', t => {
     t.is(slot, 2, "Wrong slot returned");
 });
 
-test('Calulate Building cost', t => {
-    t.is(bot.calcBuldingCost(1, 400), 400);
-    t.is(bot.calcBuldingCost(2, 400), 1600);
-    t.is(bot.calcBuldingCost(3, 400), 3200);
-});
+
+function build_cost(t, level, cost, expected) {
+    const res = bot.calcBuldingCost(level, cost);
+    t.true(res >= expected);
+}
+build_cost.title = (providedTitle, level, cost, expected) => `Level ${level} with cost ${cost} is less then ${expected}`.trim();
+
+test(build_cost, 1, 400, 400);
+test(build_cost, 2, 400, 1600);
+test(build_cost, 3, 400, 3200);
+test(build_cost, 8, 400, 64000);
 
 test('Has resources', t => {
 
+    var cost = {
+        cash: 3000,
+        food: 300,
+        steel: 300,
+        cement: 1000
+    }
+    t.true(bot.hasResources(city, "test", cost, 1));
+
+    cost = {
+        cash: 3000,
+        food: 300,
+        steel: 300,
+        cement: 1001
+    }
+    t.false(bot.hasResources(city, "test", cost, 1));
 });
