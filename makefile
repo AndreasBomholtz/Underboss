@@ -8,7 +8,7 @@ FILES+=$(shell ls gui/*.js)
 FILES+=$(shell ls util/*.js)
 FILES+=main.js
 
-.PHONY: clean lint release all dropbox
+.PHONY: clean lint release all dropbox test
 
 all: Underboss-dev.user.js
 
@@ -29,6 +29,9 @@ res/underboss.css.js: res/underboss.css
 lint:
 	@echo "Linting..."
 	@${JSL} main.js
+
+test:
+	@npm test
 
 Underboss.user.js: Underboss-dev.user.js
 	@echo "Uglifying..."
