@@ -646,16 +646,16 @@ var attackUnits = {
         bailout: 103020
     },
     Bootlegger: {
-        bailout: 141653
+        bailout: 161700
     },
     Gravedigger: {
-        bailout: 141653
+        bailout: 161700
     },
     SquadLeader: {
-        bailout:154530
+        bailout: 154530
     },
     CollasMen: {
-        bailout:150795
+        bailout: 150795
     },
     GateawayDriver: {
         bailout: 125663

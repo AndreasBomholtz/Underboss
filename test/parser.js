@@ -6,8 +6,9 @@ test.before(t => {
     parser.trace = function() {};
 });
 
-test('parse-', t => {
-    parser.parseData("test");
-
-    t.pass();
+test('parse-error', t => {
+    t.throws(() => {
+        parser.parseData("test")
+    }
+             , SyntaxError);
 });
