@@ -26,10 +26,22 @@ test.before(t => {
     bot.options = {};
 });
 
+test('Check for missing city', t => {
+    var data = bot.getBailoutUnits();
+
+    t.is(data[1], "");
+});
+
 test('Check for missing bail', t => {
     var data = bot.getBailoutUnits(city);
 
-    t.is(data[1], "", "Failed to bail the correct unit");
+    t.is(data[1], "");
+});
+
+test('Check for missing resources', t => {
+    var data = bot.getBailoutUnits({bailout: {}});
+
+    t.is(data[1], "");
 });
 
 test('Pay bailout for a single unit', t => {
