@@ -299,9 +299,12 @@ var guiBot = {
 
 
         $('<div>Gang Level:</div>').append($('<select id="select_gang"></select>')).appendTo($(infoData));
-        var gang = $('#select_gang');
-        for(var i=1; i<=15; i++) {
-            gang.append($('<option value="' + i + '">' + i + '</option>'));
+        var gang = $('#select_gang'), i;
+        for(i=1; i<=10; i++) {
+            gang.append($('<option value="' + i + '">Gang Level ' + i + '</option>'));
+        }
+        for(i=1; i<=5; i++) {
+            gang.append($('<option value="' + (10 + i) + '">Murder Inc ' + i + '</option>'));
         }
 
         $('<div id="units_p">Units:</div>').append($('<select id="select_units"></select>')).appendTo($(infoData));
@@ -315,8 +318,7 @@ var guiBot = {
 
         $('<div>Use All:</div>').append('<input type="checkbox" id="check_attack_all" value="all"/>').appendTo($(infoData));
 
-        $('<textarea id="total_units" class="textinfo"></textarea>').appendTo($(infoData));
-
+        $('<textarea id="total_units" class="textinfo"></textarea><br />').appendTo($(infoData));
 
         this.drawButton("Save", this.saveAttackOrder, infoData);
         this.drawButton("Clear", this.clearAttackOrder, infoData);
@@ -324,7 +326,7 @@ var guiBot = {
         var line = document.createElement("hr");
         infoData.appendChild(line);
 
-        $(infoData).append("<select id='order_list' size='10' width='100%' />");
+        $(infoData).append("<select id='order_list' size='10' width='100%' /><br />");
 
         this.drawButton("Delete", this.deleteAttackOrder, infoData);
 

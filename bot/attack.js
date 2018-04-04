@@ -131,7 +131,7 @@ var attackBot = {
                 return;
             }
 
-            var bestOrder = {gang:0};
+            var bestOrder = {gang: 0};
             for(var i=0; i<this.options.attackOrders.length; i++) {
                 var order = this.options.attackOrders[i];
                 this.debugAttack("Order: " + order.gang + " City: " + order.city + " Units: " + order.units, city);
