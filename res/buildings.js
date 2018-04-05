@@ -445,6 +445,158 @@ var buildings = {
             cement: 114457
         },
         maxlevel : 23
+    },
+    AngiesMaidsInc: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        },
+        maxlevel : 23
+    },
+    PoolHall: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        },
+        maxlevel : 23
+    },
+    GunLocker: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        },
+        maxlevel : 23
+    },
+    LoadingDock: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        },
+        maxlevel : 23
+    },
+    EvergrayCemetary: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        },
+        maxlevel : 23
+    },
+    PawnShop: {
+        offset: {
+            cash: 146286,
+            res: 38152
+        },
+        cost: {
+            cash: 438857,
+            food: 114457,
+            steel: 114457,
+            cement: 114457
+        },
+        maxlevel : 23
+    },
+
+    // --- Airport ---
+    CaptainsBar: {
+        cost: {
+            cash : 0,
+            food : 0,
+            steel : 0,
+            cement : 0
+        },
+        maxlevel : 20
+    },
+    CoffeeCart: {
+        cost: {
+            cash : 0,
+            food : 0,
+            steel : 0,
+            cement : 0
+        },
+        maxlevel : 20
+    },
+    DepartureDoors: {
+        cost: {
+            cash : 0,
+            food : 0,
+            steel : 0,
+            cement : 0
+        },
+        maxlevel : 20
+    },
+    FlightGates: {
+        cost: {
+            cash : 0,
+            food : 0,
+            steel : 0,
+            cement : 0
+        },
+        maxlevel : 20
+    },
+    FlightSchool: {
+        cost: {
+            cash : 0,
+            food : 0,
+            steel : 0,
+            cement : 0
+        },
+        maxlevel : 20
+    },
+    Hangar: {
+        cost: {
+            cash : 0,
+            food : 0,
+            steel : 0,
+            cement : 0
+        },
+        maxlevel : 20
+    },
+    SkyLounge: {
+        cost: {
+            cash : 0,
+            food : 0,
+            steel : 0,
+            cement : 0
+        },
+        maxlevel : 20
+    },
+    Tower: {
+        cost: {
+            cash : 0,
+            food : 0,
+            steel : 0,
+            cement : 0
+        },
+        maxlevel : 20
     }
 };
 module.exports = buildings;
