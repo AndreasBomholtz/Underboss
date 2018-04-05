@@ -77,7 +77,7 @@ var researchBot = {
                             needLevel += req.offset;
                         }
                         this.debugResearch(key + " has req " + r + " and it is " + resLvl, city);
-                        if(resLvl <= needLevel) {
+                        if(resLvl < needLevel) {
                             this.debugResearch("Skip because " + resLvl + " is less then " + needLevel, city);
                             skip = true;
                             break;
