@@ -404,10 +404,10 @@ var guiBot = {
         }
         this.listen("player:items", this.updateFinancierItems);
         this.drawButton("Add item", this.addFinancierItem, infoData);
-        this.drawButton("Remove item", this.removeFinancierItem, infoData);
 
         $(infoData).append("<br />");
         $(infoData).append("<select id='financier_order' size='10' width='100%' />");
+        this.drawButton("Remove item", this.removeFinancierItem, infoData);
 
         if(this.options.financier_order) {
             for(var o=0; o<this.options.financier_order.length; o++) {
@@ -559,7 +559,7 @@ var guiBot = {
                                     <tr><th>City</th>\
                                     <th>Cash</th><th>Cement</th><th>Food</th><th>Steel</th>\
                                     <th>Jobs</th>\
-                                    <th>Units</th>\
+                                    <th>Units / Bail</th>\
                                     </tr>\
                                     <tr id='total'>\
                                     <th>Total</th>\
@@ -588,6 +588,7 @@ var guiBot = {
         }
         var total_res = {};
         var total_units = 0;
+        var total_bail = 0;
         for(var i=0; i<this.cities.length; i++) {
             var city = this.cities[i];
             if(!city || !city.type) {
@@ -627,16 +628,23 @@ var guiBot = {
             }
             if(city.units) {
                 var units = 0;
+                var bail = 0;
                 $.each(city.units, function updateOverviewUnits(k) {
                     units += city.units[k];
                 });
+                if(city.bailout) {
+                    $.each(city.bailout, function updateOverviewBailout(k) {
+                        bail += city.bailout[k];
+                    });
+                }
                 total_units += units;
-                el.find("#units").html(conv(units));
+                total_bail += bail;
+                el.find("#units").html(conv(units) +" / " + conv(bail));
             }
         }
         $.each(total_res, function createOverviewViewEachTotal(k,v) {
             total.find("#"+k).html(conv(v));
         });
-        total.find("#units").html(conv(total_units));
+        total.find("#units").html(conv(total_units) + " / " + conv(total_bail));
     }
 };
